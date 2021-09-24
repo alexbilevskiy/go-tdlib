@@ -67,7 +67,7 @@ func NewClient(authorizationStateHandler AuthorizationStateHandler, options ...O
 		option(client)
 	}
 
-	go client.receive()
+	go receive(client)
 	go client.catch(catchersListener)
 
 	err := Authorize(client, authorizationStateHandler)
@@ -78,13 +78,31 @@ func NewClient(authorizationStateHandler AuthorizationStateHandler, options ...O
 	return client, nil
 }
 
-func (client *Client) receive() {
+var receiveStarted = false
+var clients = make(map[int]*Client)
+
+func receive(client *Client) {
+	_, ok := clients[client.jsonClient.id]
+	if !ok {
+		clients[client.jsonClient.id] = client
+	}
+	if receiveStarted == true {
+		//receiver already started in different thread
+		return
+	}
+	receiveStarted = true
 	for {
-		resp, err := client.jsonClient.Receive(client.updatesTimeout)
+		resp, err := Receive(client.updatesTimeout)
 		if err != nil {
 			continue
 		}
-		client.catcher <- resp
+		receivedClientId := resp.ClientId
+		_, ok = clients[receivedClientId]
+		if !ok {
+			continue
+		}
+
+		clients[receivedClientId].catcher <- resp
 
 		typ, err := UnmarshalType(resp.Data)
 		if err != nil {
@@ -92,7 +110,7 @@ func (client *Client) receive() {
 		}
 
 		needGc := false
-		for _, listener := range client.listenerStore.Listeners() {
+		for _, listener := range clients[receivedClientId].listenerStore.Listeners() {
 			if listener.IsActive() {
 				listener.Updates <- typ
 			} else {
@@ -100,7 +118,7 @@ func (client *Client) receive() {
 			}
 		}
 		if needGc {
-			client.listenerStore.gc()
+			clients[receivedClientId].listenerStore.gc()
 		}
 	}
 }
