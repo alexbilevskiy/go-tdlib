@@ -2707,8 +2707,8 @@ func UnmarshalChatEventAction(data json.RawMessage) (ChatEventAction, error) {
 	case TypeChatEventSlowModeDelayChanged:
 		return UnmarshalChatEventSlowModeDelayChanged(data)
 
-	case TypeChatEventMessageTtlSettingChanged:
-		return UnmarshalChatEventMessageTtlSettingChanged(data)
+	case TypeChatEventMessageTtlChanged:
+		return UnmarshalChatEventMessageTtlChanged(data)
 
 	case TypeChatEventSignMessagesToggled:
 		return UnmarshalChatEventSignMessagesToggled(data)
@@ -2737,8 +2737,8 @@ func UnmarshalChatEventAction(data json.RawMessage) (ChatEventAction, error) {
 	case TypeChatEventVideoChatCreated:
 		return UnmarshalChatEventVideoChatCreated(data)
 
-	case TypeChatEventVideoChatDiscarded:
-		return UnmarshalChatEventVideoChatDiscarded(data)
+	case TypeChatEventVideoChatEnded:
+		return UnmarshalChatEventVideoChatEnded(data)
 
 	case TypeChatEventVideoChatParticipantIsMutedToggled:
 		return UnmarshalChatEventVideoChatParticipantIsMutedToggled(data)
@@ -4005,8 +4005,8 @@ func UnmarshalSuggestedAction(data json.RawMessage) (SuggestedAction, error) {
 	case TypeSuggestedActionCheckPhoneNumber:
 		return UnmarshalSuggestedActionCheckPhoneNumber(data)
 
-	case TypeSuggestedActionSeeTicksHint:
-		return UnmarshalSuggestedActionSeeTicksHint(data)
+	case TypeSuggestedActionViewChecksHint:
+		return UnmarshalSuggestedActionViewChecksHint(data)
 
 	case TypeSuggestedActionConvertToBroadcastGroup:
 		return UnmarshalSuggestedActionConvertToBroadcastGroup(data)
@@ -4355,50 +4355,26 @@ func UnmarshalUpdate(data json.RawMessage) (Update, error) {
 	case TypeUpdateChatPosition:
 		return UnmarshalUpdateChatPosition(data)
 
-	case TypeUpdateChatDefaultMessageSenderId:
-		return UnmarshalUpdateChatDefaultMessageSenderId(data)
-
-	case TypeUpdateChatHasProtectedContent:
-		return UnmarshalUpdateChatHasProtectedContent(data)
-
-	case TypeUpdateChatIsMarkedAsUnread:
-		return UnmarshalUpdateChatIsMarkedAsUnread(data)
-
-	case TypeUpdateChatIsBlocked:
-		return UnmarshalUpdateChatIsBlocked(data)
-
-	case TypeUpdateChatHasScheduledMessages:
-		return UnmarshalUpdateChatHasScheduledMessages(data)
-
-	case TypeUpdateChatVideoChat:
-		return UnmarshalUpdateChatVideoChat(data)
-
-	case TypeUpdateChatDefaultDisableNotification:
-		return UnmarshalUpdateChatDefaultDisableNotification(data)
-
 	case TypeUpdateChatReadInbox:
 		return UnmarshalUpdateChatReadInbox(data)
 
 	case TypeUpdateChatReadOutbox:
 		return UnmarshalUpdateChatReadOutbox(data)
 
-	case TypeUpdateChatUnreadMentionCount:
-		return UnmarshalUpdateChatUnreadMentionCount(data)
-
-	case TypeUpdateChatNotificationSettings:
-		return UnmarshalUpdateChatNotificationSettings(data)
-
-	case TypeUpdateScopeNotificationSettings:
-		return UnmarshalUpdateScopeNotificationSettings(data)
-
-	case TypeUpdateChatMessageTtlSetting:
-		return UnmarshalUpdateChatMessageTtlSetting(data)
-
 	case TypeUpdateChatActionBar:
 		return UnmarshalUpdateChatActionBar(data)
 
-	case TypeUpdateChatTheme:
-		return UnmarshalUpdateChatTheme(data)
+	case TypeUpdateChatDraftMessage:
+		return UnmarshalUpdateChatDraftMessage(data)
+
+	case TypeUpdateChatMessageSender:
+		return UnmarshalUpdateChatMessageSender(data)
+
+	case TypeUpdateChatMessageTtl:
+		return UnmarshalUpdateChatMessageTtl(data)
+
+	case TypeUpdateChatNotificationSettings:
+		return UnmarshalUpdateChatNotificationSettings(data)
 
 	case TypeUpdateChatPendingJoinRequests:
 		return UnmarshalUpdateChatPendingJoinRequests(data)
@@ -4406,14 +4382,38 @@ func UnmarshalUpdate(data json.RawMessage) (Update, error) {
 	case TypeUpdateChatReplyMarkup:
 		return UnmarshalUpdateChatReplyMarkup(data)
 
-	case TypeUpdateChatDraftMessage:
-		return UnmarshalUpdateChatDraftMessage(data)
+	case TypeUpdateChatTheme:
+		return UnmarshalUpdateChatTheme(data)
+
+	case TypeUpdateChatUnreadMentionCount:
+		return UnmarshalUpdateChatUnreadMentionCount(data)
+
+	case TypeUpdateChatVideoChat:
+		return UnmarshalUpdateChatVideoChat(data)
+
+	case TypeUpdateChatDefaultDisableNotification:
+		return UnmarshalUpdateChatDefaultDisableNotification(data)
+
+	case TypeUpdateChatHasProtectedContent:
+		return UnmarshalUpdateChatHasProtectedContent(data)
+
+	case TypeUpdateChatHasScheduledMessages:
+		return UnmarshalUpdateChatHasScheduledMessages(data)
+
+	case TypeUpdateChatIsBlocked:
+		return UnmarshalUpdateChatIsBlocked(data)
+
+	case TypeUpdateChatIsMarkedAsUnread:
+		return UnmarshalUpdateChatIsMarkedAsUnread(data)
 
 	case TypeUpdateChatFilters:
 		return UnmarshalUpdateChatFilters(data)
 
 	case TypeUpdateChatOnlineMemberCount:
 		return UnmarshalUpdateChatOnlineMemberCount(data)
+
+	case TypeUpdateScopeNotificationSettings:
+		return UnmarshalUpdateScopeNotificationSettings(data)
 
 	case TypeUpdateNotification:
 		return UnmarshalUpdateNotification(data)
@@ -5827,14 +5827,6 @@ func UnmarshalMessageCalendar(data json.RawMessage) (*MessageCalendar, error) {
 
 func UnmarshalSponsoredMessage(data json.RawMessage) (*SponsoredMessage, error) {
 	var resp SponsoredMessage
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalSponsoredMessages(data json.RawMessage) (*SponsoredMessages, error) {
-	var resp SponsoredMessages
 
 	err := json.Unmarshal(data, &resp)
 
@@ -9297,8 +9289,8 @@ func UnmarshalChatEventSlowModeDelayChanged(data json.RawMessage) (*ChatEventSlo
 	return &resp, err
 }
 
-func UnmarshalChatEventMessageTtlSettingChanged(data json.RawMessage) (*ChatEventMessageTtlSettingChanged, error) {
-	var resp ChatEventMessageTtlSettingChanged
+func UnmarshalChatEventMessageTtlChanged(data json.RawMessage) (*ChatEventMessageTtlChanged, error) {
+	var resp ChatEventMessageTtlChanged
 
 	err := json.Unmarshal(data, &resp)
 
@@ -9377,8 +9369,8 @@ func UnmarshalChatEventVideoChatCreated(data json.RawMessage) (*ChatEventVideoCh
 	return &resp, err
 }
 
-func UnmarshalChatEventVideoChatDiscarded(data json.RawMessage) (*ChatEventVideoChatDiscarded, error) {
-	var resp ChatEventVideoChatDiscarded
+func UnmarshalChatEventVideoChatEnded(data json.RawMessage) (*ChatEventVideoChatEnded, error) {
+	var resp ChatEventVideoChatEnded
 
 	err := json.Unmarshal(data, &resp)
 
@@ -11097,8 +11089,8 @@ func UnmarshalSuggestedActionCheckPhoneNumber(data json.RawMessage) (*SuggestedA
 	return &resp, err
 }
 
-func UnmarshalSuggestedActionSeeTicksHint(data json.RawMessage) (*SuggestedActionSeeTicksHint, error) {
-	var resp SuggestedActionSeeTicksHint
+func UnmarshalSuggestedActionViewChecksHint(data json.RawMessage) (*SuggestedActionViewChecksHint, error) {
+	var resp SuggestedActionViewChecksHint
 
 	err := json.Unmarshal(data, &resp)
 
@@ -11545,62 +11537,6 @@ func UnmarshalUpdateChatPosition(data json.RawMessage) (*UpdateChatPosition, err
 	return &resp, err
 }
 
-func UnmarshalUpdateChatDefaultMessageSenderId(data json.RawMessage) (*UpdateChatDefaultMessageSenderId, error) {
-	var resp UpdateChatDefaultMessageSenderId
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalUpdateChatHasProtectedContent(data json.RawMessage) (*UpdateChatHasProtectedContent, error) {
-	var resp UpdateChatHasProtectedContent
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalUpdateChatIsMarkedAsUnread(data json.RawMessage) (*UpdateChatIsMarkedAsUnread, error) {
-	var resp UpdateChatIsMarkedAsUnread
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalUpdateChatIsBlocked(data json.RawMessage) (*UpdateChatIsBlocked, error) {
-	var resp UpdateChatIsBlocked
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalUpdateChatHasScheduledMessages(data json.RawMessage) (*UpdateChatHasScheduledMessages, error) {
-	var resp UpdateChatHasScheduledMessages
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalUpdateChatVideoChat(data json.RawMessage) (*UpdateChatVideoChat, error) {
-	var resp UpdateChatVideoChat
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalUpdateChatDefaultDisableNotification(data json.RawMessage) (*UpdateChatDefaultDisableNotification, error) {
-	var resp UpdateChatDefaultDisableNotification
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
 func UnmarshalUpdateChatReadInbox(data json.RawMessage) (*UpdateChatReadInbox, error) {
 	var resp UpdateChatReadInbox
 
@@ -11617,38 +11553,6 @@ func UnmarshalUpdateChatReadOutbox(data json.RawMessage) (*UpdateChatReadOutbox,
 	return &resp, err
 }
 
-func UnmarshalUpdateChatUnreadMentionCount(data json.RawMessage) (*UpdateChatUnreadMentionCount, error) {
-	var resp UpdateChatUnreadMentionCount
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalUpdateChatNotificationSettings(data json.RawMessage) (*UpdateChatNotificationSettings, error) {
-	var resp UpdateChatNotificationSettings
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalUpdateScopeNotificationSettings(data json.RawMessage) (*UpdateScopeNotificationSettings, error) {
-	var resp UpdateScopeNotificationSettings
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
-func UnmarshalUpdateChatMessageTtlSetting(data json.RawMessage) (*UpdateChatMessageTtlSetting, error) {
-	var resp UpdateChatMessageTtlSetting
-
-	err := json.Unmarshal(data, &resp)
-
-	return &resp, err
-}
-
 func UnmarshalUpdateChatActionBar(data json.RawMessage) (*UpdateChatActionBar, error) {
 	var resp UpdateChatActionBar
 
@@ -11657,8 +11561,32 @@ func UnmarshalUpdateChatActionBar(data json.RawMessage) (*UpdateChatActionBar, e
 	return &resp, err
 }
 
-func UnmarshalUpdateChatTheme(data json.RawMessage) (*UpdateChatTheme, error) {
-	var resp UpdateChatTheme
+func UnmarshalUpdateChatDraftMessage(data json.RawMessage) (*UpdateChatDraftMessage, error) {
+	var resp UpdateChatDraftMessage
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatMessageSender(data json.RawMessage) (*UpdateChatMessageSender, error) {
+	var resp UpdateChatMessageSender
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatMessageTtl(data json.RawMessage) (*UpdateChatMessageTtl, error) {
+	var resp UpdateChatMessageTtl
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatNotificationSettings(data json.RawMessage) (*UpdateChatNotificationSettings, error) {
+	var resp UpdateChatNotificationSettings
 
 	err := json.Unmarshal(data, &resp)
 
@@ -11681,8 +11609,64 @@ func UnmarshalUpdateChatReplyMarkup(data json.RawMessage) (*UpdateChatReplyMarku
 	return &resp, err
 }
 
-func UnmarshalUpdateChatDraftMessage(data json.RawMessage) (*UpdateChatDraftMessage, error) {
-	var resp UpdateChatDraftMessage
+func UnmarshalUpdateChatTheme(data json.RawMessage) (*UpdateChatTheme, error) {
+	var resp UpdateChatTheme
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatUnreadMentionCount(data json.RawMessage) (*UpdateChatUnreadMentionCount, error) {
+	var resp UpdateChatUnreadMentionCount
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatVideoChat(data json.RawMessage) (*UpdateChatVideoChat, error) {
+	var resp UpdateChatVideoChat
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatDefaultDisableNotification(data json.RawMessage) (*UpdateChatDefaultDisableNotification, error) {
+	var resp UpdateChatDefaultDisableNotification
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatHasProtectedContent(data json.RawMessage) (*UpdateChatHasProtectedContent, error) {
+	var resp UpdateChatHasProtectedContent
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatHasScheduledMessages(data json.RawMessage) (*UpdateChatHasScheduledMessages, error) {
+	var resp UpdateChatHasScheduledMessages
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatIsBlocked(data json.RawMessage) (*UpdateChatIsBlocked, error) {
+	var resp UpdateChatIsBlocked
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateChatIsMarkedAsUnread(data json.RawMessage) (*UpdateChatIsMarkedAsUnread, error) {
+	var resp UpdateChatIsMarkedAsUnread
 
 	err := json.Unmarshal(data, &resp)
 
@@ -11699,6 +11683,14 @@ func UnmarshalUpdateChatFilters(data json.RawMessage) (*UpdateChatFilters, error
 
 func UnmarshalUpdateChatOnlineMemberCount(data json.RawMessage) (*UpdateChatOnlineMemberCount, error) {
 	var resp UpdateChatOnlineMemberCount
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalUpdateScopeNotificationSettings(data json.RawMessage) (*UpdateScopeNotificationSettings, error) {
+	var resp UpdateScopeNotificationSettings
 
 	err := json.Unmarshal(data, &resp)
 
@@ -12699,9 +12691,6 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 
 	case TypeSponsoredMessage:
 		return UnmarshalSponsoredMessage(data)
-
-	case TypeSponsoredMessages:
-		return UnmarshalSponsoredMessages(data)
 
 	case TypeNotificationSettingsScopePrivateChats:
 		return UnmarshalNotificationSettingsScopePrivateChats(data)
@@ -13999,8 +13988,8 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 	case TypeChatEventSlowModeDelayChanged:
 		return UnmarshalChatEventSlowModeDelayChanged(data)
 
-	case TypeChatEventMessageTtlSettingChanged:
-		return UnmarshalChatEventMessageTtlSettingChanged(data)
+	case TypeChatEventMessageTtlChanged:
+		return UnmarshalChatEventMessageTtlChanged(data)
 
 	case TypeChatEventSignMessagesToggled:
 		return UnmarshalChatEventSignMessagesToggled(data)
@@ -14029,8 +14018,8 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 	case TypeChatEventVideoChatCreated:
 		return UnmarshalChatEventVideoChatCreated(data)
 
-	case TypeChatEventVideoChatDiscarded:
-		return UnmarshalChatEventVideoChatDiscarded(data)
+	case TypeChatEventVideoChatEnded:
+		return UnmarshalChatEventVideoChatEnded(data)
 
 	case TypeChatEventVideoChatParticipantIsMutedToggled:
 		return UnmarshalChatEventVideoChatParticipantIsMutedToggled(data)
@@ -14674,8 +14663,8 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 	case TypeSuggestedActionCheckPhoneNumber:
 		return UnmarshalSuggestedActionCheckPhoneNumber(data)
 
-	case TypeSuggestedActionSeeTicksHint:
-		return UnmarshalSuggestedActionSeeTicksHint(data)
+	case TypeSuggestedActionViewChecksHint:
+		return UnmarshalSuggestedActionViewChecksHint(data)
 
 	case TypeSuggestedActionConvertToBroadcastGroup:
 		return UnmarshalSuggestedActionConvertToBroadcastGroup(data)
@@ -14842,50 +14831,26 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 	case TypeUpdateChatPosition:
 		return UnmarshalUpdateChatPosition(data)
 
-	case TypeUpdateChatDefaultMessageSenderId:
-		return UnmarshalUpdateChatDefaultMessageSenderId(data)
-
-	case TypeUpdateChatHasProtectedContent:
-		return UnmarshalUpdateChatHasProtectedContent(data)
-
-	case TypeUpdateChatIsMarkedAsUnread:
-		return UnmarshalUpdateChatIsMarkedAsUnread(data)
-
-	case TypeUpdateChatIsBlocked:
-		return UnmarshalUpdateChatIsBlocked(data)
-
-	case TypeUpdateChatHasScheduledMessages:
-		return UnmarshalUpdateChatHasScheduledMessages(data)
-
-	case TypeUpdateChatVideoChat:
-		return UnmarshalUpdateChatVideoChat(data)
-
-	case TypeUpdateChatDefaultDisableNotification:
-		return UnmarshalUpdateChatDefaultDisableNotification(data)
-
 	case TypeUpdateChatReadInbox:
 		return UnmarshalUpdateChatReadInbox(data)
 
 	case TypeUpdateChatReadOutbox:
 		return UnmarshalUpdateChatReadOutbox(data)
 
-	case TypeUpdateChatUnreadMentionCount:
-		return UnmarshalUpdateChatUnreadMentionCount(data)
-
-	case TypeUpdateChatNotificationSettings:
-		return UnmarshalUpdateChatNotificationSettings(data)
-
-	case TypeUpdateScopeNotificationSettings:
-		return UnmarshalUpdateScopeNotificationSettings(data)
-
-	case TypeUpdateChatMessageTtlSetting:
-		return UnmarshalUpdateChatMessageTtlSetting(data)
-
 	case TypeUpdateChatActionBar:
 		return UnmarshalUpdateChatActionBar(data)
 
-	case TypeUpdateChatTheme:
-		return UnmarshalUpdateChatTheme(data)
+	case TypeUpdateChatDraftMessage:
+		return UnmarshalUpdateChatDraftMessage(data)
+
+	case TypeUpdateChatMessageSender:
+		return UnmarshalUpdateChatMessageSender(data)
+
+	case TypeUpdateChatMessageTtl:
+		return UnmarshalUpdateChatMessageTtl(data)
+
+	case TypeUpdateChatNotificationSettings:
+		return UnmarshalUpdateChatNotificationSettings(data)
 
 	case TypeUpdateChatPendingJoinRequests:
 		return UnmarshalUpdateChatPendingJoinRequests(data)
@@ -14893,14 +14858,38 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 	case TypeUpdateChatReplyMarkup:
 		return UnmarshalUpdateChatReplyMarkup(data)
 
-	case TypeUpdateChatDraftMessage:
-		return UnmarshalUpdateChatDraftMessage(data)
+	case TypeUpdateChatTheme:
+		return UnmarshalUpdateChatTheme(data)
+
+	case TypeUpdateChatUnreadMentionCount:
+		return UnmarshalUpdateChatUnreadMentionCount(data)
+
+	case TypeUpdateChatVideoChat:
+		return UnmarshalUpdateChatVideoChat(data)
+
+	case TypeUpdateChatDefaultDisableNotification:
+		return UnmarshalUpdateChatDefaultDisableNotification(data)
+
+	case TypeUpdateChatHasProtectedContent:
+		return UnmarshalUpdateChatHasProtectedContent(data)
+
+	case TypeUpdateChatHasScheduledMessages:
+		return UnmarshalUpdateChatHasScheduledMessages(data)
+
+	case TypeUpdateChatIsBlocked:
+		return UnmarshalUpdateChatIsBlocked(data)
+
+	case TypeUpdateChatIsMarkedAsUnread:
+		return UnmarshalUpdateChatIsMarkedAsUnread(data)
 
 	case TypeUpdateChatFilters:
 		return UnmarshalUpdateChatFilters(data)
 
 	case TypeUpdateChatOnlineMemberCount:
 		return UnmarshalUpdateChatOnlineMemberCount(data)
+
+	case TypeUpdateScopeNotificationSettings:
+		return UnmarshalUpdateScopeNotificationSettings(data)
 
 	case TypeUpdateNotification:
 		return UnmarshalUpdateNotification(data)

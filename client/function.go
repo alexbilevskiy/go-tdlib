@@ -1944,7 +1944,7 @@ type DeleteChatHistoryRequest struct {
 	ChatId int64 `json:"chat_id"`
 	// Pass true if the chat needs to be removed from the chat list
 	RemoveFromChatList bool `json:"remove_from_chat_list"`
-	// Pass true to try to delete chat history for all users
+	// Pass true to delete chat history for all users
 	Revoke bool `json:"revoke"`
 }
 
@@ -2311,7 +2311,7 @@ type GetChatMessageCalendarRequest struct {
 	FromMessageId int64 `json:"from_message_id"`
 }
 
-// Returns information about the next messages of the specified type in the chat splitted by days. Returns the results in reverse chronological order. Can return partial result for the last returned day. Behavior of this method depends on the value of the option "utc_time_offset"
+// Returns information about the next messages of the specified type in the chat split by days. Returns the results in reverse chronological order. Can return partial result for the last returned day. Behavior of this method depends on the value of the option "utc_time_offset"
 func (client *Client) GetChatMessageCalendar(req *GetChatMessageCalendarRequest) (*MessageCalendar, error) {
 	result, err := client.Send(Request{
 		meta: meta{
@@ -2427,16 +2427,16 @@ func (client *Client) GetMessagePublicForwards(req *GetMessagePublicForwardsRequ
 	return UnmarshalFoundMessages(result.Data)
 }
 
-type GetChatSponsoredMessagesRequest struct {
+type GetChatSponsoredMessageRequest struct {
 	// Identifier of the chat
 	ChatId int64 `json:"chat_id"`
 }
 
-// Returns sponsored messages to be shown in a chat; for channel chats only
-func (client *Client) GetChatSponsoredMessages(req *GetChatSponsoredMessagesRequest) (*SponsoredMessages, error) {
+// Returns sponsored message to be shown in a chat; for channel chats only. Returns a 404 error if there is no sponsored message in the chat
+func (client *Client) GetChatSponsoredMessage(req *GetChatSponsoredMessageRequest) (*SponsoredMessage, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "getChatSponsoredMessages",
+			Type: "getChatSponsoredMessage",
 		},
 		Data: map[string]interface{}{
 			"chat_id": req.ChatId,
@@ -2450,36 +2450,7 @@ func (client *Client) GetChatSponsoredMessages(req *GetChatSponsoredMessagesRequ
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalSponsoredMessages(result.Data)
-}
-
-type ViewSponsoredMessageRequest struct {
-	// Identifier of the chat with the sponsored message
-	ChatId int64 `json:"chat_id"`
-	// The identifier of the sponsored message being viewed
-	SponsoredMessageId int32 `json:"sponsored_message_id"`
-}
-
-// Informs TDLib that a sponsored message was viewed by the user
-func (client *Client) ViewSponsoredMessage(req *ViewSponsoredMessageRequest) (*Ok, error) {
-	result, err := client.Send(Request{
-		meta: meta{
-			Type: "viewSponsoredMessage",
-		},
-		Data: map[string]interface{}{
-			"chat_id":              req.ChatId,
-			"sponsored_message_id": req.SponsoredMessageId,
-		},
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	if result.Type == "error" {
-		return nil, buildResponseError(result.Data)
-	}
-
-	return UnmarshalOk(result.Data)
+	return UnmarshalSponsoredMessage(result.Data)
 }
 
 type RemoveNotificationRequest struct {
@@ -2662,22 +2633,22 @@ func (client *Client) GetChatAvailableMessageSenders(req *GetChatAvailableMessag
 	return UnmarshalMessageSenders(result.Data)
 }
 
-type SetChatDefaultMessageSenderRequest struct {
+type SetChatMessageSenderRequest struct {
 	// Chat identifier
 	ChatId int64 `json:"chat_id"`
-	// New default message sender in the chat
-	DefaultMessageSenderId MessageSender `json:"default_message_sender_id"`
+	// New message sender for the chat
+	MessageSenderId MessageSender `json:"message_sender_id"`
 }
 
-// Changes default message sender that is chosen in a chat
-func (client *Client) SetChatDefaultMessageSender(req *SetChatDefaultMessageSenderRequest) (*Ok, error) {
+// Selects a message sender to send messages in a chat
+func (client *Client) SetChatMessageSender(req *SetChatMessageSenderRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "setChatDefaultMessageSender",
+			Type: "setChatMessageSender",
 		},
 		Data: map[string]interface{}{
-			"chat_id":                   req.ChatId,
-			"default_message_sender_id": req.DefaultMessageSenderId,
+			"chat_id":           req.ChatId,
+			"message_sender_id": req.MessageSenderId,
 		},
 	})
 	if err != nil {
@@ -2988,7 +2959,7 @@ type DeleteMessagesRequest struct {
 	ChatId int64 `json:"chat_id"`
 	// Identifiers of the messages to be deleted
 	MessageIds []int64 `json:"message_ids"`
-	// Pass true to try to delete messages for all chat members. Always true for supergroups, channels and secret chats
+	// Pass true to delete messages for all chat members. Always true for supergroups, channels and secret chats
 	Revoke bool `json:"revoke"`
 }
 
@@ -3051,7 +3022,7 @@ type DeleteChatMessagesByDateRequest struct {
 	MinDate int32 `json:"min_date"`
 	// The maximum date of the messages to delete
 	MaxDate int32 `json:"max_date"`
-	// Pass true to try to delete chat messages for all users; private chats only
+	// Pass true to delete chat messages for all users; private chats only
 	Revoke bool `json:"revoke"`
 }
 
@@ -3458,8 +3429,8 @@ type GetTextEntitiesRequest struct {
 }
 
 // Returns all entities (mentions, hashtags, cashtags, bot commands, bank card numbers, URLs, and email addresses) contained in the text. Can be called synchronously
-func (client *Client) GetTextEntities(req *GetTextEntitiesRequest) (*TextEntities, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetTextEntities(req *GetTextEntitiesRequest) (*TextEntities, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getTextEntities",
 		},
@@ -3478,6 +3449,12 @@ func (client *Client) GetTextEntities(req *GetTextEntitiesRequest) (*TextEntitie
 	return UnmarshalTextEntities(result.Data)
 }
 
+// deprecated
+// Returns all entities (mentions, hashtags, cashtags, bot commands, bank card numbers, URLs, and email addresses) contained in the text. Can be called synchronously
+func (client *Client) GetTextEntities(req *GetTextEntitiesRequest) (*TextEntities, error) {
+	return GetTextEntities(req)
+}
+
 type ParseTextEntitiesRequest struct {
 	// The text to parse
 	Text string `json:"text"`
@@ -3486,8 +3463,8 @@ type ParseTextEntitiesRequest struct {
 }
 
 // Parses Bold, Italic, Underline, Strikethrough, Code, Pre, PreCode, TextUrl and MentionName entities contained in the text. Can be called synchronously
-func (client *Client) ParseTextEntities(req *ParseTextEntitiesRequest) (*FormattedText, error) {
-	result, err := client.jsonClient.Execute(Request{
+func ParseTextEntities(req *ParseTextEntitiesRequest) (*FormattedText, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "parseTextEntities",
 		},
@@ -3507,14 +3484,20 @@ func (client *Client) ParseTextEntities(req *ParseTextEntitiesRequest) (*Formatt
 	return UnmarshalFormattedText(result.Data)
 }
 
+// deprecated
+// Parses Bold, Italic, Underline, Strikethrough, Code, Pre, PreCode, TextUrl and MentionName entities contained in the text. Can be called synchronously
+func (client *Client) ParseTextEntities(req *ParseTextEntitiesRequest) (*FormattedText, error) {
+	return ParseTextEntities(req)
+}
+
 type ParseMarkdownRequest struct {
 	// The text to parse. For example, "__italic__ ~~strikethrough~~ **bold** `code` ```pre``` __[italic__ text_url](telegram.org) __italic**bold italic__bold**"
 	Text *FormattedText `json:"text"`
 }
 
 // Parses Markdown entities in a human-friendly format, ignoring markup errors. Can be called synchronously
-func (client *Client) ParseMarkdown(req *ParseMarkdownRequest) (*FormattedText, error) {
-	result, err := client.jsonClient.Execute(Request{
+func ParseMarkdown(req *ParseMarkdownRequest) (*FormattedText, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "parseMarkdown",
 		},
@@ -3533,14 +3516,20 @@ func (client *Client) ParseMarkdown(req *ParseMarkdownRequest) (*FormattedText, 
 	return UnmarshalFormattedText(result.Data)
 }
 
+// deprecated
+// Parses Markdown entities in a human-friendly format, ignoring markup errors. Can be called synchronously
+func (client *Client) ParseMarkdown(req *ParseMarkdownRequest) (*FormattedText, error) {
+	return ParseMarkdown(req)
+}
+
 type GetMarkdownTextRequest struct {
 	// The text
 	Text *FormattedText `json:"text"`
 }
 
 // Replaces text entities with Markdown formatting in a human-friendly format. Entities that can't be represented in Markdown unambiguously are kept as is. Can be called synchronously
-func (client *Client) GetMarkdownText(req *GetMarkdownTextRequest) (*FormattedText, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetMarkdownText(req *GetMarkdownTextRequest) (*FormattedText, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getMarkdownText",
 		},
@@ -3559,14 +3548,20 @@ func (client *Client) GetMarkdownText(req *GetMarkdownTextRequest) (*FormattedTe
 	return UnmarshalFormattedText(result.Data)
 }
 
+// deprecated
+// Replaces text entities with Markdown formatting in a human-friendly format. Entities that can't be represented in Markdown unambiguously are kept as is. Can be called synchronously
+func (client *Client) GetMarkdownText(req *GetMarkdownTextRequest) (*FormattedText, error) {
+	return GetMarkdownText(req)
+}
+
 type GetFileMimeTypeRequest struct {
 	// The name of the file or path to the file
 	FileName string `json:"file_name"`
 }
 
 // Returns the MIME type of a file, guessed by its extension. Returns an empty string on failure. Can be called synchronously
-func (client *Client) GetFileMimeType(req *GetFileMimeTypeRequest) (*Text, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetFileMimeType(req *GetFileMimeTypeRequest) (*Text, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getFileMimeType",
 		},
@@ -3585,14 +3580,20 @@ func (client *Client) GetFileMimeType(req *GetFileMimeTypeRequest) (*Text, error
 	return UnmarshalText(result.Data)
 }
 
+// deprecated
+// Returns the MIME type of a file, guessed by its extension. Returns an empty string on failure. Can be called synchronously
+func (client *Client) GetFileMimeType(req *GetFileMimeTypeRequest) (*Text, error) {
+	return GetFileMimeType(req)
+}
+
 type GetFileExtensionRequest struct {
 	// The MIME type of the file
 	MimeType string `json:"mime_type"`
 }
 
 // Returns the extension of a file, guessed by its MIME type. Returns an empty string on failure. Can be called synchronously
-func (client *Client) GetFileExtension(req *GetFileExtensionRequest) (*Text, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetFileExtension(req *GetFileExtensionRequest) (*Text, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getFileExtension",
 		},
@@ -3611,14 +3612,20 @@ func (client *Client) GetFileExtension(req *GetFileExtensionRequest) (*Text, err
 	return UnmarshalText(result.Data)
 }
 
+// deprecated
+// Returns the extension of a file, guessed by its MIME type. Returns an empty string on failure. Can be called synchronously
+func (client *Client) GetFileExtension(req *GetFileExtensionRequest) (*Text, error) {
+	return GetFileExtension(req)
+}
+
 type CleanFileNameRequest struct {
 	// File name or path to the file
 	FileName string `json:"file_name"`
 }
 
 // Removes potentially dangerous characters from the name of a file. The encoding of the file name is supposed to be UTF-8. Returns an empty string on failure. Can be called synchronously
-func (client *Client) CleanFileName(req *CleanFileNameRequest) (*Text, error) {
-	result, err := client.jsonClient.Execute(Request{
+func CleanFileName(req *CleanFileNameRequest) (*Text, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "cleanFileName",
 		},
@@ -3637,6 +3644,12 @@ func (client *Client) CleanFileName(req *CleanFileNameRequest) (*Text, error) {
 	return UnmarshalText(result.Data)
 }
 
+// deprecated
+// Removes potentially dangerous characters from the name of a file. The encoding of the file name is supposed to be UTF-8. Returns an empty string on failure. Can be called synchronously
+func (client *Client) CleanFileName(req *CleanFileNameRequest) (*Text, error) {
+	return CleanFileName(req)
+}
+
 type GetLanguagePackStringRequest struct {
 	// Path to the language pack database in which strings are stored
 	LanguagePackDatabasePath string `json:"language_pack_database_path"`
@@ -3649,8 +3662,8 @@ type GetLanguagePackStringRequest struct {
 }
 
 // Returns a string stored in the local database from the specified localization target and language pack by its key. Returns a 404 error if the string is not found. Can be called synchronously
-func (client *Client) GetLanguagePackString(req *GetLanguagePackStringRequest) (LanguagePackStringValue, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetLanguagePackString(req *GetLanguagePackStringRequest) (LanguagePackStringValue, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getLanguagePackString",
 		},
@@ -3684,14 +3697,20 @@ func (client *Client) GetLanguagePackString(req *GetLanguagePackStringRequest) (
 	}
 }
 
+// deprecated
+// Returns a string stored in the local database from the specified localization target and language pack by its key. Returns a 404 error if the string is not found. Can be called synchronously
+func (client *Client) GetLanguagePackString(req *GetLanguagePackStringRequest) (LanguagePackStringValue, error) {
+	return GetLanguagePackString(req)
+}
+
 type GetJsonValueRequest struct {
 	// The JSON-serialized string
 	Json string `json:"json"`
 }
 
 // Converts a JSON-serialized string to corresponding JsonValue object. Can be called synchronously
-func (client *Client) GetJsonValue(req *GetJsonValueRequest) (JsonValue, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetJsonValue(req *GetJsonValueRequest) (JsonValue, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getJsonValue",
 		},
@@ -3731,14 +3750,20 @@ func (client *Client) GetJsonValue(req *GetJsonValueRequest) (JsonValue, error) 
 	}
 }
 
+// deprecated
+// Converts a JSON-serialized string to corresponding JsonValue object. Can be called synchronously
+func (client *Client) GetJsonValue(req *GetJsonValueRequest) (JsonValue, error) {
+	return GetJsonValue(req)
+}
+
 type GetJsonStringRequest struct {
 	// The JsonValue object
 	JsonValue JsonValue `json:"json_value"`
 }
 
 // Converts a JsonValue object to corresponding JSON-serialized string. Can be called synchronously
-func (client *Client) GetJsonString(req *GetJsonStringRequest) (*Text, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetJsonString(req *GetJsonStringRequest) (*Text, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getJsonString",
 		},
@@ -3755,6 +3780,12 @@ func (client *Client) GetJsonString(req *GetJsonStringRequest) (*Text, error) {
 	}
 
 	return UnmarshalText(result.Data)
+}
+
+// deprecated
+// Converts a JsonValue object to corresponding JSON-serialized string. Can be called synchronously
+func (client *Client) GetJsonString(req *GetJsonStringRequest) (*Text, error) {
+	return GetJsonString(req)
 }
 
 type SetPollAnswerRequest struct {
@@ -4438,7 +4469,7 @@ type ViewMessagesRequest struct {
 	ForceRead bool `json:"force_read"`
 }
 
-// Informs TDLib that messages are being viewed by the user. Many useful activities depend on whether the messages are currently being viewed or not (e.g., marking messages as read, incrementing a view counter, updating a view counter, removing deleted messages in supergroups and channels)
+// Informs TDLib that messages are being viewed by the user. Sponsored messages must be marked as viewed only when the entire text of the message is shown on the screen (excluding the button). Many useful activities depend on whether the messages are currently being viewed or not (e.g., marking messages as read, incrementing a view counter, updating a view counter, removing deleted messages in supergroups and channels)
 func (client *Client) ViewMessages(req *ViewMessagesRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
@@ -5156,8 +5187,8 @@ type GetChatFilterDefaultIconNameRequest struct {
 }
 
 // Returns default icon name for a filter. Can be called synchronously
-func (client *Client) GetChatFilterDefaultIconName(req *GetChatFilterDefaultIconNameRequest) (*Text, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetChatFilterDefaultIconName(req *GetChatFilterDefaultIconNameRequest) (*Text, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getChatFilterDefaultIconName",
 		},
@@ -5174,6 +5205,12 @@ func (client *Client) GetChatFilterDefaultIconName(req *GetChatFilterDefaultIcon
 	}
 
 	return UnmarshalText(result.Data)
+}
+
+// deprecated
+// Returns default icon name for a filter. Can be called synchronously
+func (client *Client) GetChatFilterDefaultIconName(req *GetChatFilterDefaultIconNameRequest) (*Text, error) {
+	return GetChatFilterDefaultIconName(req)
 }
 
 type SetChatTitleRequest struct {
@@ -5234,18 +5271,18 @@ func (client *Client) SetChatPhoto(req *SetChatPhotoRequest) (*Ok, error) {
 	return UnmarshalOk(result.Data)
 }
 
-type SetChatMessageTtlSettingRequest struct {
+type SetChatMessageTtlRequest struct {
 	// Chat identifier
 	ChatId int64 `json:"chat_id"`
 	// New TTL value, in seconds; must be one of 0, 86400, 7 * 86400, or 31 * 86400 unless the chat is secret
 	Ttl int32 `json:"ttl"`
 }
 
-// Changes the message TTL setting (sets a new self-destruct timer) in a chat. Requires can_delete_messages administrator right in basic groups, supergroups and channels Message TTL setting of a chat with the current user (Saved Messages) and the chat 777000 (Telegram) can't be changed
-func (client *Client) SetChatMessageTtlSetting(req *SetChatMessageTtlSettingRequest) (*Ok, error) {
+// Changes the message TTL in a chat. Requires can_delete_messages administrator right in basic groups, supergroups and channels Message TTL can't be changed in a chat with the current user (Saved Messages) and the chat 777000 (Telegram)
+func (client *Client) SetChatMessageTtl(req *SetChatMessageTtlRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "setChatMessageTtlSetting",
+			Type: "setChatMessageTtl",
 		},
 		Data: map[string]interface{}{
 			"chat_id": req.ChatId,
@@ -6692,8 +6729,8 @@ type CreateChatInviteLinkRequest struct {
 	// Invite link name; 0-32 characters
 	Name string `json:"name"`
 	// Point in time (Unix timestamp) when the link will expire; pass 0 if never
-	ExpireDate int32 `json:"expire_date"`
-	// The maximum number of chat members that can join the chat by the link simultaneously; 0-99999; pass 0 if not limited
+	ExpirationDate int32 `json:"expiration_date"`
+	// The maximum number of chat members that can join the chat via the link simultaneously; 0-99999; pass 0 if not limited
 	MemberLimit int32 `json:"member_limit"`
 	// True, if the link only creates join request. If true, member_limit must not be specified
 	CreatesJoinRequest bool `json:"creates_join_request"`
@@ -6708,7 +6745,7 @@ func (client *Client) CreateChatInviteLink(req *CreateChatInviteLinkRequest) (*C
 		Data: map[string]interface{}{
 			"chat_id":              req.ChatId,
 			"name":                 req.Name,
-			"expire_date":          req.ExpireDate,
+			"expiration_date":      req.ExpirationDate,
 			"member_limit":         req.MemberLimit,
 			"creates_join_request": req.CreatesJoinRequest,
 		},
@@ -6732,8 +6769,8 @@ type EditChatInviteLinkRequest struct {
 	// Invite link name; 0-32 characters
 	Name string `json:"name"`
 	// Point in time (Unix timestamp) when the link will expire; pass 0 if never
-	ExpireDate int32 `json:"expire_date"`
-	// The maximum number of chat members that can join the chat by the link simultaneously; 0-99999; pass 0 if not limited
+	ExpirationDate int32 `json:"expiration_date"`
+	// The maximum number of chat members that can join the chat via the link simultaneously; 0-99999; pass 0 if not limited
 	MemberLimit int32 `json:"member_limit"`
 	// True, if the link only creates join request. If true, member_limit must not be specified
 	CreatesJoinRequest bool `json:"creates_join_request"`
@@ -6749,7 +6786,7 @@ func (client *Client) EditChatInviteLink(req *EditChatInviteLinkRequest) (*ChatI
 			"chat_id":              req.ChatId,
 			"invite_link":          req.InviteLink,
 			"name":                 req.Name,
-			"expire_date":          req.ExpireDate,
+			"expiration_date":      req.ExpirationDate,
 			"member_limit":         req.MemberLimit,
 			"creates_join_request": req.CreatesJoinRequest,
 		},
@@ -6872,7 +6909,7 @@ type GetChatInviteLinkMembersRequest struct {
 	Limit int32 `json:"limit"`
 }
 
-// Returns chat members joined a chat by an invite link. Requires administrator privileges and can_invite_users right in the chat for own links and owner privileges for other links
+// Returns chat members joined a chat via an invite link. Requires administrator privileges and can_invite_users right in the chat for own links and owner privileges for other links
 func (client *Client) GetChatInviteLinkMembers(req *GetChatInviteLinkMembersRequest) (*ChatInviteLinkMembers, error) {
 	result, err := client.Send(Request{
 		meta: meta{
@@ -7044,7 +7081,7 @@ type GetChatJoinRequestsRequest struct {
 	Query string `json:"query"`
 	// A chat join request from which to return next requests; pass null to get results from the beginning
 	OffsetRequest *ChatJoinRequest `json:"offset_request"`
-	// The maximum number of chat join requests to return
+	// The maximum number of requests to join the chat to return
 	Limit int32 `json:"limit"`
 }
 
@@ -7334,7 +7371,7 @@ type GetVideoChatAvailableParticipantsRequest struct {
 	ChatId int64 `json:"chat_id"`
 }
 
-// Returns list of participant identifiers, which can be used to join video chats in a chat
+// Returns list of participant identifiers, on whose behalf a video chat in the chat can be joined
 func (client *Client) GetVideoChatAvailableParticipants(req *GetVideoChatAvailableParticipantsRequest) (*MessageSenders, error) {
 	result, err := client.Send(Request{
 		meta: meta{
@@ -7362,7 +7399,7 @@ type SetVideoChatDefaultParticipantRequest struct {
 	DefaultParticipantId MessageSender `json:"default_participant_id"`
 }
 
-// Changes default participant identifier, which can be used to join video chats in a chat
+// Changes default participant identifier, on whose behalf a video chat in the chat will be joined
 func (client *Client) SetVideoChatDefaultParticipant(req *SetVideoChatDefaultParticipantRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
@@ -8072,16 +8109,16 @@ func (client *Client) LeaveGroupCall(req *LeaveGroupCallRequest) (*Ok, error) {
 	return UnmarshalOk(result.Data)
 }
 
-type DiscardGroupCallRequest struct {
+type EndGroupCallRequest struct {
 	// Group call identifier
 	GroupCallId int32 `json:"group_call_id"`
 }
 
-// Discards a group call. Requires groupCall.can_be_managed
-func (client *Client) DiscardGroupCall(req *DiscardGroupCallRequest) (*Ok, error) {
+// Ends a group call. Requires groupCall.can_be_managed
+func (client *Client) EndGroupCall(req *EndGroupCallRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "discardGroupCall",
+			Type: "endGroupCall",
 		},
 		Data: map[string]interface{}{
 			"group_call_id": req.GroupCallId,
@@ -10825,8 +10862,8 @@ type GetPushReceiverIdRequest struct {
 }
 
 // Returns a globally unique push notification subscription identifier for identification of an account, which has received a push notification. Can be called synchronously
-func (client *Client) GetPushReceiverId(req *GetPushReceiverIdRequest) (*PushReceiverId, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetPushReceiverId(req *GetPushReceiverIdRequest) (*PushReceiverId, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getPushReceiverId",
 		},
@@ -10843,6 +10880,12 @@ func (client *Client) GetPushReceiverId(req *GetPushReceiverIdRequest) (*PushRec
 	}
 
 	return UnmarshalPushReceiverId(result.Data)
+}
+
+// deprecated
+// Returns a globally unique push notification subscription identifier for identification of an account, which has received a push notification. Can be called synchronously
+func (client *Client) GetPushReceiverId(req *GetPushReceiverIdRequest) (*PushReceiverId, error) {
+	return GetPushReceiverId(req)
 }
 
 type GetRecentlyVisitedTMeUrlsRequest struct {
@@ -12631,8 +12674,8 @@ type GetPhoneNumberInfoSyncRequest struct {
 }
 
 // Returns information about a phone number by its prefix synchronously. getCountries must be called at least once after changing localization to the specified language if properly localized country information is expected. Can be called synchronously
-func (client *Client) GetPhoneNumberInfoSync(req *GetPhoneNumberInfoSyncRequest) (*PhoneNumberInfo, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetPhoneNumberInfoSync(req *GetPhoneNumberInfoSyncRequest) (*PhoneNumberInfo, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getPhoneNumberInfoSync",
 		},
@@ -12650,6 +12693,12 @@ func (client *Client) GetPhoneNumberInfoSync(req *GetPhoneNumberInfoSyncRequest)
 	}
 
 	return UnmarshalPhoneNumberInfo(result.Data)
+}
+
+// deprecated
+// Returns information about a phone number by its prefix synchronously. getCountries must be called at least once after changing localization to the specified language if properly localized country information is expected. Can be called synchronously
+func (client *Client) GetPhoneNumberInfoSync(req *GetPhoneNumberInfoSyncRequest) (*PhoneNumberInfo, error) {
+	return GetPhoneNumberInfoSync(req)
 }
 
 // Returns the link for downloading official Telegram application to be used when the current user invites friends to Telegram
@@ -12990,8 +13039,8 @@ type SetLogStreamRequest struct {
 }
 
 // Sets new log stream for internal logging of TDLib. Can be called synchronously
-func (client *Client) SetLogStream(req *SetLogStreamRequest) (*Ok, error) {
-	result, err := client.jsonClient.Execute(Request{
+func SetLogStream(req *SetLogStreamRequest) (*Ok, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "setLogStream",
 		},
@@ -13010,9 +13059,15 @@ func (client *Client) SetLogStream(req *SetLogStreamRequest) (*Ok, error) {
 	return UnmarshalOk(result.Data)
 }
 
+// deprecated
+// Sets new log stream for internal logging of TDLib. Can be called synchronously
+func (client *Client) SetLogStream(req *SetLogStreamRequest) (*Ok, error) {
+	return SetLogStream(req)
+}
+
 // Returns information about currently used log stream for internal logging of TDLib. Can be called synchronously
-func (client *Client) GetLogStream() (LogStream, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetLogStream() (LogStream, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getLogStream",
 		},
@@ -13041,14 +13096,20 @@ func (client *Client) GetLogStream() (LogStream, error) {
 	}
 }
 
+// deprecated
+// Returns information about currently used log stream for internal logging of TDLib. Can be called synchronously
+func (client *Client) GetLogStream() (LogStream, error) {
+	return GetLogStream()
+}
+
 type SetLogVerbosityLevelRequest struct {
 	// New value of the verbosity level for logging. Value 0 corresponds to fatal errors, value 1 corresponds to errors, value 2 corresponds to warnings and debug warnings, value 3 corresponds to informational, value 4 corresponds to debug, value 5 corresponds to verbose debug, value greater than 5 and up to 1023 can be used to enable even more logging
 	NewVerbosityLevel int32 `json:"new_verbosity_level"`
 }
 
 // Sets the verbosity level of the internal logging of TDLib. Can be called synchronously
-func (client *Client) SetLogVerbosityLevel(req *SetLogVerbosityLevelRequest) (*Ok, error) {
-	result, err := client.jsonClient.Execute(Request{
+func SetLogVerbosityLevel(req *SetLogVerbosityLevelRequest) (*Ok, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "setLogVerbosityLevel",
 		},
@@ -13067,9 +13128,15 @@ func (client *Client) SetLogVerbosityLevel(req *SetLogVerbosityLevelRequest) (*O
 	return UnmarshalOk(result.Data)
 }
 
+// deprecated
+// Sets the verbosity level of the internal logging of TDLib. Can be called synchronously
+func (client *Client) SetLogVerbosityLevel(req *SetLogVerbosityLevelRequest) (*Ok, error) {
+	return SetLogVerbosityLevel(req)
+}
+
 // Returns current verbosity level of the internal logging of TDLib. Can be called synchronously
-func (client *Client) GetLogVerbosityLevel() (*LogVerbosityLevel, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetLogVerbosityLevel() (*LogVerbosityLevel, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getLogVerbosityLevel",
 		},
@@ -13086,9 +13153,15 @@ func (client *Client) GetLogVerbosityLevel() (*LogVerbosityLevel, error) {
 	return UnmarshalLogVerbosityLevel(result.Data)
 }
 
+// deprecated
+// Returns current verbosity level of the internal logging of TDLib. Can be called synchronously
+func (client *Client) GetLogVerbosityLevel() (*LogVerbosityLevel, error) {
+	return GetLogVerbosityLevel()
+}
+
 // Returns list of available TDLib internal log tags, for example, ["actor", "binlog", "connections", "notifications", "proxy"]. Can be called synchronously
-func (client *Client) GetLogTags() (*LogTags, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetLogTags() (*LogTags, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getLogTags",
 		},
@@ -13105,6 +13178,12 @@ func (client *Client) GetLogTags() (*LogTags, error) {
 	return UnmarshalLogTags(result.Data)
 }
 
+// deprecated
+// Returns list of available TDLib internal log tags, for example, ["actor", "binlog", "connections", "notifications", "proxy"]. Can be called synchronously
+func (client *Client) GetLogTags() (*LogTags, error) {
+	return GetLogTags()
+}
+
 type SetLogTagVerbosityLevelRequest struct {
 	// Logging tag to change verbosity level
 	Tag string `json:"tag"`
@@ -13113,8 +13192,8 @@ type SetLogTagVerbosityLevelRequest struct {
 }
 
 // Sets the verbosity level for a specified TDLib internal log tag. Can be called synchronously
-func (client *Client) SetLogTagVerbosityLevel(req *SetLogTagVerbosityLevelRequest) (*Ok, error) {
-	result, err := client.jsonClient.Execute(Request{
+func SetLogTagVerbosityLevel(req *SetLogTagVerbosityLevelRequest) (*Ok, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "setLogTagVerbosityLevel",
 		},
@@ -13134,14 +13213,20 @@ func (client *Client) SetLogTagVerbosityLevel(req *SetLogTagVerbosityLevelReques
 	return UnmarshalOk(result.Data)
 }
 
+// deprecated
+// Sets the verbosity level for a specified TDLib internal log tag. Can be called synchronously
+func (client *Client) SetLogTagVerbosityLevel(req *SetLogTagVerbosityLevelRequest) (*Ok, error) {
+	return SetLogTagVerbosityLevel(req)
+}
+
 type GetLogTagVerbosityLevelRequest struct {
 	// Logging tag to change verbosity level
 	Tag string `json:"tag"`
 }
 
 // Returns current verbosity level for a specified TDLib internal log tag. Can be called synchronously
-func (client *Client) GetLogTagVerbosityLevel(req *GetLogTagVerbosityLevelRequest) (*LogVerbosityLevel, error) {
-	result, err := client.jsonClient.Execute(Request{
+func GetLogTagVerbosityLevel(req *GetLogTagVerbosityLevelRequest) (*LogVerbosityLevel, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "getLogTagVerbosityLevel",
 		},
@@ -13160,6 +13245,12 @@ func (client *Client) GetLogTagVerbosityLevel(req *GetLogTagVerbosityLevelReques
 	return UnmarshalLogVerbosityLevel(result.Data)
 }
 
+// deprecated
+// Returns current verbosity level for a specified TDLib internal log tag. Can be called synchronously
+func (client *Client) GetLogTagVerbosityLevel(req *GetLogTagVerbosityLevelRequest) (*LogVerbosityLevel, error) {
+	return GetLogTagVerbosityLevel(req)
+}
+
 type AddLogMessageRequest struct {
 	// The minimum verbosity level needed for the message to be logged; 0-1023
 	VerbosityLevel int32 `json:"verbosity_level"`
@@ -13168,8 +13259,8 @@ type AddLogMessageRequest struct {
 }
 
 // Adds a message to TDLib internal log. Can be called synchronously
-func (client *Client) AddLogMessage(req *AddLogMessageRequest) (*Ok, error) {
-	result, err := client.jsonClient.Execute(Request{
+func AddLogMessage(req *AddLogMessageRequest) (*Ok, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "addLogMessage",
 		},
@@ -13187,6 +13278,12 @@ func (client *Client) AddLogMessage(req *AddLogMessageRequest) (*Ok, error) {
 	}
 
 	return UnmarshalOk(result.Data)
+}
+
+// deprecated
+// Adds a message to TDLib internal log. Can be called synchronously
+func (client *Client) AddLogMessage(req *AddLogMessageRequest) (*Ok, error) {
+	return AddLogMessage(req)
 }
 
 // Does nothing; for testing only. This is an offline method. Can be called before authorization
@@ -13537,50 +13634,26 @@ func (client *Client) TestUseUpdate() (Update, error) {
 	case TypeUpdateChatPosition:
 		return UnmarshalUpdateChatPosition(result.Data)
 
-	case TypeUpdateChatDefaultMessageSenderId:
-		return UnmarshalUpdateChatDefaultMessageSenderId(result.Data)
-
-	case TypeUpdateChatHasProtectedContent:
-		return UnmarshalUpdateChatHasProtectedContent(result.Data)
-
-	case TypeUpdateChatIsMarkedAsUnread:
-		return UnmarshalUpdateChatIsMarkedAsUnread(result.Data)
-
-	case TypeUpdateChatIsBlocked:
-		return UnmarshalUpdateChatIsBlocked(result.Data)
-
-	case TypeUpdateChatHasScheduledMessages:
-		return UnmarshalUpdateChatHasScheduledMessages(result.Data)
-
-	case TypeUpdateChatVideoChat:
-		return UnmarshalUpdateChatVideoChat(result.Data)
-
-	case TypeUpdateChatDefaultDisableNotification:
-		return UnmarshalUpdateChatDefaultDisableNotification(result.Data)
-
 	case TypeUpdateChatReadInbox:
 		return UnmarshalUpdateChatReadInbox(result.Data)
 
 	case TypeUpdateChatReadOutbox:
 		return UnmarshalUpdateChatReadOutbox(result.Data)
 
-	case TypeUpdateChatUnreadMentionCount:
-		return UnmarshalUpdateChatUnreadMentionCount(result.Data)
-
-	case TypeUpdateChatNotificationSettings:
-		return UnmarshalUpdateChatNotificationSettings(result.Data)
-
-	case TypeUpdateScopeNotificationSettings:
-		return UnmarshalUpdateScopeNotificationSettings(result.Data)
-
-	case TypeUpdateChatMessageTtlSetting:
-		return UnmarshalUpdateChatMessageTtlSetting(result.Data)
-
 	case TypeUpdateChatActionBar:
 		return UnmarshalUpdateChatActionBar(result.Data)
 
-	case TypeUpdateChatTheme:
-		return UnmarshalUpdateChatTheme(result.Data)
+	case TypeUpdateChatDraftMessage:
+		return UnmarshalUpdateChatDraftMessage(result.Data)
+
+	case TypeUpdateChatMessageSender:
+		return UnmarshalUpdateChatMessageSender(result.Data)
+
+	case TypeUpdateChatMessageTtl:
+		return UnmarshalUpdateChatMessageTtl(result.Data)
+
+	case TypeUpdateChatNotificationSettings:
+		return UnmarshalUpdateChatNotificationSettings(result.Data)
 
 	case TypeUpdateChatPendingJoinRequests:
 		return UnmarshalUpdateChatPendingJoinRequests(result.Data)
@@ -13588,14 +13661,38 @@ func (client *Client) TestUseUpdate() (Update, error) {
 	case TypeUpdateChatReplyMarkup:
 		return UnmarshalUpdateChatReplyMarkup(result.Data)
 
-	case TypeUpdateChatDraftMessage:
-		return UnmarshalUpdateChatDraftMessage(result.Data)
+	case TypeUpdateChatTheme:
+		return UnmarshalUpdateChatTheme(result.Data)
+
+	case TypeUpdateChatUnreadMentionCount:
+		return UnmarshalUpdateChatUnreadMentionCount(result.Data)
+
+	case TypeUpdateChatVideoChat:
+		return UnmarshalUpdateChatVideoChat(result.Data)
+
+	case TypeUpdateChatDefaultDisableNotification:
+		return UnmarshalUpdateChatDefaultDisableNotification(result.Data)
+
+	case TypeUpdateChatHasProtectedContent:
+		return UnmarshalUpdateChatHasProtectedContent(result.Data)
+
+	case TypeUpdateChatHasScheduledMessages:
+		return UnmarshalUpdateChatHasScheduledMessages(result.Data)
+
+	case TypeUpdateChatIsBlocked:
+		return UnmarshalUpdateChatIsBlocked(result.Data)
+
+	case TypeUpdateChatIsMarkedAsUnread:
+		return UnmarshalUpdateChatIsMarkedAsUnread(result.Data)
 
 	case TypeUpdateChatFilters:
 		return UnmarshalUpdateChatFilters(result.Data)
 
 	case TypeUpdateChatOnlineMemberCount:
 		return UnmarshalUpdateChatOnlineMemberCount(result.Data)
+
+	case TypeUpdateScopeNotificationSettings:
+		return UnmarshalUpdateScopeNotificationSettings(result.Data)
 
 	case TypeUpdateNotification:
 		return UnmarshalUpdateNotification(result.Data)
@@ -13770,8 +13867,8 @@ type TestReturnErrorRequest struct {
 }
 
 // Returns the specified error and ensures that the Error object is used; for testing only. Can be called synchronously
-func (client *Client) TestReturnError(req *TestReturnErrorRequest) (*Error, error) {
-	result, err := client.jsonClient.Execute(Request{
+func TestReturnError(req *TestReturnErrorRequest) (*Error, error) {
+	result, err := Execute(Request{
 		meta: meta{
 			Type: "testReturnError",
 		},
@@ -13788,4 +13885,10 @@ func (client *Client) TestReturnError(req *TestReturnErrorRequest) (*Error, erro
 	}
 
 	return UnmarshalError(result.Data)
+}
+
+// deprecated
+// Returns the specified error and ensures that the Error object is used; for testing only. Can be called synchronously
+func (client *Client) TestReturnError(req *TestReturnErrorRequest) (*Error, error) {
+	return TestReturnError(req)
 }

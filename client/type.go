@@ -172,7 +172,6 @@ const (
 	ClassMessageCalendarDay                     = "MessageCalendarDay"
 	ClassMessageCalendar                        = "MessageCalendar"
 	ClassSponsoredMessage                       = "SponsoredMessage"
-	ClassSponsoredMessages                      = "SponsoredMessages"
 	ClassChatNotificationSettings               = "ChatNotificationSettings"
 	ClassScopeNotificationSettings              = "ScopeNotificationSettings"
 	ClassDraftMessage                           = "DraftMessage"
@@ -468,7 +467,6 @@ const (
 	TypeMessageCalendarDay                              = "messageCalendarDay"
 	TypeMessageCalendar                                 = "messageCalendar"
 	TypeSponsoredMessage                                = "sponsoredMessage"
-	TypeSponsoredMessages                               = "sponsoredMessages"
 	TypeNotificationSettingsScopePrivateChats           = "notificationSettingsScopePrivateChats"
 	TypeNotificationSettingsScopeGroupChats             = "notificationSettingsScopeGroupChats"
 	TypeNotificationSettingsScopeChannelChats           = "notificationSettingsScopeChannelChats"
@@ -901,7 +899,7 @@ const (
 	TypeChatEventInvitesToggled                         = "chatEventInvitesToggled"
 	TypeChatEventLinkedChatChanged                      = "chatEventLinkedChatChanged"
 	TypeChatEventSlowModeDelayChanged                   = "chatEventSlowModeDelayChanged"
-	TypeChatEventMessageTtlSettingChanged               = "chatEventMessageTtlSettingChanged"
+	TypeChatEventMessageTtlChanged                      = "chatEventMessageTtlChanged"
 	TypeChatEventSignMessagesToggled                    = "chatEventSignMessagesToggled"
 	TypeChatEventHasProtectedContentToggled             = "chatEventHasProtectedContentToggled"
 	TypeChatEventStickerSetChanged                      = "chatEventStickerSetChanged"
@@ -911,7 +909,7 @@ const (
 	TypeChatEventInviteLinkRevoked                      = "chatEventInviteLinkRevoked"
 	TypeChatEventInviteLinkDeleted                      = "chatEventInviteLinkDeleted"
 	TypeChatEventVideoChatCreated                       = "chatEventVideoChatCreated"
-	TypeChatEventVideoChatDiscarded                     = "chatEventVideoChatDiscarded"
+	TypeChatEventVideoChatEnded                         = "chatEventVideoChatEnded"
 	TypeChatEventVideoChatParticipantIsMutedToggled     = "chatEventVideoChatParticipantIsMutedToggled"
 	TypeChatEventVideoChatParticipantVolumeLevelChanged = "chatEventVideoChatParticipantVolumeLevelChanged"
 	TypeChatEventVideoChatMuteNewParticipantsToggled    = "chatEventVideoChatMuteNewParticipantsToggled"
@@ -1126,7 +1124,7 @@ const (
 	TypeSuggestedActionEnableArchiveAndMuteNewChats     = "suggestedActionEnableArchiveAndMuteNewChats"
 	TypeSuggestedActionCheckPassword                    = "suggestedActionCheckPassword"
 	TypeSuggestedActionCheckPhoneNumber                 = "suggestedActionCheckPhoneNumber"
-	TypeSuggestedActionSeeTicksHint                     = "suggestedActionSeeTicksHint"
+	TypeSuggestedActionViewChecksHint                   = "suggestedActionViewChecksHint"
 	TypeSuggestedActionConvertToBroadcastGroup          = "suggestedActionConvertToBroadcastGroup"
 	TypeSuggestedActionSetPassword                      = "suggestedActionSetPassword"
 	TypeCount                                           = "count"
@@ -1182,26 +1180,26 @@ const (
 	TypeUpdateChatPermissions                           = "updateChatPermissions"
 	TypeUpdateChatLastMessage                           = "updateChatLastMessage"
 	TypeUpdateChatPosition                              = "updateChatPosition"
-	TypeUpdateChatDefaultMessageSenderId                = "updateChatDefaultMessageSenderId"
-	TypeUpdateChatHasProtectedContent                   = "updateChatHasProtectedContent"
-	TypeUpdateChatIsMarkedAsUnread                      = "updateChatIsMarkedAsUnread"
-	TypeUpdateChatIsBlocked                             = "updateChatIsBlocked"
-	TypeUpdateChatHasScheduledMessages                  = "updateChatHasScheduledMessages"
-	TypeUpdateChatVideoChat                             = "updateChatVideoChat"
-	TypeUpdateChatDefaultDisableNotification            = "updateChatDefaultDisableNotification"
 	TypeUpdateChatReadInbox                             = "updateChatReadInbox"
 	TypeUpdateChatReadOutbox                            = "updateChatReadOutbox"
-	TypeUpdateChatUnreadMentionCount                    = "updateChatUnreadMentionCount"
-	TypeUpdateChatNotificationSettings                  = "updateChatNotificationSettings"
-	TypeUpdateScopeNotificationSettings                 = "updateScopeNotificationSettings"
-	TypeUpdateChatMessageTtlSetting                     = "updateChatMessageTtlSetting"
 	TypeUpdateChatActionBar                             = "updateChatActionBar"
-	TypeUpdateChatTheme                                 = "updateChatTheme"
+	TypeUpdateChatDraftMessage                          = "updateChatDraftMessage"
+	TypeUpdateChatMessageSender                         = "updateChatMessageSender"
+	TypeUpdateChatMessageTtl                            = "updateChatMessageTtl"
+	TypeUpdateChatNotificationSettings                  = "updateChatNotificationSettings"
 	TypeUpdateChatPendingJoinRequests                   = "updateChatPendingJoinRequests"
 	TypeUpdateChatReplyMarkup                           = "updateChatReplyMarkup"
-	TypeUpdateChatDraftMessage                          = "updateChatDraftMessage"
+	TypeUpdateChatTheme                                 = "updateChatTheme"
+	TypeUpdateChatUnreadMentionCount                    = "updateChatUnreadMentionCount"
+	TypeUpdateChatVideoChat                             = "updateChatVideoChat"
+	TypeUpdateChatDefaultDisableNotification            = "updateChatDefaultDisableNotification"
+	TypeUpdateChatHasProtectedContent                   = "updateChatHasProtectedContent"
+	TypeUpdateChatHasScheduledMessages                  = "updateChatHasScheduledMessages"
+	TypeUpdateChatIsBlocked                             = "updateChatIsBlocked"
+	TypeUpdateChatIsMarkedAsUnread                      = "updateChatIsMarkedAsUnread"
 	TypeUpdateChatFilters                               = "updateChatFilters"
 	TypeUpdateChatOnlineMemberCount                     = "updateChatOnlineMemberCount"
+	TypeUpdateScopeNotificationSettings                 = "updateScopeNotificationSettings"
 	TypeUpdateNotification                              = "updateNotification"
 	TypeUpdateNotificationGroup                         = "updateNotificationGroup"
 	TypeUpdateActiveNotifications                       = "updateActiveNotifications"
@@ -1884,7 +1882,7 @@ func (*AuthenticationCodeTypeCall) AuthenticationCodeTypeType() string {
 	return TypeAuthenticationCodeTypeCall
 }
 
-// An authentication code is delivered by an immediately canceled call to the specified phone number. The phone number, from which the call was made, is the code that must be entered automatically
+// An authentication code is delivered by an immediately canceled call to the specified phone number. The phone number that calls is the code that must be entered automatically
 type AuthenticationCodeTypeFlashCall struct {
 	meta
 	// Pattern of the phone number from which the call will be made
@@ -1911,7 +1909,7 @@ func (*AuthenticationCodeTypeFlashCall) AuthenticationCodeTypeType() string {
 	return TypeAuthenticationCodeTypeFlashCall
 }
 
-// An authentication code is delivered by an immediately canceled call to the specified phone number. The phone number, from which the call was made, is the code that is supposed to be entered manually by the user
+// An authentication code is delivered by an immediately canceled call to the specified phone number. The last digits of the phone number that calls are the code that must be entered manually by the user
 type AuthenticationCodeTypeMissedCall struct {
 	meta
 	// Prefix of the phone number from which the call will be made
@@ -2517,7 +2515,7 @@ type LocalFile struct {
 	meta
 	// Local path to the locally available file part; may be empty
 	Path string `json:"path"`
-	// True, if it is possible to try to download or generate the file
+	// True, if it is possible to download or generate the file
 	CanBeDownloaded bool `json:"can_be_downloaded"`
 	// True, if the file can be deleted
 	CanBeDeleted bool `json:"can_be_deleted"`
@@ -5147,7 +5145,7 @@ type ChatInviteLink struct {
 	// Point in time (Unix timestamp) when the link was last edited; 0 if never or unknown
 	EditDate int32 `json:"edit_date"`
 	// Point in time (Unix timestamp) when the link will expire; 0 if never
-	ExpireDate int32 `json:"expire_date"`
+	ExpirationDate int32 `json:"expiration_date"`
 	// The maximum number of members, which can join the chat using the link simultaneously; 0 if not limited. Always 0 if the link requires approval
 	MemberLimit int32 `json:"member_limit"`
 	// Number of chat members, which joined the chat using the link
@@ -5156,7 +5154,7 @@ type ChatInviteLink struct {
 	PendingJoinRequestCount int32 `json:"pending_join_request_count"`
 	// True, if the link only creates join request. If true, total number of joining members will be unlimited
 	CreatesJoinRequest bool `json:"creates_join_request"`
-	// True, if the link is primary. Primary invite link can't have name, expire date or usage limit. There is exactly one primary invite link for each administrator with can_invite_users right at a given time
+	// True, if the link is primary. Primary invite link can't have name, expiration date, or usage limit. There is exactly one primary invite link for each administrator with can_invite_users right at a given time
 	IsPrimary bool `json:"is_primary"`
 	// True, if the link was revoked
 	IsRevoked bool `json:"is_revoked"`
@@ -5253,7 +5251,7 @@ func (*ChatInviteLinkCounts) GetType() string {
 	return TypeChatInviteLinkCounts
 }
 
-// Describes a chat member joined a chat by an invite link
+// Describes a chat member joined a chat via an invite link
 type ChatInviteLinkMember struct {
 	meta
 	// User identifier
@@ -5280,12 +5278,12 @@ func (*ChatInviteLinkMember) GetType() string {
 	return TypeChatInviteLinkMember
 }
 
-// Contains a list of chat members joined a chat by an invite link
+// Contains a list of chat members joined a chat via an invite link
 type ChatInviteLinkMembers struct {
 	meta
 	// Approximate total count of chat members found
 	TotalCount int32 `json:"total_count"`
-	// List of chat members, joined a chat by an invite link
+	// List of chat members, joined a chat via an invite link
 	Members []*ChatInviteLinkMember `json:"members"`
 }
 
@@ -5408,7 +5406,7 @@ func (*ChatJoinRequest) GetType() string {
 	return TypeChatJoinRequest
 }
 
-// Contains a list of chat join requests
+// Contains a list of requests to join a chat
 type ChatJoinRequests struct {
 	meta
 	// Approximate total count of requests found
@@ -5433,12 +5431,12 @@ func (*ChatJoinRequests) GetType() string {
 	return TypeChatJoinRequests
 }
 
-// Contains information about pending chat join requests
+// Contains information about pending join requests for a chat
 type ChatJoinRequestsInfo struct {
 	meta
 	// Total number of pending join requests
 	TotalCount int32 `json:"total_count"`
-	// Identifiers of users sent the newest pending join requests
+	// Identifiers of at most 3 users sent the newest pending join requests
 	UserIds []int64 `json:"user_ids"`
 }
 
@@ -5570,7 +5568,7 @@ type Supergroup struct {
 	IsSlowModeEnabled bool `json:"is_slow_mode_enabled"`
 	// True, if the supergroup is a channel
 	IsChannel bool `json:"is_channel"`
-	// True, if the supergroup is a broadcast group, i.e. only administrators can send messages and there is no limit on number of members
+	// True, if the supergroup is a broadcast group, i.e. only administrators can send messages and there is no limit on the number of members
 	IsBroadcastGroup bool `json:"is_broadcast_group"`
 	// True, if the supergroup or channel is verified
 	IsVerified bool `json:"is_verified"`
@@ -5966,12 +5964,12 @@ func (*MessageForwardOriginUser) MessageForwardOriginType() string {
 	return TypeMessageForwardOriginUser
 }
 
-// The message was originally sent by an anonymous chat administrator on behalf of the chat
+// The message was originally sent on behalf of a chat
 type MessageForwardOriginChat struct {
 	meta
 	// Identifier of the chat that originally sent the message
 	SenderChatId int64 `json:"sender_chat_id"`
-	// Original message author signature
+	// For messages originally sent by an anonymous chat administrator, original message author signature
 	AuthorSignature string `json:"author_signature"`
 }
 
@@ -6141,7 +6139,7 @@ type MessageReplyInfo struct {
 	meta
 	// Number of times the message was directly or indirectly replied
 	ReplyCount int32 `json:"reply_count"`
-	// Identifiers of recent repliers to the message; available in channels with a discussion supergroup
+	// Identifiers of at most 3 recent repliers to the message; available in channels with a discussion supergroup. The users and chats are expected to be inaccessible: only their photo and name will be available
 	RecentReplierIds []MessageSender `json:"recent_replier_ids"`
 	// Identifier of the last read incoming reply to the message
 	LastReadInboxMessageId int64 `json:"last_read_inbox_message_id"`
@@ -6563,12 +6561,12 @@ func (*MessagePositions) GetType() string {
 	return TypeMessagePositions
 }
 
-// Contains information about found messages sent in a specific day
+// Contains information about found messages sent on a specific day
 type MessageCalendarDay struct {
 	meta
-	// Total number of found messages sent in the day
+	// Total number of found messages sent on the day
 	TotalCount int32 `json:"total_count"`
-	// First message sent in the day
+	// First message sent on the day
 	Message *Message `json:"message"`
 }
 
@@ -6588,7 +6586,7 @@ func (*MessageCalendarDay) GetType() string {
 	return TypeMessageCalendarDay
 }
 
-// Contains information about found messages, splitted by days according to the option "utc_time_offset"
+// Contains information about found messages, split by days according to the option "utc_time_offset"
 type MessageCalendar struct {
 	meta
 	// Total number of found messages
@@ -6616,8 +6614,8 @@ func (*MessageCalendar) GetType() string {
 // Describes a sponsored message
 type SponsoredMessage struct {
 	meta
-	// Unique sponsored message identifier
-	Id int32 `json:"id"`
+	// Message identifier; unique for the chat to which the sponsored message belongs among both ordinary and sponsored messages
+	MessageId int64 `json:"message_id"`
 	// Chat identifier
 	SponsorChatId int64 `json:"sponsor_chat_id"`
 	// An internal link to be opened when the sponsored message is clicked; may be null. If null, the sponsor chat needs to be opened instead
@@ -6644,7 +6642,7 @@ func (*SponsoredMessage) GetType() string {
 
 func (sponsoredMessage *SponsoredMessage) UnmarshalJSON(data []byte) error {
 	var tmp struct {
-		Id            int32           `json:"id"`
+		MessageId     int64           `json:"message_id"`
 		SponsorChatId int64           `json:"sponsor_chat_id"`
 		Link          json.RawMessage `json:"link"`
 		Content       json.RawMessage `json:"content"`
@@ -6655,7 +6653,7 @@ func (sponsoredMessage *SponsoredMessage) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	sponsoredMessage.Id = tmp.Id
+	sponsoredMessage.MessageId = tmp.MessageId
 	sponsoredMessage.SponsorChatId = tmp.SponsorChatId
 
 	fieldLink, _ := UnmarshalInternalLinkType(tmp.Link)
@@ -6665,29 +6663,6 @@ func (sponsoredMessage *SponsoredMessage) UnmarshalJSON(data []byte) error {
 	sponsoredMessage.Content = fieldContent
 
 	return nil
-}
-
-// Contains a list of sponsored messages
-type SponsoredMessages struct {
-	meta
-	// List of sponsored messages
-	Messages []*SponsoredMessage `json:"messages"`
-}
-
-func (entity *SponsoredMessages) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub SponsoredMessages
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*SponsoredMessages) GetClass() string {
-	return ClassSponsoredMessages
-}
-
-func (*SponsoredMessages) GetType() string {
-	return TypeSponsoredMessages
 }
 
 // Notification settings applied to all private and secret chats when the corresponding chat setting has a default value
@@ -7002,7 +6977,7 @@ type ChatFilter struct {
 	meta
 	// The title of the filter; 1-12 characters without line feeds
 	Title string `json:"title"`
-	// The icon name for short filter representation. If non-empty, must be one of "All", "Unread", "Unmuted", "Bots", "Channels", "Groups", "Private", "Custom", "Setup", "Cat", "Crown", "Favorite", "Flower", "Game", "Home", "Love", "Mask", "Party", "Sport", "Study", "Trade", "Travel", "Work". If empty, use getChatFilterDefaultIconName to get default icon name for the filter
+	// The chosen icon name for short filter representation. If non-empty, must be one of "All", "Unread", "Unmuted", "Bots", "Channels", "Groups", "Private", "Custom", "Setup", "Cat", "Crown", "Favorite", "Flower", "Game", "Home", "Love", "Mask", "Party", "Sport", "Study", "Trade", "Travel", "Work". If empty, use getChatFilterDefaultIconName to get default icon name for the filter
 	IconName string `json:"icon_name"`
 	// The chat identifiers of pinned chats in the filtered chat list
 	PinnedChatIds []int64 `json:"pinned_chat_ids"`
@@ -7051,7 +7026,7 @@ type ChatFilterInfo struct {
 	Id int32 `json:"id"`
 	// The title of the filter; 1-12 characters without line feeds
 	Title string `json:"title"`
-	// The icon name for short filter representation. One of "All", "Unread", "Unmuted", "Bots", "Channels", "Groups", "Private", "Custom", "Setup", "Cat", "Crown", "Favorite", "Flower", "Game", "Home", "Love", "Mask", "Party", "Sport", "Study", "Trade", "Travel", "Work"
+	// The chosen or default icon name for short filter representation. One of "All", "Unread", "Unmuted", "Bots", "Channels", "Groups", "Private", "Custom", "Setup", "Cat", "Crown", "Favorite", "Flower", "Game", "Home", "Love", "Mask", "Party", "Sport", "Study", "Trade", "Travel", "Work"
 	IconName string `json:"icon_name"`
 }
 
@@ -7408,8 +7383,8 @@ type Chat struct {
 	LastMessage *Message `json:"last_message"`
 	// Positions of the chat in chat lists
 	Positions []*ChatPosition `json:"positions"`
-	// Default identifier of a user or chat that is chosen to send messages in the chat; may be null if the user can't change message sender
-	DefaultMessageSenderId MessageSender `json:"default_message_sender_id"`
+	// Identifier of a user or chat that is selected to send messages in the chat; may be null if the user can't change message sender
+	MessageSenderId MessageSender `json:"message_sender_id"`
 	// True, if chat content can't be saved locally, forwarded, or copied
 	HasProtectedContent bool `json:"has_protected_content"`
 	// True, if the chat is marked as unread
@@ -7437,7 +7412,7 @@ type Chat struct {
 	// Notification settings for this chat
 	NotificationSettings *ChatNotificationSettings `json:"notification_settings"`
 	// Current message Time To Live setting (self-destruct timer) for the chat; 0 if not defined. TTL is counted from the time message or its content is viewed in secret chats and from the send date in other chats
-	MessageTtlSetting int32 `json:"message_ttl_setting"`
+	MessageTtl int32 `json:"message_ttl"`
 	// If non-empty, name of a theme, set for the chat
 	ThemeName string `json:"theme_name"`
 	// Information about actions which must be possible to do through the chat action bar; may be null
@@ -7479,7 +7454,7 @@ func (chat *Chat) UnmarshalJSON(data []byte) error {
 		Permissions                *ChatPermissions          `json:"permissions"`
 		LastMessage                *Message                  `json:"last_message"`
 		Positions                  []*ChatPosition           `json:"positions"`
-		DefaultMessageSenderId     json.RawMessage           `json:"default_message_sender_id"`
+		MessageSenderId            json.RawMessage           `json:"message_sender_id"`
 		HasProtectedContent        bool                      `json:"has_protected_content"`
 		IsMarkedAsUnread           bool                      `json:"is_marked_as_unread"`
 		IsBlocked                  bool                      `json:"is_blocked"`
@@ -7493,7 +7468,7 @@ func (chat *Chat) UnmarshalJSON(data []byte) error {
 		LastReadOutboxMessageId    int64                     `json:"last_read_outbox_message_id"`
 		UnreadMentionCount         int32                     `json:"unread_mention_count"`
 		NotificationSettings       *ChatNotificationSettings `json:"notification_settings"`
-		MessageTtlSetting          int32                     `json:"message_ttl_setting"`
+		MessageTtl                 int32                     `json:"message_ttl"`
 		ThemeName                  string                    `json:"theme_name"`
 		ActionBar                  json.RawMessage           `json:"action_bar"`
 		VideoChat                  *VideoChat                `json:"video_chat"`
@@ -7527,7 +7502,7 @@ func (chat *Chat) UnmarshalJSON(data []byte) error {
 	chat.LastReadOutboxMessageId = tmp.LastReadOutboxMessageId
 	chat.UnreadMentionCount = tmp.UnreadMentionCount
 	chat.NotificationSettings = tmp.NotificationSettings
-	chat.MessageTtlSetting = tmp.MessageTtlSetting
+	chat.MessageTtl = tmp.MessageTtl
 	chat.ThemeName = tmp.ThemeName
 	chat.VideoChat = tmp.VideoChat
 	chat.PendingJoinRequests = tmp.PendingJoinRequests
@@ -7538,8 +7513,8 @@ func (chat *Chat) UnmarshalJSON(data []byte) error {
 	fieldType, _ := UnmarshalChatType(tmp.Type)
 	chat.Type = fieldType
 
-	fieldDefaultMessageSenderId, _ := UnmarshalMessageSender(tmp.DefaultMessageSenderId)
-	chat.DefaultMessageSenderId = fieldDefaultMessageSenderId
+	fieldMessageSenderId, _ := UnmarshalMessageSender(tmp.MessageSenderId)
+	chat.MessageSenderId = fieldMessageSenderId
 
 	fieldActionBar, _ := UnmarshalChatActionBar(tmp.ActionBar)
 	chat.ActionBar = fieldActionBar
@@ -14554,7 +14529,7 @@ func (*MessageChatAddMembers) MessageContentType() string {
 	return TypeMessageChatAddMembers
 }
 
-// A new member joined the chat by invite link
+// A new member joined the chat via an invite link
 type MessageChatJoinByLink struct {
 	meta
 }
@@ -14769,7 +14744,7 @@ func (*MessageChatSetTheme) MessageContentType() string {
 // The TTL (Time To Live) setting for messages in the chat has been changed
 type MessageChatSetTtl struct {
 	meta
-	// New message TTL setting
+	// New message TTL
 	Ttl int32 `json:"ttl"`
 }
 
@@ -16563,7 +16538,7 @@ type InputMessageForwarded struct {
 	MessageId int64 `json:"message_id"`
 	// True, if a game message is being shared from a launched game; applies only to game messages
 	InGameShare bool `json:"in_game_share"`
-	// Options to be used to copy content of the message without reference to the original sender; pass null to try to forward the message as usual
+	// Options to be used to copy content of the message without reference to the original sender; pass null to forward the message as usual
 	CopyOptions *MessageCopyOptions `json:"copy_options"`
 }
 
@@ -18348,7 +18323,7 @@ type GroupCall struct {
 	ParticipantCount int32 `json:"participant_count"`
 	// True, if all group call participants are loaded
 	LoadedAllParticipants bool `json:"loaded_all_participants"`
-	// Recently speaking users in the group call
+	// At most 3 recently speaking users in the group call
 	RecentSpeakers []*GroupCallRecentSpeaker `json:"recent_speakers"`
 	// True, if the current user's video is enabled
 	IsMyVideoEnabled bool `json:"is_my_video_enabled"`
@@ -20660,7 +20635,7 @@ func (*ChatEventMemberJoined) ChatEventActionType() string {
 	return TypeChatEventMemberJoined
 }
 
-// A new member joined the chat by an invite link
+// A new member joined the chat via an invite link
 type ChatEventMemberJoinedByInviteLink struct {
 	meta
 	// Invite link used to join the chat
@@ -21128,33 +21103,33 @@ func (*ChatEventSlowModeDelayChanged) ChatEventActionType() string {
 	return TypeChatEventSlowModeDelayChanged
 }
 
-// The message TTL setting was changed
-type ChatEventMessageTtlSettingChanged struct {
+// The message TTL was changed
+type ChatEventMessageTtlChanged struct {
 	meta
-	// Previous value of message_ttl_setting
-	OldMessageTtlSetting int32 `json:"old_message_ttl_setting"`
-	// New value of message_ttl_setting
-	NewMessageTtlSetting int32 `json:"new_message_ttl_setting"`
+	// Previous value of message_ttl
+	OldMessageTtl int32 `json:"old_message_ttl"`
+	// New value of message_ttl
+	NewMessageTtl int32 `json:"new_message_ttl"`
 }
 
-func (entity *ChatEventMessageTtlSettingChanged) MarshalJSON() ([]byte, error) {
+func (entity *ChatEventMessageTtlChanged) MarshalJSON() ([]byte, error) {
 	entity.meta.Type = entity.GetType()
 
-	type stub ChatEventMessageTtlSettingChanged
+	type stub ChatEventMessageTtlChanged
 
 	return json.Marshal((*stub)(entity))
 }
 
-func (*ChatEventMessageTtlSettingChanged) GetClass() string {
+func (*ChatEventMessageTtlChanged) GetClass() string {
 	return ClassChatEventAction
 }
 
-func (*ChatEventMessageTtlSettingChanged) GetType() string {
-	return TypeChatEventMessageTtlSettingChanged
+func (*ChatEventMessageTtlChanged) GetType() string {
+	return TypeChatEventMessageTtlChanged
 }
 
-func (*ChatEventMessageTtlSettingChanged) ChatEventActionType() string {
-	return TypeChatEventMessageTtlSettingChanged
+func (*ChatEventMessageTtlChanged) ChatEventActionType() string {
+	return TypeChatEventMessageTtlChanged
 }
 
 // The sign_messages setting of a channel was toggled
@@ -21406,31 +21381,31 @@ func (*ChatEventVideoChatCreated) ChatEventActionType() string {
 	return TypeChatEventVideoChatCreated
 }
 
-// A video chat was discarded
-type ChatEventVideoChatDiscarded struct {
+// A video chat was ended
+type ChatEventVideoChatEnded struct {
 	meta
 	// Identifier of the video chat. The video chat can be received through the method getGroupCall
 	GroupCallId int32 `json:"group_call_id"`
 }
 
-func (entity *ChatEventVideoChatDiscarded) MarshalJSON() ([]byte, error) {
+func (entity *ChatEventVideoChatEnded) MarshalJSON() ([]byte, error) {
 	entity.meta.Type = entity.GetType()
 
-	type stub ChatEventVideoChatDiscarded
+	type stub ChatEventVideoChatEnded
 
 	return json.Marshal((*stub)(entity))
 }
 
-func (*ChatEventVideoChatDiscarded) GetClass() string {
+func (*ChatEventVideoChatEnded) GetClass() string {
 	return ClassChatEventAction
 }
 
-func (*ChatEventVideoChatDiscarded) GetType() string {
-	return TypeChatEventVideoChatDiscarded
+func (*ChatEventVideoChatEnded) GetType() string {
+	return TypeChatEventVideoChatEnded
 }
 
-func (*ChatEventVideoChatDiscarded) ChatEventActionType() string {
-	return TypeChatEventVideoChatDiscarded
+func (*ChatEventVideoChatEnded) ChatEventActionType() string {
+	return TypeChatEventVideoChatEnded
 }
 
 // A video chat participant was muted or unmuted
@@ -21563,9 +21538,9 @@ type ChatEvent struct {
 	Id JsonInt64 `json:"id"`
 	// Point in time (Unix timestamp) when the event happened
 	Date int32 `json:"date"`
-	// Identifier of the user who performed the action that triggered the event
-	UserId int64 `json:"user_id"`
-	// Action performed by the user
+	// Identifier of the user or chat who performed the action
+	MemberId MessageSender `json:"member_id"`
+	// The action
 	Action ChatEventAction `json:"action"`
 }
 
@@ -21587,10 +21562,10 @@ func (*ChatEvent) GetType() string {
 
 func (chatEvent *ChatEvent) UnmarshalJSON(data []byte) error {
 	var tmp struct {
-		Id     JsonInt64       `json:"id"`
-		Date   int32           `json:"date"`
-		UserId int64           `json:"user_id"`
-		Action json.RawMessage `json:"action"`
+		Id       JsonInt64       `json:"id"`
+		Date     int32           `json:"date"`
+		MemberId json.RawMessage `json:"member_id"`
+		Action   json.RawMessage `json:"action"`
 	}
 
 	err := json.Unmarshal(data, &tmp)
@@ -21600,7 +21575,9 @@ func (chatEvent *ChatEvent) UnmarshalJSON(data []byte) error {
 
 	chatEvent.Id = tmp.Id
 	chatEvent.Date = tmp.Date
-	chatEvent.UserId = tmp.UserId
+
+	fieldMemberId, _ := UnmarshalMessageSender(tmp.MemberId)
+	chatEvent.MemberId = fieldMemberId
 
 	fieldAction, _ := UnmarshalChatEventAction(tmp.Action)
 	chatEvent.Action = fieldAction
@@ -21905,7 +21882,7 @@ func (*LocalizationTargetInfo) GetType() string {
 // A token for Firebase Cloud Messaging
 type DeviceTokenFirebaseCloudMessaging struct {
 	meta
-	// Device registration token; may be empty to de-register a device
+	// Device registration token; may be empty to deregister a device
 	Token string `json:"token"`
 	// True, if push notifications must be additionally encrypted
 	Encrypt bool `json:"encrypt"`
@@ -21934,7 +21911,7 @@ func (*DeviceTokenFirebaseCloudMessaging) DeviceTokenType() string {
 // A token for Apple Push Notification service
 type DeviceTokenApplePush struct {
 	meta
-	// Device token; may be empty to de-register a device
+	// Device token; may be empty to deregister a device
 	DeviceToken string `json:"device_token"`
 	// True, if App Sandbox is enabled
 	IsAppSandbox bool `json:"is_app_sandbox"`
@@ -21963,7 +21940,7 @@ func (*DeviceTokenApplePush) DeviceTokenType() string {
 // A token for Apple Push Notification service VoIP notifications
 type DeviceTokenApplePushVoIP struct {
 	meta
-	// Device token; may be empty to de-register a device
+	// Device token; may be empty to deregister a device
 	DeviceToken string `json:"device_token"`
 	// True, if App Sandbox is enabled
 	IsAppSandbox bool `json:"is_app_sandbox"`
@@ -21994,7 +21971,7 @@ func (*DeviceTokenApplePushVoIP) DeviceTokenType() string {
 // A token for Windows Push Notification Services
 type DeviceTokenWindowsPush struct {
 	meta
-	// The access token that will be used to send notifications; may be empty to de-register a device
+	// The access token that will be used to send notifications; may be empty to deregister a device
 	AccessToken string `json:"access_token"`
 }
 
@@ -22021,7 +21998,7 @@ func (*DeviceTokenWindowsPush) DeviceTokenType() string {
 // A token for Microsoft Push Notification Service
 type DeviceTokenMicrosoftPush struct {
 	meta
-	// Push notification channel URI; may be empty to de-register a device
+	// Push notification channel URI; may be empty to deregister a device
 	ChannelUri string `json:"channel_uri"`
 }
 
@@ -22048,7 +22025,7 @@ func (*DeviceTokenMicrosoftPush) DeviceTokenType() string {
 // A token for Microsoft Push Notification Service VoIP channel
 type DeviceTokenMicrosoftPushVoIP struct {
 	meta
-	// Push notification channel URI; may be empty to de-register a device
+	// Push notification channel URI; may be empty to deregister a device
 	ChannelUri string `json:"channel_uri"`
 }
 
@@ -22075,7 +22052,7 @@ func (*DeviceTokenMicrosoftPushVoIP) DeviceTokenType() string {
 // A token for web Push API
 type DeviceTokenWebPush struct {
 	meta
-	// Absolute URL exposed by the push service where the application server can send push messages; may be empty to de-register a device
+	// Absolute URL exposed by the push service where the application server can send push messages; may be empty to deregister a device
 	Endpoint string `json:"endpoint"`
 	// Base64url-encoded P-256 elliptic curve Diffie-Hellman public key
 	P256dhBase64url string `json:"p256dh_base64url"`
@@ -22106,7 +22083,7 @@ func (*DeviceTokenWebPush) DeviceTokenType() string {
 // A token for Simple Push API for Firefox OS
 type DeviceTokenSimplePush struct {
 	meta
-	// Absolute URL exposed by the push service where the application server can send push messages; may be empty to de-register a device
+	// Absolute URL exposed by the push service where the application server can send push messages; may be empty to deregister a device
 	Endpoint string `json:"endpoint"`
 }
 
@@ -22133,7 +22110,7 @@ func (*DeviceTokenSimplePush) DeviceTokenType() string {
 // A token for Ubuntu Push Client service
 type DeviceTokenUbuntuPush struct {
 	meta
-	// Token; may be empty to de-register a device
+	// Token; may be empty to deregister a device
 	Token string `json:"token"`
 }
 
@@ -22160,7 +22137,7 @@ func (*DeviceTokenUbuntuPush) DeviceTokenType() string {
 // A token for BlackBerry Push Service
 type DeviceTokenBlackBerryPush struct {
 	meta
-	// Token; may be empty to de-register a device
+	// Token; may be empty to deregister a device
 	Token string `json:"token"`
 }
 
@@ -22187,7 +22164,7 @@ func (*DeviceTokenBlackBerryPush) DeviceTokenType() string {
 // A token for Tizen Push Service
 type DeviceTokenTizenPush struct {
 	meta
-	// Push service registration identifier; may be empty to de-register a device
+	// Push service registration identifier; may be empty to deregister a device
 	RegId string `json:"reg_id"`
 }
 
@@ -23862,7 +23839,7 @@ func (*PushMessageContentChatDeleteMember) PushMessageContentType() string {
 	return TypePushMessageContentChatDeleteMember
 }
 
-// A new member joined the chat by invite link
+// A new member joined the chat via an invite link
 type PushMessageContentChatJoinByLink struct {
 	meta
 }
@@ -27628,7 +27605,7 @@ func (*SuggestedActionEnableArchiveAndMuteNewChats) SuggestedActionType() string
 	return TypeSuggestedActionEnableArchiveAndMuteNewChats
 }
 
-// Suggests the user to check whether 2-step verification password is still remembered
+// Suggests the user to check whether they still remember their 2-step verification password
 type SuggestedActionCheckPassword struct {
 	meta
 }
@@ -27678,29 +27655,29 @@ func (*SuggestedActionCheckPhoneNumber) SuggestedActionType() string {
 	return TypeSuggestedActionCheckPhoneNumber
 }
 
-// Suggests the user to see a hint about meaning of one and two ticks on sent messages
-type SuggestedActionSeeTicksHint struct {
+// Suggests the user to view a hint about the meaning of one and two check marks on sent messages
+type SuggestedActionViewChecksHint struct {
 	meta
 }
 
-func (entity *SuggestedActionSeeTicksHint) MarshalJSON() ([]byte, error) {
+func (entity *SuggestedActionViewChecksHint) MarshalJSON() ([]byte, error) {
 	entity.meta.Type = entity.GetType()
 
-	type stub SuggestedActionSeeTicksHint
+	type stub SuggestedActionViewChecksHint
 
 	return json.Marshal((*stub)(entity))
 }
 
-func (*SuggestedActionSeeTicksHint) GetClass() string {
+func (*SuggestedActionViewChecksHint) GetClass() string {
 	return ClassSuggestedAction
 }
 
-func (*SuggestedActionSeeTicksHint) GetType() string {
-	return TypeSuggestedActionSeeTicksHint
+func (*SuggestedActionViewChecksHint) GetType() string {
+	return TypeSuggestedActionViewChecksHint
 }
 
-func (*SuggestedActionSeeTicksHint) SuggestedActionType() string {
-	return TypeSuggestedActionSeeTicksHint
+func (*SuggestedActionViewChecksHint) SuggestedActionType() string {
+	return TypeSuggestedActionViewChecksHint
 }
 
 // Suggests the user to convert specified supergroup to a broadcast group
@@ -29549,228 +29526,6 @@ func (*UpdateChatPosition) UpdateType() string {
 	return TypeUpdateChatPosition
 }
 
-// The default message sender that is chosen to send messages in a chat has changed
-type UpdateChatDefaultMessageSenderId struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// New value of default_message_sender_id; may be null if the user can't change message sender
-	DefaultMessageSenderId MessageSender `json:"default_message_sender_id"`
-}
-
-func (entity *UpdateChatDefaultMessageSenderId) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatDefaultMessageSenderId
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatDefaultMessageSenderId) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatDefaultMessageSenderId) GetType() string {
-	return TypeUpdateChatDefaultMessageSenderId
-}
-
-func (*UpdateChatDefaultMessageSenderId) UpdateType() string {
-	return TypeUpdateChatDefaultMessageSenderId
-}
-
-func (updateChatDefaultMessageSenderId *UpdateChatDefaultMessageSenderId) UnmarshalJSON(data []byte) error {
-	var tmp struct {
-		ChatId                 int64           `json:"chat_id"`
-		DefaultMessageSenderId json.RawMessage `json:"default_message_sender_id"`
-	}
-
-	err := json.Unmarshal(data, &tmp)
-	if err != nil {
-		return err
-	}
-
-	updateChatDefaultMessageSenderId.ChatId = tmp.ChatId
-
-	fieldDefaultMessageSenderId, _ := UnmarshalMessageSender(tmp.DefaultMessageSenderId)
-	updateChatDefaultMessageSenderId.DefaultMessageSenderId = fieldDefaultMessageSenderId
-
-	return nil
-}
-
-// A chat content was allowed or restricted for saving
-type UpdateChatHasProtectedContent struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// New value of has_protected_content
-	HasProtectedContent bool `json:"has_protected_content"`
-}
-
-func (entity *UpdateChatHasProtectedContent) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatHasProtectedContent
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatHasProtectedContent) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatHasProtectedContent) GetType() string {
-	return TypeUpdateChatHasProtectedContent
-}
-
-func (*UpdateChatHasProtectedContent) UpdateType() string {
-	return TypeUpdateChatHasProtectedContent
-}
-
-// A chat was marked as unread or was read
-type UpdateChatIsMarkedAsUnread struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// New value of is_marked_as_unread
-	IsMarkedAsUnread bool `json:"is_marked_as_unread"`
-}
-
-func (entity *UpdateChatIsMarkedAsUnread) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatIsMarkedAsUnread
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatIsMarkedAsUnread) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatIsMarkedAsUnread) GetType() string {
-	return TypeUpdateChatIsMarkedAsUnread
-}
-
-func (*UpdateChatIsMarkedAsUnread) UpdateType() string {
-	return TypeUpdateChatIsMarkedAsUnread
-}
-
-// A chat was blocked or unblocked
-type UpdateChatIsBlocked struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// New value of is_blocked
-	IsBlocked bool `json:"is_blocked"`
-}
-
-func (entity *UpdateChatIsBlocked) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatIsBlocked
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatIsBlocked) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatIsBlocked) GetType() string {
-	return TypeUpdateChatIsBlocked
-}
-
-func (*UpdateChatIsBlocked) UpdateType() string {
-	return TypeUpdateChatIsBlocked
-}
-
-// A chat's has_scheduled_messages field has changed
-type UpdateChatHasScheduledMessages struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// New value of has_scheduled_messages
-	HasScheduledMessages bool `json:"has_scheduled_messages"`
-}
-
-func (entity *UpdateChatHasScheduledMessages) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatHasScheduledMessages
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatHasScheduledMessages) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatHasScheduledMessages) GetType() string {
-	return TypeUpdateChatHasScheduledMessages
-}
-
-func (*UpdateChatHasScheduledMessages) UpdateType() string {
-	return TypeUpdateChatHasScheduledMessages
-}
-
-// A chat video chat state has changed
-type UpdateChatVideoChat struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// New value of video_chat
-	VideoChat *VideoChat `json:"video_chat"`
-}
-
-func (entity *UpdateChatVideoChat) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatVideoChat
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatVideoChat) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatVideoChat) GetType() string {
-	return TypeUpdateChatVideoChat
-}
-
-func (*UpdateChatVideoChat) UpdateType() string {
-	return TypeUpdateChatVideoChat
-}
-
-// The value of the default disable_notification parameter, used when a message is sent to the chat, was changed
-type UpdateChatDefaultDisableNotification struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// The new default_disable_notification value
-	DefaultDisableNotification bool `json:"default_disable_notification"`
-}
-
-func (entity *UpdateChatDefaultDisableNotification) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatDefaultDisableNotification
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatDefaultDisableNotification) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatDefaultDisableNotification) GetType() string {
-	return TypeUpdateChatDefaultDisableNotification
-}
-
-func (*UpdateChatDefaultDisableNotification) UpdateType() string {
-	return TypeUpdateChatDefaultDisableNotification
-}
-
 // Incoming messages were read or the number of unread messages has been changed
 type UpdateChatReadInbox struct {
 	meta
@@ -29831,141 +29586,6 @@ func (*UpdateChatReadOutbox) UpdateType() string {
 	return TypeUpdateChatReadOutbox
 }
 
-// The chat unread_mention_count has changed
-type UpdateChatUnreadMentionCount struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// The number of unread mention messages left in the chat
-	UnreadMentionCount int32 `json:"unread_mention_count"`
-}
-
-func (entity *UpdateChatUnreadMentionCount) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatUnreadMentionCount
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatUnreadMentionCount) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatUnreadMentionCount) GetType() string {
-	return TypeUpdateChatUnreadMentionCount
-}
-
-func (*UpdateChatUnreadMentionCount) UpdateType() string {
-	return TypeUpdateChatUnreadMentionCount
-}
-
-// Notification settings for a chat were changed
-type UpdateChatNotificationSettings struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// The new notification settings
-	NotificationSettings *ChatNotificationSettings `json:"notification_settings"`
-}
-
-func (entity *UpdateChatNotificationSettings) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatNotificationSettings
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatNotificationSettings) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatNotificationSettings) GetType() string {
-	return TypeUpdateChatNotificationSettings
-}
-
-func (*UpdateChatNotificationSettings) UpdateType() string {
-	return TypeUpdateChatNotificationSettings
-}
-
-// Notification settings for some type of chats were updated
-type UpdateScopeNotificationSettings struct {
-	meta
-	// Types of chats for which notification settings were updated
-	Scope NotificationSettingsScope `json:"scope"`
-	// The new notification settings
-	NotificationSettings *ScopeNotificationSettings `json:"notification_settings"`
-}
-
-func (entity *UpdateScopeNotificationSettings) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateScopeNotificationSettings
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateScopeNotificationSettings) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateScopeNotificationSettings) GetType() string {
-	return TypeUpdateScopeNotificationSettings
-}
-
-func (*UpdateScopeNotificationSettings) UpdateType() string {
-	return TypeUpdateScopeNotificationSettings
-}
-
-func (updateScopeNotificationSettings *UpdateScopeNotificationSettings) UnmarshalJSON(data []byte) error {
-	var tmp struct {
-		Scope                json.RawMessage            `json:"scope"`
-		NotificationSettings *ScopeNotificationSettings `json:"notification_settings"`
-	}
-
-	err := json.Unmarshal(data, &tmp)
-	if err != nil {
-		return err
-	}
-
-	updateScopeNotificationSettings.NotificationSettings = tmp.NotificationSettings
-
-	fieldScope, _ := UnmarshalNotificationSettingsScope(tmp.Scope)
-	updateScopeNotificationSettings.Scope = fieldScope
-
-	return nil
-}
-
-// The message Time To Live setting for a chat was changed
-type UpdateChatMessageTtlSetting struct {
-	meta
-	// Chat identifier
-	ChatId int64 `json:"chat_id"`
-	// New value of message_ttl_setting
-	MessageTtlSetting int32 `json:"message_ttl_setting"`
-}
-
-func (entity *UpdateChatMessageTtlSetting) MarshalJSON() ([]byte, error) {
-	entity.meta.Type = entity.GetType()
-
-	type stub UpdateChatMessageTtlSetting
-
-	return json.Marshal((*stub)(entity))
-}
-
-func (*UpdateChatMessageTtlSetting) GetClass() string {
-	return ClassUpdate
-}
-
-func (*UpdateChatMessageTtlSetting) GetType() string {
-	return TypeUpdateChatMessageTtlSetting
-}
-
-func (*UpdateChatMessageTtlSetting) UpdateType() string {
-	return TypeUpdateChatMessageTtlSetting
-}
-
 // The chat action bar was changed
 type UpdateChatActionBar struct {
 	meta
@@ -30014,33 +29634,141 @@ func (updateChatActionBar *UpdateChatActionBar) UnmarshalJSON(data []byte) error
 	return nil
 }
 
-// The chat theme was changed
-type UpdateChatTheme struct {
+// A chat draft has changed. Be aware that the update may come in the currently opened chat but with old content of the draft. If the user has changed the content of the draft, this update mustn't be applied
+type UpdateChatDraftMessage struct {
 	meta
 	// Chat identifier
 	ChatId int64 `json:"chat_id"`
-	// The new name of the chat theme; may be empty if theme was reset to default
-	ThemeName string `json:"theme_name"`
+	// The new draft message; may be null
+	DraftMessage *DraftMessage `json:"draft_message"`
+	// The new chat positions in the chat lists
+	Positions []*ChatPosition `json:"positions"`
 }
 
-func (entity *UpdateChatTheme) MarshalJSON() ([]byte, error) {
+func (entity *UpdateChatDraftMessage) MarshalJSON() ([]byte, error) {
 	entity.meta.Type = entity.GetType()
 
-	type stub UpdateChatTheme
+	type stub UpdateChatDraftMessage
 
 	return json.Marshal((*stub)(entity))
 }
 
-func (*UpdateChatTheme) GetClass() string {
+func (*UpdateChatDraftMessage) GetClass() string {
 	return ClassUpdate
 }
 
-func (*UpdateChatTheme) GetType() string {
-	return TypeUpdateChatTheme
+func (*UpdateChatDraftMessage) GetType() string {
+	return TypeUpdateChatDraftMessage
 }
 
-func (*UpdateChatTheme) UpdateType() string {
-	return TypeUpdateChatTheme
+func (*UpdateChatDraftMessage) UpdateType() string {
+	return TypeUpdateChatDraftMessage
+}
+
+// The message sender that is selected to send messages in a chat has changed
+type UpdateChatMessageSender struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// New value of message_sender_id; may be null if the user can't change message sender
+	MessageSenderId MessageSender `json:"message_sender_id"`
+}
+
+func (entity *UpdateChatMessageSender) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatMessageSender
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatMessageSender) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatMessageSender) GetType() string {
+	return TypeUpdateChatMessageSender
+}
+
+func (*UpdateChatMessageSender) UpdateType() string {
+	return TypeUpdateChatMessageSender
+}
+
+func (updateChatMessageSender *UpdateChatMessageSender) UnmarshalJSON(data []byte) error {
+	var tmp struct {
+		ChatId          int64           `json:"chat_id"`
+		MessageSenderId json.RawMessage `json:"message_sender_id"`
+	}
+
+	err := json.Unmarshal(data, &tmp)
+	if err != nil {
+		return err
+	}
+
+	updateChatMessageSender.ChatId = tmp.ChatId
+
+	fieldMessageSenderId, _ := UnmarshalMessageSender(tmp.MessageSenderId)
+	updateChatMessageSender.MessageSenderId = fieldMessageSenderId
+
+	return nil
+}
+
+// The message Time To Live setting for a chat was changed
+type UpdateChatMessageTtl struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// New value of message_ttl
+	MessageTtl int32 `json:"message_ttl"`
+}
+
+func (entity *UpdateChatMessageTtl) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatMessageTtl
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatMessageTtl) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatMessageTtl) GetType() string {
+	return TypeUpdateChatMessageTtl
+}
+
+func (*UpdateChatMessageTtl) UpdateType() string {
+	return TypeUpdateChatMessageTtl
+}
+
+// Notification settings for a chat were changed
+type UpdateChatNotificationSettings struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// The new notification settings
+	NotificationSettings *ChatNotificationSettings `json:"notification_settings"`
+}
+
+func (entity *UpdateChatNotificationSettings) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatNotificationSettings
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatNotificationSettings) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatNotificationSettings) GetType() string {
+	return TypeUpdateChatNotificationSettings
+}
+
+func (*UpdateChatNotificationSettings) UpdateType() string {
+	return TypeUpdateChatNotificationSettings
 }
 
 // The chat pending join requests were changed
@@ -30101,35 +29829,236 @@ func (*UpdateChatReplyMarkup) UpdateType() string {
 	return TypeUpdateChatReplyMarkup
 }
 
-// A chat draft has changed. Be aware that the update may come in the currently opened chat but with old content of the draft. If the user has changed the content of the draft, this update mustn't be applied
-type UpdateChatDraftMessage struct {
+// The chat theme was changed
+type UpdateChatTheme struct {
 	meta
 	// Chat identifier
 	ChatId int64 `json:"chat_id"`
-	// The new draft message; may be null
-	DraftMessage *DraftMessage `json:"draft_message"`
-	// The new chat positions in the chat lists
-	Positions []*ChatPosition `json:"positions"`
+	// The new name of the chat theme; may be empty if theme was reset to default
+	ThemeName string `json:"theme_name"`
 }
 
-func (entity *UpdateChatDraftMessage) MarshalJSON() ([]byte, error) {
+func (entity *UpdateChatTheme) MarshalJSON() ([]byte, error) {
 	entity.meta.Type = entity.GetType()
 
-	type stub UpdateChatDraftMessage
+	type stub UpdateChatTheme
 
 	return json.Marshal((*stub)(entity))
 }
 
-func (*UpdateChatDraftMessage) GetClass() string {
+func (*UpdateChatTheme) GetClass() string {
 	return ClassUpdate
 }
 
-func (*UpdateChatDraftMessage) GetType() string {
-	return TypeUpdateChatDraftMessage
+func (*UpdateChatTheme) GetType() string {
+	return TypeUpdateChatTheme
 }
 
-func (*UpdateChatDraftMessage) UpdateType() string {
-	return TypeUpdateChatDraftMessage
+func (*UpdateChatTheme) UpdateType() string {
+	return TypeUpdateChatTheme
+}
+
+// The chat unread_mention_count has changed
+type UpdateChatUnreadMentionCount struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// The number of unread mention messages left in the chat
+	UnreadMentionCount int32 `json:"unread_mention_count"`
+}
+
+func (entity *UpdateChatUnreadMentionCount) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatUnreadMentionCount
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatUnreadMentionCount) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatUnreadMentionCount) GetType() string {
+	return TypeUpdateChatUnreadMentionCount
+}
+
+func (*UpdateChatUnreadMentionCount) UpdateType() string {
+	return TypeUpdateChatUnreadMentionCount
+}
+
+// A chat video chat state has changed
+type UpdateChatVideoChat struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// New value of video_chat
+	VideoChat *VideoChat `json:"video_chat"`
+}
+
+func (entity *UpdateChatVideoChat) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatVideoChat
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatVideoChat) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatVideoChat) GetType() string {
+	return TypeUpdateChatVideoChat
+}
+
+func (*UpdateChatVideoChat) UpdateType() string {
+	return TypeUpdateChatVideoChat
+}
+
+// The value of the default disable_notification parameter, used when a message is sent to the chat, was changed
+type UpdateChatDefaultDisableNotification struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// The new default_disable_notification value
+	DefaultDisableNotification bool `json:"default_disable_notification"`
+}
+
+func (entity *UpdateChatDefaultDisableNotification) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatDefaultDisableNotification
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatDefaultDisableNotification) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatDefaultDisableNotification) GetType() string {
+	return TypeUpdateChatDefaultDisableNotification
+}
+
+func (*UpdateChatDefaultDisableNotification) UpdateType() string {
+	return TypeUpdateChatDefaultDisableNotification
+}
+
+// A chat content was allowed or restricted for saving
+type UpdateChatHasProtectedContent struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// New value of has_protected_content
+	HasProtectedContent bool `json:"has_protected_content"`
+}
+
+func (entity *UpdateChatHasProtectedContent) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatHasProtectedContent
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatHasProtectedContent) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatHasProtectedContent) GetType() string {
+	return TypeUpdateChatHasProtectedContent
+}
+
+func (*UpdateChatHasProtectedContent) UpdateType() string {
+	return TypeUpdateChatHasProtectedContent
+}
+
+// A chat's has_scheduled_messages field has changed
+type UpdateChatHasScheduledMessages struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// New value of has_scheduled_messages
+	HasScheduledMessages bool `json:"has_scheduled_messages"`
+}
+
+func (entity *UpdateChatHasScheduledMessages) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatHasScheduledMessages
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatHasScheduledMessages) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatHasScheduledMessages) GetType() string {
+	return TypeUpdateChatHasScheduledMessages
+}
+
+func (*UpdateChatHasScheduledMessages) UpdateType() string {
+	return TypeUpdateChatHasScheduledMessages
+}
+
+// A chat was blocked or unblocked
+type UpdateChatIsBlocked struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// New value of is_blocked
+	IsBlocked bool `json:"is_blocked"`
+}
+
+func (entity *UpdateChatIsBlocked) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatIsBlocked
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatIsBlocked) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatIsBlocked) GetType() string {
+	return TypeUpdateChatIsBlocked
+}
+
+func (*UpdateChatIsBlocked) UpdateType() string {
+	return TypeUpdateChatIsBlocked
+}
+
+// A chat was marked as unread or was read
+type UpdateChatIsMarkedAsUnread struct {
+	meta
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+	// New value of is_marked_as_unread
+	IsMarkedAsUnread bool `json:"is_marked_as_unread"`
+}
+
+func (entity *UpdateChatIsMarkedAsUnread) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateChatIsMarkedAsUnread
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateChatIsMarkedAsUnread) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateChatIsMarkedAsUnread) GetType() string {
+	return TypeUpdateChatIsMarkedAsUnread
+}
+
+func (*UpdateChatIsMarkedAsUnread) UpdateType() string {
+	return TypeUpdateChatIsMarkedAsUnread
 }
 
 // The list of chat filters or a chat filter has changed
@@ -30186,6 +30115,54 @@ func (*UpdateChatOnlineMemberCount) GetType() string {
 
 func (*UpdateChatOnlineMemberCount) UpdateType() string {
 	return TypeUpdateChatOnlineMemberCount
+}
+
+// Notification settings for some type of chats were updated
+type UpdateScopeNotificationSettings struct {
+	meta
+	// Types of chats for which notification settings were updated
+	Scope NotificationSettingsScope `json:"scope"`
+	// The new notification settings
+	NotificationSettings *ScopeNotificationSettings `json:"notification_settings"`
+}
+
+func (entity *UpdateScopeNotificationSettings) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UpdateScopeNotificationSettings
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UpdateScopeNotificationSettings) GetClass() string {
+	return ClassUpdate
+}
+
+func (*UpdateScopeNotificationSettings) GetType() string {
+	return TypeUpdateScopeNotificationSettings
+}
+
+func (*UpdateScopeNotificationSettings) UpdateType() string {
+	return TypeUpdateScopeNotificationSettings
+}
+
+func (updateScopeNotificationSettings *UpdateScopeNotificationSettings) UnmarshalJSON(data []byte) error {
+	var tmp struct {
+		Scope                json.RawMessage            `json:"scope"`
+		NotificationSettings *ScopeNotificationSettings `json:"notification_settings"`
+	}
+
+	err := json.Unmarshal(data, &tmp)
+	if err != nil {
+		return err
+	}
+
+	updateScopeNotificationSettings.NotificationSettings = tmp.NotificationSettings
+
+	fieldScope, _ := UnmarshalNotificationSettingsScope(tmp.Scope)
+	updateScopeNotificationSettings.Scope = fieldScope
+
+	return nil
 }
 
 // A notification was changed

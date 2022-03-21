@@ -197,7 +197,7 @@
         },
         {
             "name": "authenticationCodeTypeFlashCall",
-            "description": "An authentication code is delivered by an immediately canceled call to the specified phone number. The phone number, from which the call was made, is the code that must be entered automatically",
+            "description": "An authentication code is delivered by an immediately canceled call to the specified phone number. The phone number that calls is the code that must be entered automatically",
             "class": "AuthenticationCodeType",
             "properties": [
                 {
@@ -209,7 +209,7 @@
         },
         {
             "name": "authenticationCodeTypeMissedCall",
-            "description": "An authentication code is delivered by an immediately canceled call to the specified phone number. The phone number, from which the call was made, is the code that is supposed to be entered manually by the user",
+            "description": "An authentication code is delivered by an immediately canceled call to the specified phone number. The last digits of the phone number that calls are the code that must be entered manually by the user",
             "class": "AuthenticationCodeType",
             "properties": [
                 {
@@ -526,7 +526,7 @@
                 {
                     "name": "can_be_downloaded",
                     "type": "Bool",
-                    "description": "True, if it is possible to try to download or generate the file"
+                    "description": "True, if it is possible to download or generate the file"
                 },
                 {
                     "name": "can_be_deleted",
@@ -2336,7 +2336,7 @@
                     "description": "Point in time (Unix timestamp) when the link was last edited; 0 if never or unknown"
                 },
                 {
-                    "name": "expire_date",
+                    "name": "expiration_date",
                     "type": "int32",
                     "description": "Point in time (Unix timestamp) when the link will expire; 0 if never"
                 },
@@ -2363,7 +2363,7 @@
                 {
                     "name": "is_primary",
                     "type": "Bool",
-                    "description": "True, if the link is primary. Primary invite link can't have name, expire date or usage limit. There is exactly one primary invite link for each administrator with can_invite_users right at a given time"
+                    "description": "True, if the link is primary. Primary invite link can't have name, expiration date, or usage limit. There is exactly one primary invite link for each administrator with can_invite_users right at a given time"
                 },
                 {
                     "name": "is_revoked",
@@ -2425,7 +2425,7 @@
         },
         {
             "name": "chatInviteLinkMember",
-            "description": "Describes a chat member joined a chat by an invite link",
+            "description": "Describes a chat member joined a chat via an invite link",
             "class": "ChatInviteLinkMember",
             "properties": [
                 {
@@ -2447,7 +2447,7 @@
         },
         {
             "name": "chatInviteLinkMembers",
-            "description": "Contains a list of chat members joined a chat by an invite link",
+            "description": "Contains a list of chat members joined a chat via an invite link",
             "class": "ChatInviteLinkMembers",
             "properties": [
                 {
@@ -2458,7 +2458,7 @@
                 {
                     "name": "members",
                     "type": "vector\u003cchatInviteLinkMember\u003e",
-                    "description": "List of chat members, joined a chat by an invite link"
+                    "description": "List of chat members, joined a chat via an invite link"
                 }
             ]
         },
@@ -2543,7 +2543,7 @@
         },
         {
             "name": "chatJoinRequests",
-            "description": "Contains a list of chat join requests",
+            "description": "Contains a list of requests to join a chat",
             "class": "ChatJoinRequests",
             "properties": [
                 {
@@ -2560,7 +2560,7 @@
         },
         {
             "name": "chatJoinRequestsInfo",
-            "description": "Contains information about pending chat join requests",
+            "description": "Contains information about pending join requests for a chat",
             "class": "ChatJoinRequestsInfo",
             "properties": [
                 {
@@ -2571,7 +2571,7 @@
                 {
                     "name": "user_ids",
                     "type": "vector\u003cint53\u003e",
-                    "description": "Identifiers of users sent the newest pending join requests"
+                    "description": "Identifiers of at most 3 users sent the newest pending join requests"
                 }
             ]
         },
@@ -2702,7 +2702,7 @@
                 {
                     "name": "is_broadcast_group",
                     "type": "Bool",
-                    "description": "True, if the supergroup is a broadcast group, i.e. only administrators can send messages and there is no limit on number of members"
+                    "description": "True, if the supergroup is a broadcast group, i.e. only administrators can send messages and there is no limit on the number of members"
                 },
                 {
                     "name": "is_verified",
@@ -2948,7 +2948,7 @@
         },
         {
             "name": "messageForwardOriginChat",
-            "description": "The message was originally sent by an anonymous chat administrator on behalf of the chat",
+            "description": "The message was originally sent on behalf of a chat",
             "class": "MessageForwardOrigin",
             "properties": [
                 {
@@ -2959,7 +2959,7 @@
                 {
                     "name": "author_signature",
                     "type": "string",
-                    "description": "Original message author signature"
+                    "description": "For messages originally sent by an anonymous chat administrator, original message author signature"
                 }
             ]
         },
@@ -3054,7 +3054,7 @@
                 {
                     "name": "recent_replier_ids",
                     "type": "vector\u003cMessageSender\u003e",
-                    "description": "Identifiers of recent repliers to the message; available in channels with a discussion supergroup"
+                    "description": "Identifiers of at most 3 recent repliers to the message; available in channels with a discussion supergroup. The users and chats are expected to be inaccessible: only their photo and name will be available"
                 },
                 {
                     "name": "last_read_inbox_message_id",
@@ -3390,24 +3390,24 @@
         },
         {
             "name": "messageCalendarDay",
-            "description": "Contains information about found messages sent in a specific day",
+            "description": "Contains information about found messages sent on a specific day",
             "class": "MessageCalendarDay",
             "properties": [
                 {
                     "name": "total_count",
                     "type": "int32",
-                    "description": "Total number of found messages sent in the day"
+                    "description": "Total number of found messages sent on the day"
                 },
                 {
                     "name": "message",
                     "type": "message",
-                    "description": "First message sent in the day"
+                    "description": "First message sent on the day"
                 }
             ]
         },
         {
             "name": "messageCalendar",
-            "description": "Contains information about found messages, splitted by days according to the option \"utc_time_offset\"",
+            "description": "Contains information about found messages, split by days according to the option \"utc_time_offset\"",
             "class": "MessageCalendar",
             "properties": [
                 {
@@ -3428,9 +3428,9 @@
             "class": "SponsoredMessage",
             "properties": [
                 {
-                    "name": "id",
-                    "type": "int32",
-                    "description": "Unique sponsored message identifier"
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "Message identifier; unique for the chat to which the sponsored message belongs among both ordinary and sponsored messages"
                 },
                 {
                     "name": "sponsor_chat_id",
@@ -3446,18 +3446,6 @@
                     "name": "content",
                     "type": "MessageContent",
                     "description": "Content of the message. Currently, can be only of the type messageText"
-                }
-            ]
-        },
-        {
-            "name": "sponsoredMessages",
-            "description": "Contains a list of sponsored messages",
-            "class": "SponsoredMessages",
-            "properties": [
-                {
-                    "name": "messages",
-                    "type": "vector\u003csponsoredMessage\u003e",
-                    "description": "List of sponsored messages"
                 }
             ]
         },
@@ -3661,7 +3649,7 @@
                 {
                     "name": "icon_name",
                     "type": "string",
-                    "description": "The icon name for short filter representation. If non-empty, must be one of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\". If empty, use getChatFilterDefaultIconName to get default icon name for the filter"
+                    "description": "The chosen icon name for short filter representation. If non-empty, must be one of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\". If empty, use getChatFilterDefaultIconName to get default icon name for the filter"
                 },
                 {
                     "name": "pinned_chat_ids",
@@ -3738,7 +3726,7 @@
                 {
                     "name": "icon_name",
                     "type": "string",
-                    "description": "The icon name for short filter representation. One of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\""
+                    "description": "The chosen or default icon name for short filter representation. One of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\""
                 }
             ]
         },
@@ -3920,9 +3908,9 @@
                     "description": "Positions of the chat in chat lists"
                 },
                 {
-                    "name": "default_message_sender_id",
+                    "name": "message_sender_id",
                     "type": "MessageSender",
-                    "description": "Default identifier of a user or chat that is chosen to send messages in the chat; may be null if the user can't change message sender"
+                    "description": "Identifier of a user or chat that is selected to send messages in the chat; may be null if the user can't change message sender"
                 },
                 {
                     "name": "has_protected_content",
@@ -3990,7 +3978,7 @@
                     "description": "Notification settings for this chat"
                 },
                 {
-                    "name": "message_ttl_setting",
+                    "name": "message_ttl",
                     "type": "int32",
                     "description": "Current message Time To Live setting (self-destruct timer) for the chat; 0 if not defined. TTL is counted from the time message or its content is viewed in secret chats and from the send date in other chats"
                 },
@@ -7638,7 +7626,7 @@
         },
         {
             "name": "messageChatJoinByLink",
-            "description": "A new member joined the chat by invite link",
+            "description": "A new member joined the chat via an invite link",
             "class": "MessageContent",
             "properties": []
         },
@@ -7727,7 +7715,7 @@
                 {
                     "name": "ttl",
                     "type": "int32",
-                    "description": "New message TTL setting"
+                    "description": "New message TTL"
                 }
             ]
         },
@@ -8645,7 +8633,7 @@
                 {
                     "name": "copy_options",
                     "type": "messageCopyOptions",
-                    "description": "Options to be used to copy content of the message without reference to the original sender; pass null to try to forward the message as usual"
+                    "description": "Options to be used to copy content of the message without reference to the original sender; pass null to forward the message as usual"
                 }
             ]
         },
@@ -9454,7 +9442,7 @@
                 {
                     "name": "recent_speakers",
                     "type": "vector\u003cgroupCallRecentSpeaker\u003e",
-                    "description": "Recently speaking users in the group call"
+                    "description": "At most 3 recently speaking users in the group call"
                 },
                 {
                     "name": "is_my_video_enabled",
@@ -10904,7 +10892,7 @@
         },
         {
             "name": "chatEventMemberJoinedByInviteLink",
-            "description": "A new member joined the chat by an invite link",
+            "description": "A new member joined the chat via an invite link",
             "class": "ChatEventAction",
             "properties": [
                 {
@@ -11130,19 +11118,19 @@
             ]
         },
         {
-            "name": "chatEventMessageTtlSettingChanged",
-            "description": "The message TTL setting was changed",
+            "name": "chatEventMessageTtlChanged",
+            "description": "The message TTL was changed",
             "class": "ChatEventAction",
             "properties": [
                 {
-                    "name": "old_message_ttl_setting",
+                    "name": "old_message_ttl",
                     "type": "int32",
-                    "description": "Previous value of message_ttl_setting"
+                    "description": "Previous value of message_ttl"
                 },
                 {
-                    "name": "new_message_ttl_setting",
+                    "name": "new_message_ttl",
                     "type": "int32",
-                    "description": "New value of message_ttl_setting"
+                    "description": "New value of message_ttl"
                 }
             ]
         },
@@ -11270,8 +11258,8 @@
             ]
         },
         {
-            "name": "chatEventVideoChatDiscarded",
-            "description": "A video chat was discarded",
+            "name": "chatEventVideoChatEnded",
+            "description": "A video chat was ended",
             "class": "ChatEventAction",
             "properties": [
                 {
@@ -11343,14 +11331,14 @@
                     "description": "Point in time (Unix timestamp) when the event happened"
                 },
                 {
-                    "name": "user_id",
-                    "type": "int53",
-                    "description": "Identifier of the user who performed the action that triggered the event"
+                    "name": "member_id",
+                    "type": "MessageSender",
+                    "description": "Identifier of the user or chat who performed the action"
                 },
                 {
                     "name": "action",
                     "type": "ChatEventAction",
-                    "description": "Action performed by the user"
+                    "description": "The action"
                 }
             ]
         },
@@ -11609,7 +11597,7 @@
                 {
                     "name": "token",
                     "type": "string",
-                    "description": "Device registration token; may be empty to de-register a device"
+                    "description": "Device registration token; may be empty to deregister a device"
                 },
                 {
                     "name": "encrypt",
@@ -11626,7 +11614,7 @@
                 {
                     "name": "device_token",
                     "type": "string",
-                    "description": "Device token; may be empty to de-register a device"
+                    "description": "Device token; may be empty to deregister a device"
                 },
                 {
                     "name": "is_app_sandbox",
@@ -11643,7 +11631,7 @@
                 {
                     "name": "device_token",
                     "type": "string",
-                    "description": "Device token; may be empty to de-register a device"
+                    "description": "Device token; may be empty to deregister a device"
                 },
                 {
                     "name": "is_app_sandbox",
@@ -11665,7 +11653,7 @@
                 {
                     "name": "access_token",
                     "type": "string",
-                    "description": "The access token that will be used to send notifications; may be empty to de-register a device"
+                    "description": "The access token that will be used to send notifications; may be empty to deregister a device"
                 }
             ]
         },
@@ -11677,7 +11665,7 @@
                 {
                     "name": "channel_uri",
                     "type": "string",
-                    "description": "Push notification channel URI; may be empty to de-register a device"
+                    "description": "Push notification channel URI; may be empty to deregister a device"
                 }
             ]
         },
@@ -11689,7 +11677,7 @@
                 {
                     "name": "channel_uri",
                     "type": "string",
-                    "description": "Push notification channel URI; may be empty to de-register a device"
+                    "description": "Push notification channel URI; may be empty to deregister a device"
                 }
             ]
         },
@@ -11701,7 +11689,7 @@
                 {
                     "name": "endpoint",
                     "type": "string",
-                    "description": "Absolute URL exposed by the push service where the application server can send push messages; may be empty to de-register a device"
+                    "description": "Absolute URL exposed by the push service where the application server can send push messages; may be empty to deregister a device"
                 },
                 {
                     "name": "p256dh_base64url",
@@ -11723,7 +11711,7 @@
                 {
                     "name": "endpoint",
                     "type": "string",
-                    "description": "Absolute URL exposed by the push service where the application server can send push messages; may be empty to de-register a device"
+                    "description": "Absolute URL exposed by the push service where the application server can send push messages; may be empty to deregister a device"
                 }
             ]
         },
@@ -11735,7 +11723,7 @@
                 {
                     "name": "token",
                     "type": "string",
-                    "description": "Token; may be empty to de-register a device"
+                    "description": "Token; may be empty to deregister a device"
                 }
             ]
         },
@@ -11747,7 +11735,7 @@
                 {
                     "name": "token",
                     "type": "string",
-                    "description": "Token; may be empty to de-register a device"
+                    "description": "Token; may be empty to deregister a device"
                 }
             ]
         },
@@ -11759,7 +11747,7 @@
                 {
                     "name": "reg_id",
                     "type": "string",
-                    "description": "Push service registration identifier; may be empty to de-register a device"
+                    "description": "Push service registration identifier; may be empty to deregister a device"
                 }
             ]
         },
@@ -12561,7 +12549,7 @@
         },
         {
             "name": "pushMessageContentChatJoinByLink",
-            "description": "A new member joined the chat by invite link",
+            "description": "A new member joined the chat via an invite link",
             "class": "PushMessageContent",
             "properties": []
         },
@@ -14165,7 +14153,7 @@
         },
         {
             "name": "suggestedActionCheckPassword",
-            "description": "Suggests the user to check whether 2-step verification password is still remembered",
+            "description": "Suggests the user to check whether they still remember their 2-step verification password",
             "class": "SuggestedAction",
             "properties": []
         },
@@ -14176,8 +14164,8 @@
             "properties": []
         },
         {
-            "name": "suggestedActionSeeTicksHint",
-            "description": "Suggests the user to see a hint about meaning of one and two ticks on sent messages",
+            "name": "suggestedActionViewChecksHint",
+            "description": "Suggests the user to view a hint about the meaning of one and two check marks on sent messages",
             "class": "SuggestedAction",
             "properties": []
         },
@@ -15217,125 +15205,6 @@
             ]
         },
         {
-            "name": "updateChatDefaultMessageSenderId",
-            "description": "The default message sender that is chosen to send messages in a chat has changed",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "default_message_sender_id",
-                    "type": "MessageSender",
-                    "description": "New value of default_message_sender_id; may be null if the user can't change message sender"
-                }
-            ]
-        },
-        {
-            "name": "updateChatHasProtectedContent",
-            "description": "A chat content was allowed or restricted for saving",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "has_protected_content",
-                    "type": "Bool",
-                    "description": "New value of has_protected_content"
-                }
-            ]
-        },
-        {
-            "name": "updateChatIsMarkedAsUnread",
-            "description": "A chat was marked as unread or was read",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "is_marked_as_unread",
-                    "type": "Bool",
-                    "description": "New value of is_marked_as_unread"
-                }
-            ]
-        },
-        {
-            "name": "updateChatIsBlocked",
-            "description": "A chat was blocked or unblocked",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "is_blocked",
-                    "type": "Bool",
-                    "description": "New value of is_blocked"
-                }
-            ]
-        },
-        {
-            "name": "updateChatHasScheduledMessages",
-            "description": "A chat's has_scheduled_messages field has changed",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "has_scheduled_messages",
-                    "type": "Bool",
-                    "description": "New value of has_scheduled_messages"
-                }
-            ]
-        },
-        {
-            "name": "updateChatVideoChat",
-            "description": "A chat video chat state has changed",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "video_chat",
-                    "type": "videoChat",
-                    "description": "New value of video_chat"
-                }
-            ]
-        },
-        {
-            "name": "updateChatDefaultDisableNotification",
-            "description": "The value of the default disable_notification parameter, used when a message is sent to the chat, was changed",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "default_disable_notification",
-                    "type": "Bool",
-                    "description": "The new default_disable_notification value"
-                }
-            ]
-        },
-        {
             "name": "updateChatReadInbox",
             "description": "Incoming messages were read or the number of unread messages has been changed",
             "class": "Update",
@@ -15375,74 +15244,6 @@
             ]
         },
         {
-            "name": "updateChatUnreadMentionCount",
-            "description": "The chat unread_mention_count has changed",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "unread_mention_count",
-                    "type": "int32",
-                    "description": "The number of unread mention messages left in the chat"
-                }
-            ]
-        },
-        {
-            "name": "updateChatNotificationSettings",
-            "description": "Notification settings for a chat were changed",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "notification_settings",
-                    "type": "chatNotificationSettings",
-                    "description": "The new notification settings"
-                }
-            ]
-        },
-        {
-            "name": "updateScopeNotificationSettings",
-            "description": "Notification settings for some type of chats were updated",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "scope",
-                    "type": "NotificationSettingsScope",
-                    "description": "Types of chats for which notification settings were updated"
-                },
-                {
-                    "name": "notification_settings",
-                    "type": "scopeNotificationSettings",
-                    "description": "The new notification settings"
-                }
-            ]
-        },
-        {
-            "name": "updateChatMessageTtlSetting",
-            "description": "The message Time To Live setting for a chat was changed",
-            "class": "Update",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                },
-                {
-                    "name": "message_ttl_setting",
-                    "type": "int32",
-                    "description": "New value of message_ttl_setting"
-                }
-            ]
-        },
-        {
             "name": "updateChatActionBar",
             "description": "The chat action bar was changed",
             "class": "Update",
@@ -15460,8 +15261,8 @@
             ]
         },
         {
-            "name": "updateChatTheme",
-            "description": "The chat theme was changed",
+            "name": "updateChatDraftMessage",
+            "description": "A chat draft has changed. Be aware that the update may come in the currently opened chat but with old content of the draft. If the user has changed the content of the draft, this update mustn't be applied",
             "class": "Update",
             "properties": [
                 {
@@ -15470,9 +15271,65 @@
                     "description": "Chat identifier"
                 },
                 {
-                    "name": "theme_name",
-                    "type": "string",
-                    "description": "The new name of the chat theme; may be empty if theme was reset to default"
+                    "name": "draft_message",
+                    "type": "draftMessage",
+                    "description": "The new draft message; may be null"
+                },
+                {
+                    "name": "positions",
+                    "type": "vector\u003cchatPosition\u003e",
+                    "description": "The new chat positions in the chat lists"
+                }
+            ]
+        },
+        {
+            "name": "updateChatMessageSender",
+            "description": "The message sender that is selected to send messages in a chat has changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "message_sender_id",
+                    "type": "MessageSender",
+                    "description": "New value of message_sender_id; may be null if the user can't change message sender"
+                }
+            ]
+        },
+        {
+            "name": "updateChatMessageTtl",
+            "description": "The message Time To Live setting for a chat was changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "message_ttl",
+                    "type": "int32",
+                    "description": "New value of message_ttl"
+                }
+            ]
+        },
+        {
+            "name": "updateChatNotificationSettings",
+            "description": "Notification settings for a chat were changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "notification_settings",
+                    "type": "chatNotificationSettings",
+                    "description": "The new notification settings"
                 }
             ]
         },
@@ -15511,8 +15368,8 @@
             ]
         },
         {
-            "name": "updateChatDraftMessage",
-            "description": "A chat draft has changed. Be aware that the update may come in the currently opened chat but with old content of the draft. If the user has changed the content of the draft, this update mustn't be applied",
+            "name": "updateChatTheme",
+            "description": "The chat theme was changed",
             "class": "Update",
             "properties": [
                 {
@@ -15521,14 +15378,128 @@
                     "description": "Chat identifier"
                 },
                 {
-                    "name": "draft_message",
-                    "type": "draftMessage",
-                    "description": "The new draft message; may be null"
+                    "name": "theme_name",
+                    "type": "string",
+                    "description": "The new name of the chat theme; may be empty if theme was reset to default"
+                }
+            ]
+        },
+        {
+            "name": "updateChatUnreadMentionCount",
+            "description": "The chat unread_mention_count has changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
                 },
                 {
-                    "name": "positions",
-                    "type": "vector\u003cchatPosition\u003e",
-                    "description": "The new chat positions in the chat lists"
+                    "name": "unread_mention_count",
+                    "type": "int32",
+                    "description": "The number of unread mention messages left in the chat"
+                }
+            ]
+        },
+        {
+            "name": "updateChatVideoChat",
+            "description": "A chat video chat state has changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "video_chat",
+                    "type": "videoChat",
+                    "description": "New value of video_chat"
+                }
+            ]
+        },
+        {
+            "name": "updateChatDefaultDisableNotification",
+            "description": "The value of the default disable_notification parameter, used when a message is sent to the chat, was changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "default_disable_notification",
+                    "type": "Bool",
+                    "description": "The new default_disable_notification value"
+                }
+            ]
+        },
+        {
+            "name": "updateChatHasProtectedContent",
+            "description": "A chat content was allowed or restricted for saving",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "has_protected_content",
+                    "type": "Bool",
+                    "description": "New value of has_protected_content"
+                }
+            ]
+        },
+        {
+            "name": "updateChatHasScheduledMessages",
+            "description": "A chat's has_scheduled_messages field has changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "has_scheduled_messages",
+                    "type": "Bool",
+                    "description": "New value of has_scheduled_messages"
+                }
+            ]
+        },
+        {
+            "name": "updateChatIsBlocked",
+            "description": "A chat was blocked or unblocked",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "is_blocked",
+                    "type": "Bool",
+                    "description": "New value of is_blocked"
+                }
+            ]
+        },
+        {
+            "name": "updateChatIsMarkedAsUnread",
+            "description": "A chat was marked as unread or was read",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "is_marked_as_unread",
+                    "type": "Bool",
+                    "description": "New value of is_marked_as_unread"
                 }
             ]
         },
@@ -15558,6 +15529,23 @@
                     "name": "online_member_count",
                     "type": "int32",
                     "description": "New number of online members in the chat, or 0 if unknown"
+                }
+            ]
+        },
+        {
+            "name": "updateScopeNotificationSettings",
+            "description": "Notification settings for some type of chats were updated",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "scope",
+                    "type": "NotificationSettingsScope",
+                    "description": "Types of chats for which notification settings were updated"
+                },
+                {
+                    "name": "notification_settings",
+                    "type": "scopeNotificationSettings",
+                    "description": "The new notification settings"
                 }
             ]
         },
@@ -18239,7 +18227,7 @@
                 {
                     "name": "revoke",
                     "type": "Bool",
-                    "description": "Pass true to try to delete chat history for all users"
+                    "description": "Pass true to delete chat history for all users"
                 }
             ],
             "is_synchronous": false,
@@ -18511,7 +18499,7 @@
         },
         {
             "name": "getChatMessageCalendar",
-            "description": "Returns information about the next messages of the specified type in the chat splitted by days. Returns the results in reverse chronological order. Can return partial result for the last returned day. Behavior of this method depends on the value of the option \"utc_time_offset\"",
+            "description": "Returns information about the next messages of the specified type in the chat split by days. Returns the results in reverse chronological order. Can return partial result for the last returned day. Behavior of this method depends on the value of the option \"utc_time_offset\"",
             "class": "MessageCalendar",
             "properties": [
                 {
@@ -18601,33 +18589,14 @@
             "type": 2
         },
         {
-            "name": "getChatSponsoredMessages",
-            "description": "Returns sponsored messages to be shown in a chat; for channel chats only",
-            "class": "SponsoredMessages",
+            "name": "getChatSponsoredMessage",
+            "description": "Returns sponsored message to be shown in a chat; for channel chats only. Returns a 404 error if there is no sponsored message in the chat",
+            "class": "SponsoredMessage",
             "properties": [
                 {
                     "name": "chat_id",
                     "type": "int53",
                     "description": "Identifier of the chat"
-                }
-            ],
-            "is_synchronous": false,
-            "type": 2
-        },
-        {
-            "name": "viewSponsoredMessage",
-            "description": "Informs TDLib that a sponsored message was viewed by the user",
-            "class": "Ok",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Identifier of the chat with the sponsored message"
-                },
-                {
-                    "name": "sponsored_message_id",
-                    "type": "int32",
-                    "description": "The identifier of the sponsored message being viewed"
                 }
             ],
             "is_synchronous": false,
@@ -18758,8 +18727,8 @@
             "type": 2
         },
         {
-            "name": "setChatDefaultMessageSender",
-            "description": "Changes default message sender that is chosen in a chat",
+            "name": "setChatMessageSender",
+            "description": "Selects a message sender to send messages in a chat",
             "class": "Ok",
             "properties": [
                 {
@@ -18768,9 +18737,9 @@
                     "description": "Chat identifier"
                 },
                 {
-                    "name": "default_message_sender_id",
+                    "name": "message_sender_id",
                     "type": "MessageSender",
-                    "description": "New default message sender in the chat"
+                    "description": "New message sender for the chat"
                 }
             ],
             "is_synchronous": false,
@@ -19046,7 +19015,7 @@
                 {
                     "name": "revoke",
                     "type": "Bool",
-                    "description": "Pass true to try to delete messages for all chat members. Always true for supergroups, channels and secret chats"
+                    "description": "Pass true to delete messages for all chat members. Always true for supergroups, channels and secret chats"
                 }
             ],
             "is_synchronous": false,
@@ -19094,7 +19063,7 @@
                 {
                     "name": "revoke",
                     "type": "Bool",
-                    "description": "Pass true to try to delete chat messages for all users; private chats only"
+                    "description": "Pass true to delete chat messages for all users; private chats only"
                 }
             ],
             "is_synchronous": false,
@@ -20076,7 +20045,7 @@
         },
         {
             "name": "viewMessages",
-            "description": "Informs TDLib that messages are being viewed by the user. Many useful activities depend on whether the messages are currently being viewed or not (e.g., marking messages as read, incrementing a view counter, updating a view counter, removing deleted messages in supergroups and channels)",
+            "description": "Informs TDLib that messages are being viewed by the user. Sponsored messages must be marked as viewed only when the entire text of the message is shown on the screen (excluding the button). Many useful activities depend on whether the messages are currently being viewed or not (e.g., marking messages as read, incrementing a view counter, updating a view counter, removing deleted messages in supergroups and channels)",
             "class": "Ok",
             "properties": [
                 {
@@ -20523,8 +20492,8 @@
             "type": 1
         },
         {
-            "name": "setChatMessageTtlSetting",
-            "description": "Changes the message TTL setting (sets a new self-destruct timer) in a chat. Requires can_delete_messages administrator right in basic groups, supergroups and channels Message TTL setting of a chat with the current user (Saved Messages) and the chat 777000 (Telegram) can't be changed",
+            "name": "setChatMessageTtl",
+            "description": "Changes the message TTL in a chat. Requires can_delete_messages administrator right in basic groups, supergroups and channels Message TTL can't be changed in a chat with the current user (Saved Messages) and the chat 777000 (Telegram)",
             "class": "Ok",
             "properties": [
                 {
@@ -21487,14 +21456,14 @@
                     "description": "Invite link name; 0-32 characters"
                 },
                 {
-                    "name": "expire_date",
+                    "name": "expiration_date",
                     "type": "int32",
                     "description": "Point in time (Unix timestamp) when the link will expire; pass 0 if never"
                 },
                 {
                     "name": "member_limit",
                     "type": "int32",
-                    "description": "The maximum number of chat members that can join the chat by the link simultaneously; 0-99999; pass 0 if not limited"
+                    "description": "The maximum number of chat members that can join the chat via the link simultaneously; 0-99999; pass 0 if not limited"
                 },
                 {
                     "name": "creates_join_request",
@@ -21526,14 +21495,14 @@
                     "description": "Invite link name; 0-32 characters"
                 },
                 {
-                    "name": "expire_date",
+                    "name": "expiration_date",
                     "type": "int32",
                     "description": "Point in time (Unix timestamp) when the link will expire; pass 0 if never"
                 },
                 {
                     "name": "member_limit",
                     "type": "int32",
-                    "description": "The maximum number of chat members that can join the chat by the link simultaneously; 0-99999; pass 0 if not limited"
+                    "description": "The maximum number of chat members that can join the chat via the link simultaneously; 0-99999; pass 0 if not limited"
                 },
                 {
                     "name": "creates_join_request",
@@ -21618,7 +21587,7 @@
         },
         {
             "name": "getChatInviteLinkMembers",
-            "description": "Returns chat members joined a chat by an invite link. Requires administrator privileges and can_invite_users right in the chat for own links and owner privileges for other links",
+            "description": "Returns chat members joined a chat via an invite link. Requires administrator privileges and can_invite_users right in the chat for own links and owner privileges for other links",
             "class": "ChatInviteLinkMembers",
             "properties": [
                 {
@@ -21758,7 +21727,7 @@
                 {
                     "name": "limit",
                     "type": "int32",
-                    "description": "The maximum number of chat join requests to return"
+                    "description": "The maximum number of requests to join the chat to return"
                 }
             ],
             "is_synchronous": false,
@@ -21958,7 +21927,7 @@
         },
         {
             "name": "getVideoChatAvailableParticipants",
-            "description": "Returns list of participant identifiers, which can be used to join video chats in a chat",
+            "description": "Returns list of participant identifiers, on whose behalf a video chat in the chat can be joined",
             "class": "MessageSenders",
             "properties": [
                 {
@@ -21972,7 +21941,7 @@
         },
         {
             "name": "setVideoChatDefaultParticipant",
-            "description": "Changes default participant identifier, which can be used to join video chats in a chat",
+            "description": "Changes default participant identifier, on whose behalf a video chat in the chat will be joined",
             "class": "Ok",
             "properties": [
                 {
@@ -22462,8 +22431,8 @@
             "type": 2
         },
         {
-            "name": "discardGroupCall",
-            "description": "Discards a group call. Requires groupCall.can_be_managed",
+            "name": "endGroupCall",
+            "description": "Ends a group call. Requires groupCall.can_be_managed",
             "class": "Ok",
             "properties": [
                 {
