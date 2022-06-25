@@ -545,17 +545,17 @@
                 },
                 {
                     "name": "download_offset",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "Download will be started from this offset. downloaded_prefix_size is calculated from this offset"
                 },
                 {
                     "name": "downloaded_prefix_size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "If is_downloading_completed is false, then only some prefix of the file starting from download_offset is ready to be read. downloaded_prefix_size is the size of that prefix in bytes"
                 },
                 {
                     "name": "downloaded_size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "Total downloaded file size, in bytes. Can be used only for calculating download progress. The actual file size may be bigger, and some parts of it may contain garbage"
                 }
             ]
@@ -587,7 +587,7 @@
                 },
                 {
                     "name": "uploaded_size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "Size of the remote available part of the file, in bytes; 0 if unknown"
                 }
             ]
@@ -604,12 +604,12 @@
                 },
                 {
                     "name": "size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "File size, in bytes; 0 if unknown"
                 },
                 {
                     "name": "expected_size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "Approximate file size in bytes in case the exact file size is unknown. Can be used to show download/upload progress"
                 },
                 {
@@ -677,7 +677,7 @@
                 },
                 {
                     "name": "expected_size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "Expected size of the generated file, in bytes; 0 if unknown"
                 }
             ]
@@ -1153,6 +1153,11 @@
                     "description": "Sticker thumbnail in WEBP or JPEG format; may be null"
                 },
                 {
+                    "name": "premium_animation",
+                    "type": "file",
+                    "description": "Premium animation of the sticker; may be null. If present, only Premium users can send the sticker"
+                },
+                {
                     "name": "sticker",
                     "type": "file",
                     "description": "File containing the sticker"
@@ -1267,6 +1272,16 @@
                     "name": "mime_type",
                     "type": "string",
                     "description": "MIME type of the file; as defined by the sender"
+                },
+                {
+                    "name": "is_recognized",
+                    "type": "Bool",
+                    "description": "True, if speech recognition is completed; Premium users only"
+                },
+                {
+                    "name": "recognized_text",
+                    "type": "string",
+                    "description": "Recognized text of the voice note; Premium users only. Call recognizeSpeech to get recognized text of the voice note"
                 },
                 {
                     "name": "voice",
@@ -1587,6 +1602,11 @@
                     "name": "need_location",
                     "type": "Bool",
                     "description": "True, if the location of the user is expected to be sent with every inline query to this bot"
+                },
+                {
+                    "name": "can_be_added_to_attachment_menu",
+                    "type": "Bool",
+                    "description": "True, if the bot can be added to attachment menu"
                 }
             ]
         },
@@ -1627,6 +1647,23 @@
                     "name": "commands",
                     "type": "vector\u003cbotCommand\u003e",
                     "description": "List of bot commands"
+                }
+            ]
+        },
+        {
+            "name": "botMenuButton",
+            "description": "Describes a button to be shown instead of bot commands menu button",
+            "class": "BotMenuButton",
+            "properties": [
+                {
+                    "name": "text",
+                    "type": "string",
+                    "description": "Text of the button"
+                },
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "URL to be passed to openWebApp"
                 }
             ]
         },
@@ -1697,7 +1734,12 @@
                 {
                     "name": "animation",
                     "type": "animatedChatPhoto",
-                    "description": "Animated variant of the photo in MPEG4 format; may be null"
+                    "description": "A big (640x640) animated variant of the photo in MPEG4 format; may be null"
+                },
+                {
+                    "name": "small_animation",
+                    "type": "animatedChatPhoto",
+                    "description": "A small (160x160) animated variant of the photo in MPEG4 format; may be null even the big animation is available"
                 }
             ]
         },
@@ -1760,6 +1802,115 @@
             ]
         },
         {
+            "name": "chatPermissions",
+            "description": "Describes actions that a user is allowed to take in a chat",
+            "class": "ChatPermissions",
+            "properties": [
+                {
+                    "name": "can_send_messages",
+                    "type": "Bool",
+                    "description": "True, if the user can send text messages, contacts, locations, and venues"
+                },
+                {
+                    "name": "can_send_media_messages",
+                    "type": "Bool",
+                    "description": "True, if the user can send audio files, documents, photos, videos, video notes, and voice notes. Implies can_send_messages permissions"
+                },
+                {
+                    "name": "can_send_polls",
+                    "type": "Bool",
+                    "description": "True, if the user can send polls. Implies can_send_messages permissions"
+                },
+                {
+                    "name": "can_send_other_messages",
+                    "type": "Bool",
+                    "description": "True, if the user can send animations, games, stickers, and dice and use inline bots. Implies can_send_messages permissions"
+                },
+                {
+                    "name": "can_add_web_page_previews",
+                    "type": "Bool",
+                    "description": "True, if the user may add a web page preview to their messages. Implies can_send_messages permissions"
+                },
+                {
+                    "name": "can_change_info",
+                    "type": "Bool",
+                    "description": "True, if the user can change the chat title, photo, and other settings"
+                },
+                {
+                    "name": "can_invite_users",
+                    "type": "Bool",
+                    "description": "True, if the user can invite new users to the chat"
+                },
+                {
+                    "name": "can_pin_messages",
+                    "type": "Bool",
+                    "description": "True, if the user can pin messages"
+                }
+            ]
+        },
+        {
+            "name": "chatAdministratorRights",
+            "description": "Describes rights of the administrator",
+            "class": "ChatAdministratorRights",
+            "properties": [
+                {
+                    "name": "can_manage_chat",
+                    "type": "Bool",
+                    "description": "True, if the administrator can get chat event log, get chat statistics, get message statistics in channels, get channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other privilege; applicable to supergroups and channels only"
+                },
+                {
+                    "name": "can_change_info",
+                    "type": "Bool",
+                    "description": "True, if the administrator can change the chat title, photo, and other settings"
+                },
+                {
+                    "name": "can_post_messages",
+                    "type": "Bool",
+                    "description": "True, if the administrator can create channel posts; applicable to channels only"
+                },
+                {
+                    "name": "can_edit_messages",
+                    "type": "Bool",
+                    "description": "True, if the administrator can edit messages of other users and pin messages; applicable to channels only"
+                },
+                {
+                    "name": "can_delete_messages",
+                    "type": "Bool",
+                    "description": "True, if the administrator can delete messages of other users"
+                },
+                {
+                    "name": "can_invite_users",
+                    "type": "Bool",
+                    "description": "True, if the administrator can invite new users to the chat"
+                },
+                {
+                    "name": "can_restrict_members",
+                    "type": "Bool",
+                    "description": "True, if the administrator can restrict, ban, or unban chat members; always true for channels"
+                },
+                {
+                    "name": "can_pin_messages",
+                    "type": "Bool",
+                    "description": "True, if the administrator can pin messages; applicable to basic groups and supergroups only"
+                },
+                {
+                    "name": "can_promote_members",
+                    "type": "Bool",
+                    "description": "True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that were directly or indirectly promoted by them"
+                },
+                {
+                    "name": "can_manage_video_chats",
+                    "type": "Bool",
+                    "description": "True, if the administrator can manage video chats"
+                },
+                {
+                    "name": "is_anonymous",
+                    "type": "Bool",
+                    "description": "True, if the administrator isn't shown in the chat member list and sends messages anonymously; applicable to supergroups only"
+                }
+            ]
+        },
+        {
             "name": "user",
             "description": "Represents a user",
             "class": "User",
@@ -1815,6 +1966,11 @@
                     "description": "True, if the user is verified"
                 },
                 {
+                    "name": "is_premium",
+                    "type": "Bool",
+                    "description": "True, if the user is a Telegram Premium user"
+                },
+                {
                     "name": "is_support",
                     "type": "Bool",
                     "description": "True, if the user is Telegram support account"
@@ -1848,6 +2004,58 @@
                     "name": "language_code",
                     "type": "string",
                     "description": "IETF language tag of the user's language; only available to bots"
+                },
+                {
+                    "name": "added_to_attachment_menu",
+                    "type": "Bool",
+                    "description": "True, if the user added the current bot to attachment menu; only available to bots"
+                }
+            ]
+        },
+        {
+            "name": "botInfo",
+            "description": "Contains information about a bot",
+            "class": "BotInfo",
+            "properties": [
+                {
+                    "name": "share_text",
+                    "type": "string",
+                    "description": "The text that is shown on the bot's profile page and is sent together with the link when users share the bot"
+                },
+                {
+                    "name": "description",
+                    "type": "string",
+                    "description": "The text shown in the chat with the bot if the chat is empty"
+                },
+                {
+                    "name": "photo",
+                    "type": "photo",
+                    "description": "Photo shown in the chat with the bot if the chat is empty; may be null"
+                },
+                {
+                    "name": "animation",
+                    "type": "animation",
+                    "description": "Animation shown in the chat with the bot if the chat is empty; may be null"
+                },
+                {
+                    "name": "menu_button",
+                    "type": "botMenuButton",
+                    "description": "Information about a button to show instead of the bot commands menu button; may be null if ordinary bot commands menu must be shown"
+                },
+                {
+                    "name": "commands",
+                    "type": "vector\u003cbotCommand\u003e",
+                    "description": "List of the bot commands"
+                },
+                {
+                    "name": "default_group_administrator_rights",
+                    "type": "chatAdministratorRights",
+                    "description": "Default administrator rights for adding the bot to basic group and supergroup chats; may be null"
+                },
+                {
+                    "name": "default_channel_administrator_rights",
+                    "type": "chatAdministratorRights",
+                    "description": "Default administrator rights for adding the bot to channels; may be null"
                 }
             ]
         },
@@ -1893,18 +2101,8 @@
                 },
                 {
                     "name": "bio",
-                    "type": "string",
-                    "description": "A short user bio"
-                },
-                {
-                    "name": "share_text",
-                    "type": "string",
-                    "description": "For bots, the text that is shown on the bot's profile page and is sent together with the link when users share the bot"
-                },
-                {
-                    "name": "description",
-                    "type": "string",
-                    "description": "For bots, the text shown in the chat with the bot if the chat is empty"
+                    "type": "formattedText",
+                    "description": "A short user bio; may be null for bots"
                 },
                 {
                     "name": "group_in_common_count",
@@ -1912,9 +2110,9 @@
                     "description": "Number of group chats where both the other user and the current user are a member; 0 for the current user"
                 },
                 {
-                    "name": "commands",
-                    "type": "vector\u003cbotCommand\u003e",
-                    "description": "For bots, list of the bot commands"
+                    "name": "bot_info",
+                    "type": "botInfo",
+                    "description": "For bots, information about the bot; may be null"
                 }
             ]
         },
@@ -1970,53 +2168,6 @@
             ]
         },
         {
-            "name": "chatPermissions",
-            "description": "Describes actions that a user is allowed to take in a chat",
-            "class": "ChatPermissions",
-            "properties": [
-                {
-                    "name": "can_send_messages",
-                    "type": "Bool",
-                    "description": "True, if the user can send text messages, contacts, locations, and venues"
-                },
-                {
-                    "name": "can_send_media_messages",
-                    "type": "Bool",
-                    "description": "True, if the user can send audio files, documents, photos, videos, video notes, and voice notes. Implies can_send_messages permissions"
-                },
-                {
-                    "name": "can_send_polls",
-                    "type": "Bool",
-                    "description": "True, if the user can send polls. Implies can_send_messages permissions"
-                },
-                {
-                    "name": "can_send_other_messages",
-                    "type": "Bool",
-                    "description": "True, if the user can send animations, games, stickers, and dice and use inline bots. Implies can_send_messages permissions"
-                },
-                {
-                    "name": "can_add_web_page_previews",
-                    "type": "Bool",
-                    "description": "True, if the user may add a web page preview to their messages. Implies can_send_messages permissions"
-                },
-                {
-                    "name": "can_change_info",
-                    "type": "Bool",
-                    "description": "True, if the user can change the chat title, photo, and other settings"
-                },
-                {
-                    "name": "can_invite_users",
-                    "type": "Bool",
-                    "description": "True, if the user can invite new users to the chat"
-                },
-                {
-                    "name": "can_pin_messages",
-                    "type": "Bool",
-                    "description": "True, if the user can pin messages"
-                }
-            ]
-        },
-        {
             "name": "chatMemberStatusCreator",
             "description": "The user is the owner of the chat and has all the administrator privileges",
             "class": "ChatMemberStatus",
@@ -2054,59 +2205,9 @@
                     "description": "True, if the current user can edit the administrator privileges for the called user"
                 },
                 {
-                    "name": "can_manage_chat",
-                    "type": "Bool",
-                    "description": "True, if the administrator can get chat event log, get chat statistics, get message statistics in channels, get channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other privilege; applicable to supergroups and channels only"
-                },
-                {
-                    "name": "can_change_info",
-                    "type": "Bool",
-                    "description": "True, if the administrator can change the chat title, photo, and other settings"
-                },
-                {
-                    "name": "can_post_messages",
-                    "type": "Bool",
-                    "description": "True, if the administrator can create channel posts; applicable to channels only"
-                },
-                {
-                    "name": "can_edit_messages",
-                    "type": "Bool",
-                    "description": "True, if the administrator can edit messages of other users and pin messages; applicable to channels only"
-                },
-                {
-                    "name": "can_delete_messages",
-                    "type": "Bool",
-                    "description": "True, if the administrator can delete messages of other users"
-                },
-                {
-                    "name": "can_invite_users",
-                    "type": "Bool",
-                    "description": "True, if the administrator can invite new users to the chat"
-                },
-                {
-                    "name": "can_restrict_members",
-                    "type": "Bool",
-                    "description": "True, if the administrator can restrict, ban, or unban chat members; always true for channels"
-                },
-                {
-                    "name": "can_pin_messages",
-                    "type": "Bool",
-                    "description": "True, if the administrator can pin messages; applicable to basic groups and supergroups only"
-                },
-                {
-                    "name": "can_promote_members",
-                    "type": "Bool",
-                    "description": "True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that were directly or indirectly promoted by them"
-                },
-                {
-                    "name": "can_manage_video_chats",
-                    "type": "Bool",
-                    "description": "True, if the administrator can manage video chats"
-                },
-                {
-                    "name": "is_anonymous",
-                    "type": "Bool",
-                    "description": "True, if the administrator isn't shown in the chat member list and sends messages anonymously; applicable to supergroups only"
+                    "name": "rights",
+                    "type": "chatAdministratorRights",
+                    "description": "Rights of the administrator"
                 }
             ]
         },
@@ -2716,6 +2817,16 @@
                     "description": "True, if messages sent to the channel need to contain information about the sender. This field is only applicable to channels"
                 },
                 {
+                    "name": "join_to_send_messages",
+                    "type": "Bool",
+                    "description": "True, if users need to join the supergroup before they can send messages. Always true for channels and non-discussion supergroups"
+                },
+                {
+                    "name": "join_by_request",
+                    "type": "Bool",
+                    "description": "True, if all users directly joining the supergroup need to be approved by supergroup administrators. Always false for channels and supergroups without username, location, or a linked chat"
+                },
+                {
                     "name": "is_slow_mode_enabled",
                     "type": "Bool",
                     "description": "True, if the slow mode is enabled in the supergroup"
@@ -2915,7 +3026,7 @@
                 {
                     "name": "layer",
                     "type": "int32",
-                    "description": "Secret chat layer; determines features supported by the chat partner's application. Nested text entities and underline and strikethrough entities are supported if the layer \u003e= 101"
+                    "description": "Secret chat layer; determines features supported by the chat partner's application. Nested text entities and underline and strikethrough entities are supported if the layer \u003e= 101, files bigger than 2000MB are supported if the layer \u003e= 143"
                 }
             ]
         },
@@ -3122,7 +3233,7 @@
                 {
                     "name": "recent_sender_ids",
                     "type": "vector\u003cMessageSender\u003e",
-                    "description": "Identifiers of at most 3 recent message senders, added the reaction; available in private chats, basic groups and supergroups"
+                    "description": "Identifiers of at most 3 recent message senders, added the reaction; available in private, basic group and supergroup chats"
                 }
             ]
         },
@@ -3523,6 +3634,11 @@
                     "description": "Message identifier; unique for the chat to which the sponsored message belongs among both ordinary and sponsored messages"
                 },
                 {
+                    "name": "is_recommended",
+                    "type": "Bool",
+                    "description": "True, if the message needs to be labeled as \"recommended\" instead of \"sponsored\""
+                },
+                {
                     "name": "sponsor_chat_id",
                     "type": "int53",
                     "description": "Sponsor chat identifier; 0 if the sponsor chat is accessible through an invite link"
@@ -3535,7 +3651,7 @@
                 {
                     "name": "link",
                     "type": "InternalLinkType",
-                    "description": "An internal link to be opened when the sponsored message is clicked; may be null. If null, the sponsor chat needs to be opened instead"
+                    "description": "An internal link to be opened when the sponsored message is clicked; may be null if the sponsor chat needs to be opened instead"
                 },
                 {
                     "name": "content",
@@ -3628,13 +3744,13 @@
         },
         {
             "name": "notificationSettingsScopeGroupChats",
-            "description": "Notification settings applied to all basic groups and supergroups when the corresponding chat setting has a default value",
+            "description": "Notification settings applied to all basic group and supergroup chats when the corresponding chat setting has a default value",
             "class": "NotificationSettingsScope",
             "properties": []
         },
         {
             "name": "notificationSettingsScopeChannelChats",
-            "description": "Notification settings applied to all channels when the corresponding chat setting has a default value",
+            "description": "Notification settings applied to all channel chats when the corresponding chat setting has a default value",
             "class": "NotificationSettingsScope",
             "properties": []
         },
@@ -3656,12 +3772,12 @@
                 {
                     "name": "use_default_sound",
                     "type": "Bool",
-                    "description": "If true, sound is ignored and the value for the relevant type of chat is used instead"
+                    "description": "If true, the value for the relevant type of chat is used instead of sound_id"
                 },
                 {
-                    "name": "sound",
-                    "type": "string",
-                    "description": "The name of an audio file to be used for notification sounds; only applies to iOS applications"
+                    "name": "sound_id",
+                    "type": "int64",
+                    "description": "Identifier of the notification sound to be played; 0 if sound is disabled"
                 },
                 {
                     "name": "use_default_show_preview",
@@ -3706,9 +3822,9 @@
                     "description": "Time left before notifications will be unmuted, in seconds"
                 },
                 {
-                    "name": "sound",
-                    "type": "string",
-                    "description": "The name of an audio file to be used for notification sounds; only applies to iOS applications"
+                    "name": "sound_id",
+                    "type": "int64",
+                    "description": "Identifier of the notification sound to be played; 0 if sound is disabled"
                 },
                 {
                     "name": "show_preview",
@@ -3735,7 +3851,7 @@
                 {
                     "name": "reply_to_message_id",
                     "type": "int53",
-                    "description": "Identifier of the message to reply to; 0 if none"
+                    "description": "Identifier of the replied message; 0 if none"
                 },
                 {
                     "name": "date",
@@ -3820,22 +3936,22 @@
                 {
                     "name": "icon_name",
                     "type": "string",
-                    "description": "The chosen icon name for short filter representation. If non-empty, must be one of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\". If empty, use getChatFilterDefaultIconName to get default icon name for the filter"
+                    "description": "The chosen icon name for short filter representation. If non-empty, must be one of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\", \"Airplane\", \"Book\", \"Light\", \"Like\", \"Money\", \"Note\", \"Palette\". If empty, use getChatFilterDefaultIconName to get default icon name for the filter"
                 },
                 {
                     "name": "pinned_chat_ids",
                     "type": "vector\u003cint53\u003e",
-                    "description": "The chat identifiers of pinned chats in the filtered chat list"
+                    "description": "The chat identifiers of pinned chats in the filtered chat list. There can be up to GetOption(\"chat_filter_chosen_chat_count_max\") pinned and always included non-secret chats and the same number of secret chats, but the limit can be increased with Telegram Premium"
                 },
                 {
                     "name": "included_chat_ids",
                     "type": "vector\u003cint53\u003e",
-                    "description": "The chat identifiers of always included chats in the filtered chat list"
+                    "description": "The chat identifiers of always included chats in the filtered chat list. There can be up to GetOption(\"chat_filter_chosen_chat_count_max\") pinned and always included non-secret chats and the same number of secret chats, but the limit can be increased with Telegram Premium"
                 },
                 {
                     "name": "excluded_chat_ids",
                     "type": "vector\u003cint53\u003e",
-                    "description": "The chat identifiers of always excluded chats in the filtered chat list"
+                    "description": "The chat identifiers of always excluded chats in the filtered chat list. There can be up to GetOption(\"chat_filter_chosen_chat_count_max\") always excluded non-secret chats and the same number of secret chats, but the limit can be increased with Telegram Premium"
                 },
                 {
                     "name": "exclude_muted",
@@ -3897,7 +4013,7 @@
                 {
                     "name": "icon_name",
                     "type": "string",
-                    "description": "The chosen or default icon name for short filter representation. One of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\""
+                    "description": "The chosen or default icon name for short filter representation. One of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\", \"Airplane\", \"Book\", \"Light\", \"Like\", \"Money\", \"Note\", \"Palette\""
                 }
             ]
         },
@@ -4374,6 +4490,18 @@
             ]
         },
         {
+            "name": "keyboardButtonTypeWebApp",
+            "description": "A button that opens a Web App by calling getWebAppUrl",
+            "class": "KeyboardButtonType",
+            "properties": [
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "An HTTP URL to pass to getWebAppUrl"
+                }
+            ]
+        },
+        {
             "name": "keyboardButton",
             "description": "Represents a single button in a bot keyboard",
             "class": "KeyboardButton",
@@ -4404,13 +4532,13 @@
         },
         {
             "name": "inlineKeyboardButtonTypeLoginUrl",
-            "description": "A button that opens a specified URL and automatically authorize the current user if allowed to do so",
+            "description": "A button that opens a specified URL and automatically authorize the current user by calling getLoginUrlInfo",
             "class": "InlineKeyboardButtonType",
             "properties": [
                 {
                     "name": "url",
                     "type": "string",
-                    "description": "An HTTP URL to open"
+                    "description": "An HTTP URL to pass to getLoginUrlInfo"
                 },
                 {
                     "name": "id",
@@ -4421,6 +4549,18 @@
                     "name": "forward_text",
                     "type": "string",
                     "description": "If non-empty, new text of the button in forwarded messages"
+                }
+            ]
+        },
+        {
+            "name": "inlineKeyboardButtonTypeWebApp",
+            "description": "A button that opens a Web App by calling openWebApp",
+            "class": "InlineKeyboardButtonType",
+            "properties": [
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "An HTTP URL to pass to openWebApp"
                 }
             ]
         },
@@ -4620,6 +4760,23 @@
                     "name": "request_write_access",
                     "type": "Bool",
                     "description": "True, if the user needs to be requested to give the permission to the bot to send them messages"
+                }
+            ]
+        },
+        {
+            "name": "webAppInfo",
+            "description": "Contains information about a Web App",
+            "class": "WebAppInfo",
+            "properties": [
+                {
+                    "name": "launch_id",
+                    "type": "int64",
+                    "description": "Unique identifier for the Web App launch"
+                },
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "A Web App URL to open in a web view"
                 }
             ]
         },
@@ -5493,7 +5650,7 @@
                 {
                     "name": "username",
                     "type": "string",
-                    "description": "Chat username, by which all other information about the chat can be resolved"
+                    "description": "Chat username by which all other information about the chat can be resolved"
                 }
             ]
         },
@@ -5882,6 +6039,48 @@
             ]
         },
         {
+            "name": "themeParameters",
+            "description": "Contains parameters of the application theme",
+            "class": "ThemeParameters",
+            "properties": [
+                {
+                    "name": "background_color",
+                    "type": "int32",
+                    "description": "A color of the background in the RGB24 format"
+                },
+                {
+                    "name": "secondary_background_color",
+                    "type": "int32",
+                    "description": "A secondary color for the background in the RGB24 format"
+                },
+                {
+                    "name": "text_color",
+                    "type": "int32",
+                    "description": "A color of text in the RGB24 format"
+                },
+                {
+                    "name": "hint_color",
+                    "type": "int32",
+                    "description": "A color of hints in the RGB24 format"
+                },
+                {
+                    "name": "link_color",
+                    "type": "int32",
+                    "description": "A color of links in the RGB24 format"
+                },
+                {
+                    "name": "button_color",
+                    "type": "int32",
+                    "description": "A color of the buttons in the RGB24 format"
+                },
+                {
+                    "name": "button_text_color",
+                    "type": "int32",
+                    "description": "A color of text on the buttons in the RGB24 format"
+                }
+            ]
+        },
+        {
             "name": "labeledPricePart",
             "description": "Portion of the price of a product (e.g., \"delivery cost\", \"tax amount\")",
             "class": "LabeledPricePart",
@@ -5922,6 +6121,11 @@
                     "name": "suggested_tip_amounts",
                     "type": "vector\u003cint53\u003e",
                     "description": "Suggested amounts of tip in the smallest units of the currency"
+                },
+                {
+                    "name": "recurring_payment_terms_of_service_url",
+                    "type": "string",
+                    "description": "An HTTP URL with terms of service for recurring payments. If non-empty, the invoice payment will result in recurring payments and the user must accept the terms of service before allowed to pay"
                 },
                 {
                     "name": "is_test",
@@ -6085,9 +6289,21 @@
             ]
         },
         {
-            "name": "paymentsProviderStripe",
+            "name": "paymentProviderSmartGlocal",
+            "description": "Smart Glocal payment provider",
+            "class": "PaymentProvider",
+            "properties": [
+                {
+                    "name": "public_token",
+                    "type": "string",
+                    "description": "Public payment token"
+                }
+            ]
+        },
+        {
+            "name": "paymentProviderStripe",
             "description": "Stripe payment provider",
-            "class": "PaymentsProviderStripe",
+            "class": "PaymentProvider",
             "properties": [
                 {
                     "name": "publishable_key",
@@ -6112,39 +6328,14 @@
             ]
         },
         {
-            "name": "paymentFormTheme",
-            "description": "Theme colors for a payment form",
-            "class": "PaymentFormTheme",
+            "name": "paymentProviderOther",
+            "description": "Some other payment provider, for which a web payment form must be shown",
+            "class": "PaymentProvider",
             "properties": [
                 {
-                    "name": "background_color",
-                    "type": "int32",
-                    "description": "A color of the payment form background in the RGB24 format"
-                },
-                {
-                    "name": "text_color",
-                    "type": "int32",
-                    "description": "A color of text in the RGB24 format"
-                },
-                {
-                    "name": "hint_color",
-                    "type": "int32",
-                    "description": "A color of hints in the RGB24 format"
-                },
-                {
-                    "name": "link_color",
-                    "type": "int32",
-                    "description": "A color of links in the RGB24 format"
-                },
-                {
-                    "name": "button_color",
-                    "type": "int32",
-                    "description": "A color of the buttons in the RGB24 format"
-                },
-                {
-                    "name": "button_text_color",
-                    "type": "int32",
-                    "description": "A color of text on the buttons in the RGB24 format"
+                    "name": "url",
+                    "type": "string",
+                    "description": "Payment form URL"
                 }
             ]
         },
@@ -6161,12 +6352,7 @@
                 {
                     "name": "invoice",
                     "type": "invoice",
-                    "description": "Full information of the invoice"
-                },
-                {
-                    "name": "url",
-                    "type": "string",
-                    "description": "Payment form URL"
+                    "description": "Full information about the invoice"
                 },
                 {
                     "name": "seller_bot_user_id",
@@ -6174,14 +6360,14 @@
                     "description": "User identifier of the seller bot"
                 },
                 {
-                    "name": "payments_provider_user_id",
+                    "name": "payment_provider_user_id",
                     "type": "int53",
                     "description": "User identifier of the payment provider bot"
                 },
                 {
-                    "name": "payments_provider",
-                    "type": "paymentsProviderStripe",
-                    "description": "Information about the payment provider, if available, to support it natively without the need for opening the URL; may be null"
+                    "name": "payment_provider",
+                    "type": "PaymentProvider",
+                    "description": "Information about the payment provider"
                 },
                 {
                     "name": "saved_order_info",
@@ -6202,6 +6388,21 @@
                     "name": "need_password",
                     "type": "Bool",
                     "description": "True, if the user will be able to save credentials protected by a password they set up"
+                },
+                {
+                    "name": "product_title",
+                    "type": "string",
+                    "description": "Product title"
+                },
+                {
+                    "name": "product_description",
+                    "type": "formattedText",
+                    "description": "Product description"
+                },
+                {
+                    "name": "product_photo",
+                    "type": "photo",
+                    "description": "Product photo; may be null"
                 }
             ]
         },
@@ -6251,7 +6452,7 @@
                 },
                 {
                     "name": "description",
-                    "type": "string",
+                    "type": "formattedText",
                     "description": "Product description"
                 },
                 {
@@ -6270,7 +6471,7 @@
                     "description": "User identifier of the seller bot"
                 },
                 {
-                    "name": "payments_provider_user_id",
+                    "name": "payment_provider_user_id",
                     "type": "int53",
                     "description": "User identifier of the payment provider bot"
                 },
@@ -6298,6 +6499,35 @@
                     "name": "tip_amount",
                     "type": "int53",
                     "description": "The amount of tip chosen by the buyer in the smallest units of the currency"
+                }
+            ]
+        },
+        {
+            "name": "inputInvoiceMessage",
+            "description": "An invoice from a message of the type messageInvoice",
+            "class": "InputInvoice",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier of the message"
+                },
+                {
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "Message identifier"
+                }
+            ]
+        },
+        {
+            "name": "inputInvoiceName",
+            "description": "An invoice from a link of the type internalLinkTypeInvoice",
+            "class": "InputInvoice",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Name of the invoice"
                 }
             ]
         },
@@ -7398,6 +7628,11 @@
                     "name": "sticker",
                     "type": "sticker",
                     "description": "The sticker description"
+                },
+                {
+                    "name": "is_premium",
+                    "type": "Bool",
+                    "description": "True, if premium animation of the sticker must be played"
                 }
             ]
         },
@@ -7614,7 +7849,7 @@
                 },
                 {
                     "name": "description",
-                    "type": "string",
+                    "type": "formattedText",
                     "description": "Product description"
                 },
                 {
@@ -7947,7 +8182,7 @@
                 {
                     "name": "invoice_message_id",
                     "type": "int53",
-                    "description": "Identifier of the message with the corresponding invoice; can be an identifier of a deleted message"
+                    "description": "Identifier of the message with the corresponding invoice; can be 0 or an identifier of a deleted message"
                 },
                 {
                     "name": "currency",
@@ -7958,6 +8193,21 @@
                     "name": "total_amount",
                     "type": "int53",
                     "description": "Total price for the product, in the smallest units of the currency"
+                },
+                {
+                    "name": "is_recurring",
+                    "type": "Bool",
+                    "description": "True, if this is a recurring payment"
+                },
+                {
+                    "name": "is_first_recurring",
+                    "type": "Bool",
+                    "description": "True, if this is the first recurring payment"
+                },
+                {
+                    "name": "invoice_name",
+                    "type": "string",
+                    "description": "Name of the invoice; may be empty if unknown"
                 }
             ]
         },
@@ -7975,6 +8225,16 @@
                     "name": "total_amount",
                     "type": "int53",
                     "description": "Total price for the product, in the smallest units of the currency"
+                },
+                {
+                    "name": "is_recurring",
+                    "type": "Bool",
+                    "description": "True, if this is a recurring payment"
+                },
+                {
+                    "name": "is_first_recurring",
+                    "type": "Bool",
+                    "description": "True, if this is the first recurring payment"
                 },
                 {
                     "name": "invoice_payload",
@@ -8022,8 +8282,37 @@
             ]
         },
         {
+            "name": "messageWebAppDataSent",
+            "description": "Data from a Web App has been sent to a bot",
+            "class": "MessageContent",
+            "properties": [
+                {
+                    "name": "button_text",
+                    "type": "string",
+                    "description": "Text of the keyboardButtonTypeWebApp button, which opened the Web App"
+                }
+            ]
+        },
+        {
+            "name": "messageWebAppDataReceived",
+            "description": "Data from a Web App has been received; for bots only",
+            "class": "MessageContent",
+            "properties": [
+                {
+                    "name": "button_text",
+                    "type": "string",
+                    "description": "Text of the keyboardButtonTypeWebApp button, which opened the Web App"
+                },
+                {
+                    "name": "data",
+                    "type": "string",
+                    "description": "Received data"
+                }
+            ]
+        },
+        {
             "name": "messagePassportDataSent",
-            "description": "Telegram Passport data has been sent",
+            "description": "Telegram Passport data has been sent to a bot",
             "class": "MessageContent",
             "properties": [
                 {
@@ -8441,7 +8730,7 @@
                 {
                     "name": "photo",
                     "type": "InputFile",
-                    "description": "Photo to send"
+                    "description": "Photo to send. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20"
                 },
                 {
                     "name": "thumbnail",
@@ -9281,6 +9570,28 @@
             ]
         },
         {
+            "name": "trendingStickerSets",
+            "description": "Represents a list of trending sticker sets",
+            "class": "TrendingStickerSets",
+            "properties": [
+                {
+                    "name": "total_count",
+                    "type": "int32",
+                    "description": "Approximate total number of trending sticker sets"
+                },
+                {
+                    "name": "sets",
+                    "type": "vector\u003cstickerSetInfo\u003e",
+                    "description": "List of trending sticker sets"
+                },
+                {
+                    "name": "is_premium",
+                    "type": "Bool",
+                    "description": "True, if the list contains sticker sets with premium stickers"
+                }
+            ]
+        },
+        {
             "name": "callDiscardReasonEmpty",
             "description": "The call wasn't discarded, or the reason is unknown",
             "class": "CallDiscardReason",
@@ -9351,6 +9662,11 @@
                     "name": "peer_tag",
                     "type": "bytes",
                     "description": "A peer tag to be used with the reflector"
+                },
+                {
+                    "name": "is_tcp",
+                    "type": "Bool",
+                    "description": "True, if the server uses TCP instead of UDP"
                 }
             ]
         },
@@ -9522,6 +9838,11 @@
                     "name": "need_debug_information",
                     "type": "Bool",
                     "description": "True, if the call debug information must be sent to the server"
+                },
+                {
+                    "name": "need_log",
+                    "type": "Bool",
+                    "description": "True, if the call log must be sent to the server"
                 }
             ]
         },
@@ -10029,13 +10350,30 @@
             ]
         },
         {
+            "name": "availableReaction",
+            "description": "Represents an available reaction",
+            "class": "AvailableReaction",
+            "properties": [
+                {
+                    "name": "reaction",
+                    "type": "string",
+                    "description": "Text representation of the reaction"
+                },
+                {
+                    "name": "needs_premium",
+                    "type": "Bool",
+                    "description": "True, if Telegram Premium is needed to send the reaction"
+                }
+            ]
+        },
+        {
             "name": "availableReactions",
             "description": "Represents a list of available reactions",
             "class": "AvailableReactions",
             "properties": [
                 {
                     "name": "reactions",
-                    "type": "vector\u003cstring\u003e",
+                    "type": "vector\u003cavailableReaction\u003e",
                     "description": "List of reactions"
                 }
             ]
@@ -10059,6 +10397,11 @@
                     "name": "is_active",
                     "type": "Bool",
                     "description": "True, if the reaction can be added to new messages and enabled in chats"
+                },
+                {
+                    "name": "is_premium",
+                    "type": "Bool",
+                    "description": "True, if the reaction is available only for Premium users"
                 },
                 {
                     "name": "static_icon",
@@ -10167,6 +10510,122 @@
                     "name": "importer_count",
                     "type": "vector\u003cint32\u003e",
                     "description": "The number of users that imported the corresponding contact; 0 for already registered users or if unavailable"
+                }
+            ]
+        },
+        {
+            "name": "attachmentMenuBotColor",
+            "description": "Describes a color to highlight a bot added to attachment menu",
+            "class": "AttachmentMenuBotColor",
+            "properties": [
+                {
+                    "name": "light_color",
+                    "type": "int32",
+                    "description": "Color in the RGB24 format for light themes"
+                },
+                {
+                    "name": "dark_color",
+                    "type": "int32",
+                    "description": "Color in the RGB24 format for dark themes"
+                }
+            ]
+        },
+        {
+            "name": "attachmentMenuBot",
+            "description": "Represents a bot added to attachment menu",
+            "class": "AttachmentMenuBot",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "User identifier of the bot added to attachment menu"
+                },
+                {
+                    "name": "supports_self_chat",
+                    "type": "Bool",
+                    "description": "True, if the bot supports opening from attachment menu in the chat with the bot"
+                },
+                {
+                    "name": "supports_user_chats",
+                    "type": "Bool",
+                    "description": "True, if the bot supports opening from attachment menu in private chats with ordinary users"
+                },
+                {
+                    "name": "supports_bot_chats",
+                    "type": "Bool",
+                    "description": "True, if the bot supports opening from attachment menu in private chats with other bots"
+                },
+                {
+                    "name": "supports_group_chats",
+                    "type": "Bool",
+                    "description": "True, if the bot supports opening from attachment menu in basic group and supergroup chats"
+                },
+                {
+                    "name": "supports_channel_chats",
+                    "type": "Bool",
+                    "description": "True, if the bot supports opening from attachment menu in channel chats"
+                },
+                {
+                    "name": "supports_settings",
+                    "type": "Bool",
+                    "description": "True, if the bot supports \"settings_button_pressed\" event"
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Name for the bot in attachment menu"
+                },
+                {
+                    "name": "name_color",
+                    "type": "attachmentMenuBotColor",
+                    "description": "Color to highlight selected name of the bot if appropriate; may be null"
+                },
+                {
+                    "name": "default_icon",
+                    "type": "file",
+                    "description": "Default attachment menu icon for the bot in SVG format; may be null"
+                },
+                {
+                    "name": "ios_static_icon",
+                    "type": "file",
+                    "description": "Attachment menu icon for the bot in SVG format for the official iOS app; may be null"
+                },
+                {
+                    "name": "ios_animated_icon",
+                    "type": "file",
+                    "description": "Attachment menu icon for the bot in TGS format for the official iOS app; may be null"
+                },
+                {
+                    "name": "android_icon",
+                    "type": "file",
+                    "description": "Attachment menu icon for the bot in TGS format for the official Android app; may be null"
+                },
+                {
+                    "name": "macos_icon",
+                    "type": "file",
+                    "description": "Attachment menu icon for the bot in TGS format for the official native macOS app; may be null"
+                },
+                {
+                    "name": "icon_color",
+                    "type": "attachmentMenuBotColor",
+                    "description": "Color to highlight selected icon of the bot if appropriate; may be null"
+                },
+                {
+                    "name": "web_app_placeholder",
+                    "type": "file",
+                    "description": "Default placeholder for opened Web Apps in SVG format; may be null"
+                }
+            ]
+        },
+        {
+            "name": "sentWebAppMessage",
+            "description": "Information about the message sent by answerWebAppQuery",
+            "class": "SentWebAppMessage",
+            "properties": [
+                {
+                    "name": "inline_message_id",
+                    "type": "string",
+                    "description": "Identifier of the sent inline message, if known"
                 }
             ]
         },
@@ -11964,6 +12423,262 @@
             ]
         },
         {
+            "name": "premiumLimitTypeSupergroupCount",
+            "description": "The maximum number of joined supergroups and channels",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypePinnedChatCount",
+            "description": "The maximum number of pinned chats in the main chat list",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeCreatedPublicChatCount",
+            "description": "The maximum number of created public chats",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeSavedAnimationCount",
+            "description": "The maximum number of saved animations",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeFavoriteStickerCount",
+            "description": "The maximum number of favorite stickers",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeChatFilterCount",
+            "description": "The maximum number of chat filters",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeChatFilterChosenChatCount",
+            "description": "The maximum number of pinned and always included, or always excluded chats in a chat filter",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypePinnedArchivedChatCount",
+            "description": "The maximum number of pinned chats in the archive chat list",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeCaptionLength",
+            "description": "The maximum length of sent media caption",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeBioLength",
+            "description": "The maximum length of the user's bio",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureIncreasedLimits",
+            "description": "Increased limits",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureIncreasedUploadFileSize",
+            "description": "Increased maximum upload file size",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureImprovedDownloadSpeed",
+            "description": "Improved download speed",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureVoiceRecognition",
+            "description": "The ability to convert voice notes to text",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureDisabledAds",
+            "description": "Disabled ads",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureUniqueReactions",
+            "description": "Allowed to use more reactions",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureUniqueStickers",
+            "description": "Allowed to use premium stickers with unique effects",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureAdvancedChatManagement",
+            "description": "Ability to change position of the main chat list, archive and mute all new chats from non-contacts, and completely disable notifications about the user's contacts joined Telegram",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureProfileBadge",
+            "description": "A badge in the user's profile",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureAnimatedProfilePhoto",
+            "description": "Profile photo animation on message and chat screens",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumFeatureAppIcons",
+            "description": "Allowed to set a premium appllication icons",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
+            "name": "premiumLimit",
+            "description": "Contains information about a limit, increased for Premium users",
+            "class": "PremiumLimit",
+            "properties": [
+                {
+                    "name": "type",
+                    "type": "PremiumLimitType",
+                    "description": "The type of the limit"
+                },
+                {
+                    "name": "default_value",
+                    "type": "int32",
+                    "description": "Default value of the limit"
+                },
+                {
+                    "name": "premium_value",
+                    "type": "int32",
+                    "description": "Value of the limit for Premium users"
+                }
+            ]
+        },
+        {
+            "name": "premiumFeatures",
+            "description": "Contains information about features, available to Premium users",
+            "class": "PremiumFeatures",
+            "properties": [
+                {
+                    "name": "features",
+                    "type": "vector\u003cPremiumFeature\u003e",
+                    "description": "The list of available features"
+                },
+                {
+                    "name": "limits",
+                    "type": "vector\u003cpremiumLimit\u003e",
+                    "description": "The list of limits, increased for Premium users"
+                },
+                {
+                    "name": "payment_link",
+                    "type": "InternalLinkType",
+                    "description": "An internal link to be opened to pay for Telegram Premium if store payment isn't possible; may be null if direct payment isn't available. If the link has type internalLinkTypeBotStart, then sendBotStartMessage must be called automatically"
+                }
+            ]
+        },
+        {
+            "name": "premiumSourceLimitExceeded",
+            "description": "A limit was exceeded",
+            "class": "PremiumSource",
+            "properties": [
+                {
+                    "name": "limit_type",
+                    "type": "PremiumLimitType",
+                    "description": "Type of the exceeded limit"
+                }
+            ]
+        },
+        {
+            "name": "premiumSourceFeature",
+            "description": "A user tried to use a Premium feature",
+            "class": "PremiumSource",
+            "properties": [
+                {
+                    "name": "feature",
+                    "type": "PremiumFeature",
+                    "description": "The used feature"
+                }
+            ]
+        },
+        {
+            "name": "premiumSourceLink",
+            "description": "A user opened an internal link of the type internalLinkTypePremiumFeatures",
+            "class": "PremiumSource",
+            "properties": [
+                {
+                    "name": "referrer",
+                    "type": "string",
+                    "description": "The referrer from the link"
+                }
+            ]
+        },
+        {
+            "name": "premiumSourceSettings",
+            "description": "A user opened the Premium features screen from settings",
+            "class": "PremiumSource",
+            "properties": []
+        },
+        {
+            "name": "premiumFeaturePromotionAnimation",
+            "description": "Describes a promotion animation for a Premium feature",
+            "class": "PremiumFeaturePromotionAnimation",
+            "properties": [
+                {
+                    "name": "feature",
+                    "type": "PremiumFeature",
+                    "description": "Premium feature"
+                },
+                {
+                    "name": "animation",
+                    "type": "animation",
+                    "description": "Promotion animation for the feature"
+                }
+            ]
+        },
+        {
+            "name": "premiumState",
+            "description": "Contains state of Telegram Premium subscription and promotion videos for Premium features",
+            "class": "PremiumState",
+            "properties": [
+                {
+                    "name": "state",
+                    "type": "formattedText",
+                    "description": "Text description of the state of the current Premium subscription; may be empty if the current user has no Telegram Premium subscription"
+                },
+                {
+                    "name": "currency",
+                    "type": "string",
+                    "description": "ISO 4217 currency code for Telegram Premium subscription payment"
+                },
+                {
+                    "name": "monthly_amount",
+                    "type": "int53",
+                    "description": "Monthly subscription payment for Telegram Premium subscription, in the smallest units of the currency"
+                },
+                {
+                    "name": "animations",
+                    "type": "vector\u003cpremiumFeaturePromotionAnimation\u003e",
+                    "description": "The list of available promotion animations for Premium features"
+                }
+            ]
+        },
+        {
             "name": "deviceTokenFirebaseCloudMessaging",
             "description": "A token for Firebase Cloud Messaging",
             "class": "DeviceToken",
@@ -12934,6 +13649,18 @@
             "properties": []
         },
         {
+            "name": "pushMessageContentRecurringPayment",
+            "description": "A new recurrent payment was made by the current user",
+            "class": "PushMessageContent",
+            "properties": [
+                {
+                    "name": "amount",
+                    "type": "string",
+                    "description": "The paid amount"
+                }
+            ]
+        },
+        {
             "name": "pushMessageContentMessageForwards",
             "description": "A forwarded messages",
             "class": "PushMessageContent",
@@ -12986,6 +13713,11 @@
                     "name": "message",
                     "type": "message",
                     "description": "The message"
+                },
+                {
+                    "name": "show_preview",
+                    "type": "Bool",
+                    "description": "True, if message content must be displayed in notifications"
                 }
             ]
         },
@@ -13064,6 +13796,55 @@
             "properties": []
         },
         {
+            "name": "notificationSound",
+            "description": "Describes a notification sound in MP3 format",
+            "class": "NotificationSound",
+            "properties": [
+                {
+                    "name": "id",
+                    "type": "int64",
+                    "description": "Unique identifier of the notification sound"
+                },
+                {
+                    "name": "duration",
+                    "type": "int32",
+                    "description": "Duration of the sound, in seconds"
+                },
+                {
+                    "name": "date",
+                    "type": "int32",
+                    "description": "Point in time (Unix timestamp) when the sound was created"
+                },
+                {
+                    "name": "title",
+                    "type": "string",
+                    "description": "Title of the notification sound"
+                },
+                {
+                    "name": "data",
+                    "type": "string",
+                    "description": "Arbitrary data, defined while the sound was uploaded"
+                },
+                {
+                    "name": "sound",
+                    "type": "file",
+                    "description": "File containing the sound"
+                }
+            ]
+        },
+        {
+            "name": "notificationSounds",
+            "description": "Contains a list of notification sounds",
+            "class": "NotificationSounds",
+            "properties": [
+                {
+                    "name": "notification_sounds",
+                    "type": "vector\u003cnotificationSound\u003e",
+                    "description": "A list of notification sounds"
+                }
+            ]
+        },
+        {
             "name": "notification",
             "description": "Contains information about a notification",
             "class": "Notification",
@@ -13081,7 +13862,7 @@
                 {
                     "name": "is_silent",
                     "type": "Bool",
-                    "description": "True, if the notification was initially silent"
+                    "description": "True, if the notification was explicitly sent without sound"
                 },
                 {
                     "name": "type",
@@ -13392,6 +14173,108 @@
             ]
         },
         {
+            "name": "sessionTypeAndroid",
+            "description": "The session is running on an Android device",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeApple",
+            "description": "The session is running on a generic Apple device",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeBrave",
+            "description": "The session is running on the Brave browser",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeChrome",
+            "description": "The session is running on the Chrome browser",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeEdge",
+            "description": "The session is running on the Edge browser",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeFirefox",
+            "description": "The session is running on the Firefox browser",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeIpad",
+            "description": "The session is running on an iPad device",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeIphone",
+            "description": "The session is running on an iPhone device",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeLinux",
+            "description": "The session is running on a Linux device",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeMac",
+            "description": "The session is running on a Mac device",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeOpera",
+            "description": "The session is running on the Opera browser",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeSafari",
+            "description": "The session is running on the Safari browser",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeUbuntu",
+            "description": "The session is running on an Ubuntu device",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeUnknown",
+            "description": "The session is running on an unknown type of device",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeVivaldi",
+            "description": "The session is running on the Vivaldi browser",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeWindows",
+            "description": "The session is running on a Windows device",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
+            "name": "sessionTypeXbox",
+            "description": "The session is running on an Xbox console",
+            "class": "SessionType",
+            "properties": []
+        },
+        {
             "name": "session",
             "description": "Contains information about one session in a Telegram application used by the current user. Sessions must be shown to the user in the returned order",
             "class": "Session",
@@ -13420,6 +14303,11 @@
                     "name": "can_accept_calls",
                     "type": "Bool",
                     "description": "True, if incoming calls can be accepted by the session"
+                },
+                {
+                    "name": "type",
+                    "type": "SessionType",
+                    "description": "Session type based on the system and application version, which can be used to display a corresponding icon"
                 },
                 {
                     "name": "api_id",
@@ -13548,7 +14436,7 @@
                 {
                     "name": "location",
                     "type": "string",
-                    "description": "Human-readable description of a country and a region, from which the user was logged in, based on the IP address"
+                    "description": "Human-readable description of a country and a region from which the user was logged in, based on the IP address"
                 }
             ]
         },
@@ -13625,10 +14513,77 @@
             "properties": []
         },
         {
+            "name": "targetChatCurrent",
+            "description": "The currently opened chat needs to be kept",
+            "class": "TargetChat",
+            "properties": []
+        },
+        {
+            "name": "targetChatChosen",
+            "description": "The chat needs to be chosen by the user among chats of the specified types",
+            "class": "TargetChat",
+            "properties": [
+                {
+                    "name": "allow_user_chats",
+                    "type": "Bool",
+                    "description": "True, if private chats with ordinary users are allowed"
+                },
+                {
+                    "name": "allow_bot_chats",
+                    "type": "Bool",
+                    "description": "True, if private chats with other bots are allowed"
+                },
+                {
+                    "name": "allow_group_chats",
+                    "type": "Bool",
+                    "description": "True, if basic group and supergroup chats are allowed"
+                },
+                {
+                    "name": "allow_channel_chats",
+                    "type": "Bool",
+                    "description": "True, if channel chats are allowed"
+                }
+            ]
+        },
+        {
+            "name": "targetChatInternalLink",
+            "description": "The chat needs to be open with the provided internal link",
+            "class": "TargetChat",
+            "properties": [
+                {
+                    "name": "link",
+                    "type": "InternalLinkType",
+                    "description": "An internal link pointing to the chat"
+                }
+            ]
+        },
+        {
             "name": "internalLinkTypeActiveSessions",
-            "description": "The link is a link to the active sessions section of the app. Use getActiveSessions to handle the link",
+            "description": "The link is a link to the active sessions section of the application. Use getActiveSessions to handle the link",
             "class": "InternalLinkType",
             "properties": []
+        },
+        {
+            "name": "internalLinkTypeAttachmentMenuBot",
+            "description": "The link is a link to an attachment menu bot to be opened in the specified or a chosen chat. Process given target_chat to open the chat. Then call searchPublicChat with the given bot username, check that the user is a bot and can be added to attachment menu. Then use getAttachmentMenuBot to receive information about the bot. If the bot isn't added to attachment menu, then user needs to confirm adding the bot to attachment menu. If user confirms adding, then use toggleBotIsAddedToAttachmentMenu to add it. If the attachment menu bot can't be used in the opened chat, show an error to the user. If the bot is added to attachment menu and can be used in the chat, then use openWebApp with the given URL",
+            "class": "InternalLinkType",
+            "properties": [
+                {
+                    "name": "target_chat",
+                    "type": "TargetChat",
+                    "description": "Target chat to be opened"
+                },
+                {
+                    "name": "bot_username",
+                    "type": "string",
+                    "description": "Username of the bot"
+                },
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "URL to be passed to openWebApp"
+                }
+            ]
         },
         {
             "name": "internalLinkTypeAuthenticationCode",
@@ -13673,7 +14628,7 @@
         },
         {
             "name": "internalLinkTypeBotStartInGroup",
-            "description": "The link is a link to a Telegram bot, which is supposed to be added to a group chat. Call searchPublicChat with the given bot username, check that the user is a bot and can be added to groups, ask the current user to select a group to add the bot to, and then call sendBotStartMessage with the given start parameter and the chosen group chat. Bots can be added to a public group only by administrators of the group",
+            "description": "The link is a link to a Telegram bot, which is supposed to be added to a group chat. Call searchPublicChat with the given bot username, check that the user is a bot and can be added to groups, ask the current user to select a basic group or a supergroup chat to add the bot to, taking into account that bots can be added to a public supergroup only by administrators of the supergroup. If administrator rights are provided by the link, call getChatMember to receive the current bot rights in the chat and if the bot already is an administrator, check that the current user can edit its administrator rights, combine received rights with the requested administrator rights, show confirmation box to the user, and call setChatMemberStatus with the chosen chat and confirmed administrator rights. Before call to setChatMemberStatus it may be required to upgrade the chosen basic group chat to a supergroup chat. Then if start_parameter isn't empty, call sendBotStartMessage with the given start parameter and the chosen chat, otherwise just send /start message with bot's username added to the chat.",
             "class": "InternalLinkType",
             "properties": [
                 {
@@ -13685,6 +14640,28 @@
                     "name": "start_parameter",
                     "type": "string",
                     "description": "The parameter to be passed to sendBotStartMessage"
+                },
+                {
+                    "name": "administrator_rights",
+                    "type": "chatAdministratorRights",
+                    "description": "Expected administrator rights for the bot; may be null"
+                }
+            ]
+        },
+        {
+            "name": "internalLinkTypeBotAddToChannel",
+            "description": "The link is a link to a Telegram bot, which is supposed to be added to a channel chat as an administrator. Call searchPublicChat with the given bot username and check that the user is a bot, ask the current user to select a channel chat to add the bot to as an administrator. Then call getChatMember to receive the current bot rights in the chat and if the bot already is an administrator, check that the current user can edit its administrator rights and combine received rights with the requested administrator rights. Then show confirmation box to the user, and call setChatMemberStatus with the chosen chat and confirmed rights",
+            "class": "InternalLinkType",
+            "properties": [
+                {
+                    "name": "bot_username",
+                    "type": "string",
+                    "description": "Username of the bot"
+                },
+                {
+                    "name": "administrator_rights",
+                    "type": "chatAdministratorRights",
+                    "description": "Expected administrator rights for the bot"
                 }
             ]
         },
@@ -13726,6 +14703,18 @@
                     "name": "game_short_name",
                     "type": "string",
                     "description": "Short name of the game"
+                }
+            ]
+        },
+        {
+            "name": "internalLinkTypeInvoice",
+            "description": "The link is a link to an invoice. Call getPaymentForm with the given invoice name to process the link",
+            "class": "InternalLinkType",
+            "properties": [
+                {
+                    "name": "invoice_name",
+                    "type": "string",
+                    "description": "Name of the invoice"
                 }
             ]
         },
@@ -13778,7 +14767,7 @@
         },
         {
             "name": "internalLinkTypePassportDataRequest",
-            "description": "The link contains a request of Telegram passport data. Call getPassportAuthorizationForm with the given parameters to process the link if the link was received from outside of the app, otherwise ignore it",
+            "description": "The link contains a request of Telegram passport data. Call getPassportAuthorizationForm with the given parameters to process the link if the link was received from outside of the application, otherwise ignore it",
             "class": "InternalLinkType",
             "properties": [
                 {
@@ -13822,6 +14811,18 @@
                     "name": "phone_number",
                     "type": "string",
                     "description": "Phone number value from the link"
+                }
+            ]
+        },
+        {
+            "name": "internalLinkTypePremiumFeatures",
+            "description": "The link is a link to the Premium features screen of the applcation from which the user can subscribe to Telegram Premium. Call getPremiumFeatures with the given referrer to process the link",
+            "class": "InternalLinkType",
+            "properties": [
+                {
+                    "name": "referrer",
+                    "type": "string",
+                    "description": "Referrer specified in the link"
                 }
             ]
         },
@@ -13873,7 +14874,7 @@
         },
         {
             "name": "internalLinkTypeSettings",
-            "description": "The link is a link to app settings",
+            "description": "The link is a link to application settings",
             "class": "InternalLinkType",
             "properties": []
         },
@@ -14046,6 +15047,12 @@
         {
             "name": "fileTypeDocument",
             "description": "The file is a document",
+            "class": "FileType",
+            "properties": []
+        },
+        {
+            "name": "fileTypeNotificationSound",
+            "description": "The file is a notification sound",
             "class": "FileType",
             "properties": []
         },
@@ -14354,12 +15361,12 @@
                 },
                 {
                     "name": "max_video_file_size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "The maximum size of a video file to be auto-downloaded, in bytes"
                 },
                 {
                     "name": "max_other_file_size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "The maximum size of other file types to be auto-downloaded, in bytes"
                 },
                 {
@@ -14636,6 +15643,18 @@
                     "name": "seconds",
                     "type": "double",
                     "description": "Number of seconds"
+                }
+            ]
+        },
+        {
+            "name": "fileDownloadedPrefixSize",
+            "description": "Contains size of downloaded prefix of a file",
+            "class": "FileDownloadedPrefixSize",
+            "properties": [
+                {
+                    "name": "size",
+                    "type": "int53",
+                    "description": "The prefix size, in bytes"
                 }
             ]
         },
@@ -15966,6 +16985,11 @@
                     "name": "chat_filters",
                     "type": "vector\u003cchatFilterInfo\u003e",
                     "description": "The new list of chat filters"
+                },
+                {
+                    "name": "main_chat_list_position",
+                    "type": "int32",
+                    "description": "Position of the main chat list among chat filters, 0-based"
                 }
             ]
         },
@@ -16046,9 +17070,9 @@
                     "description": "Chat identifier, which notification settings must be applied to the added notifications"
                 },
                 {
-                    "name": "is_silent",
-                    "type": "Bool",
-                    "description": "True, if the notifications must be shown without sound"
+                    "name": "notification_sound_id",
+                    "type": "int64",
+                    "description": "Identifier of the notification sound to be played; 0 if sound is disabled"
                 },
                 {
                     "name": "total_count",
@@ -16604,7 +17628,7 @@
             "properties": [
                 {
                     "name": "sticker_sets",
-                    "type": "stickerSets",
+                    "type": "trendingStickerSets",
                     "description": "The prefix of the list of trending sticker sets with the newest trending sticker sets"
                 }
             ]
@@ -16647,6 +17671,18 @@
                     "name": "animation_ids",
                     "type": "vector\u003cint32\u003e",
                     "description": "The new list of file identifiers of saved animations"
+                }
+            ]
+        },
+        {
+            "name": "updateSavedNotificationSounds",
+            "description": "The list of saved notifications sounds was updated. This update may not be sent until information about a notification sound was requested for the first time",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "notification_sound_ids",
+                    "type": "vector\u003cint64\u003e",
+                    "description": "The new list of identifiers of saved notification sounds"
                 }
             ]
         },
@@ -16739,6 +17775,30 @@
                     "name": "users_nearby",
                     "type": "vector\u003cchatNearby\u003e",
                     "description": "The new list of users nearby"
+                }
+            ]
+        },
+        {
+            "name": "updateAttachmentMenuBots",
+            "description": "The list of bots added to attachment menu has changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "bots",
+                    "type": "vector\u003cattachmentMenuBot\u003e",
+                    "description": "The new list of bots added to attachment menu. The bots must not be shown on scheduled messages screen"
+                }
+            ]
+        },
+        {
+            "name": "updateWebAppMessageSent",
+            "description": "A message was sent by an opened Web App, so the Web App needs to be closed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "web_app_launch_id",
+                    "type": "int64",
+                    "description": "Identifier of Web App launch"
                 }
             ]
         },
@@ -16845,7 +17905,7 @@
                 {
                     "name": "chat_type",
                     "type": "ChatType",
-                    "description": "The type of the chat, from which the query originated; may be null if unknown"
+                    "description": "The type of the chat from which the query originated; may be null if unknown"
                 },
                 {
                     "name": "query",
@@ -16914,7 +17974,7 @@
                 {
                     "name": "message_id",
                     "type": "int53",
-                    "description": "Identifier of the message, from which the query originated"
+                    "description": "Identifier of the message from which the query originated"
                 },
                 {
                     "name": "chat_instance",
@@ -16946,7 +18006,7 @@
                 {
                     "name": "inline_message_id",
                     "type": "string",
-                    "description": "Identifier of the inline message, from which the query originated"
+                    "description": "Identifier of the inline message from which the query originated"
                 },
                 {
                     "name": "chat_instance",
@@ -17437,6 +18497,14 @@
             "description": "Contains information about the payment method chosen by the user"
         },
         {
+            "name": "PaymentProvider",
+            "description": "Contains information about a payment provider"
+        },
+        {
+            "name": "InputInvoice",
+            "description": "Describe an invoice to process"
+        },
+        {
             "name": "PassportElementType",
             "description": "Contains the type of a Telegram Passport element"
         },
@@ -17529,6 +18597,18 @@
             "description": "Represents the value of a string in a language pack"
         },
         {
+            "name": "PremiumLimitType",
+            "description": "Describes type of a limit, increased for Premium users"
+        },
+        {
+            "name": "PremiumFeature",
+            "description": "Describes a feature available to Premium users"
+        },
+        {
+            "name": "PremiumSource",
+            "description": "Describes a source from which the Premium features screen is opened"
+        },
+        {
             "name": "DeviceToken",
             "description": "Represents a data needed to subscribe for push notifications through registerDevice method. To use specific push notification service, the correct application platform must be specified and a valid server authentication data must be uploaded at https://my.telegram.org"
         },
@@ -17593,12 +18673,20 @@
             "description": "Describes available user privacy settings"
         },
         {
+            "name": "SessionType",
+            "description": "Represents the type of a session"
+        },
+        {
             "name": "ChatReportReason",
             "description": "Describes the reason why a chat is reported"
         },
         {
+            "name": "TargetChat",
+            "description": "Describes the target chat to be opened"
+        },
+        {
             "name": "InternalLinkType",
-            "description": "Describes an internal https://t.me or tg: link, which must be processed by the app in a special way"
+            "description": "Describes an internal https://t.me or tg: link, which must be processed by the application in a special way"
         },
         {
             "name": "FileType",
@@ -18638,7 +19726,7 @@
         },
         {
             "name": "checkCreatedPublicChatsLimit",
-            "description": "Checks whether the maximum number of owned public chats has been reached. Returns corresponding error if the limit was reached",
+            "description": "Checks whether the maximum number of owned public chats has been reached. Returns corresponding error if the limit was reached. The limit can be increased with Telegram Premium",
             "class": "Ok",
             "properties": [
                 {
@@ -18660,7 +19748,7 @@
         },
         {
             "name": "getInactiveSupergroupChats",
-            "description": "Returns a list of recently inactive supergroups and channels. Can be used when user reaches limit on the number of joined supergroups and channels and receives CHANNELS_TOO_MUCH error",
+            "description": "Returns a list of recently inactive supergroups and channels. Can be used when user reaches limit on the number of joined supergroups and channels and receives CHANNELS_TOO_MUCH error. Also, the limit can be increased with Telegram Premium",
             "class": "Chats",
             "properties": [],
             "is_synchronous": false,
@@ -18784,7 +19872,7 @@
         },
         {
             "name": "deleteChat",
-            "description": "Deletes a chat along with all messages in the corresponding chat for all chat members; requires owner privileges. For group chats this will release the username and remove all members. Chats with more than 1000 members can't be deleted using this method",
+            "description": "Deletes a chat along with all messages in the corresponding chat for all chat members. For group chats this will release the username and remove all members. Use the field chat.can_be_deleted_for_all_users to find whether the method can be applied to the chat",
             "class": "Ok",
             "properties": [
                 {
@@ -19305,6 +20393,49 @@
             "type": 2
         },
         {
+            "name": "recognizeSpeech",
+            "description": "Recognizes speech in a voice note message. The message must be successfully sent and must not be scheduled. May return an error with a message \"MSG_VOICE_TOO_LONG\" if the voice note is too long to be recognized",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat to which the message belongs"
+                },
+                {
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "Identifier of the message"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "rateSpeechRecognition",
+            "description": "Rates recognized speech in a voice note message",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat to which the message belongs"
+                },
+                {
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "Identifier of the message"
+                },
+                {
+                    "name": "is_good",
+                    "type": "Bool",
+                    "description": "Pass true if the speech recognition is good"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "getChatAvailableMessageSenders",
             "description": "Returns list of message sender identifiers, which can be used to send messages in a chat",
             "class": "MessageSenders",
@@ -19355,7 +20486,7 @@
                 {
                     "name": "reply_to_message_id",
                     "type": "int53",
-                    "description": "Identifier of the message to reply to or 0"
+                    "description": "Identifier of the replied message; 0 if none"
                 },
                 {
                     "name": "options",
@@ -19394,7 +20525,7 @@
                 {
                     "name": "reply_to_message_id",
                     "type": "int53",
-                    "description": "Identifier of a message to reply to or 0"
+                    "description": "Identifier of a replied message; 0 if none"
                 },
                 {
                     "name": "options",
@@ -19457,7 +20588,7 @@
                 {
                     "name": "reply_to_message_id",
                     "type": "int53",
-                    "description": "Identifier of a message to reply to or 0"
+                    "description": "Identifier of a replied message; 0 if none"
                 },
                 {
                     "name": "options",
@@ -19578,7 +20709,7 @@
                 {
                     "name": "reply_to_message_id",
                     "type": "int53",
-                    "description": "Identifier of the message to reply to or 0"
+                    "description": "Identifier of the replied message; 0 if none"
                 },
                 {
                     "name": "disable_notification",
@@ -19967,7 +21098,7 @@
         },
         {
             "name": "getMessageAvailableReactions",
-            "description": "Returns reactions, which can be added to a message. The list can change after updateReactions, updateChatAvailableReactions for the chat, or updateMessageInteractionInfo for the message",
+            "description": "Returns reactions, which can be added to a message. The list can change after updateReactions, updateChatAvailableReactions for the chat, or updateMessageInteractionInfo for the message. The method will return Premium reactions, even the current user has no Premium subscription",
             "class": "AvailableReactions",
             "properties": [
                 {
@@ -20208,6 +21339,20 @@
             "type": 1
         },
         {
+            "name": "getThemeParametersJsonString",
+            "description": "Converts a themeParameters object to corresponding JSON-serialized string. Can be called synchronously",
+            "class": "Text",
+            "properties": [
+                {
+                    "name": "theme",
+                    "type": "themeParameters",
+                    "description": "Theme parameters to convert to JSON"
+                }
+            ],
+            "is_synchronous": true,
+            "type": 1
+        },
+        {
             "name": "setPollAnswer",
             "description": "Changes the user answer to a poll. A poll in quiz mode can be answered only once",
             "class": "Ok",
@@ -20429,6 +21574,121 @@
                     "name": "switch_pm_parameter",
                     "type": "string",
                     "description": "The parameter for the bot start message"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "getWebAppUrl",
+            "description": "Returns an HTTPS URL of a Web App to open after keyboardButtonTypeWebApp button is pressed",
+            "class": "HttpUrl",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "The URL from the keyboardButtonTypeWebApp button"
+                },
+                {
+                    "name": "theme",
+                    "type": "themeParameters",
+                    "description": "Preferred Web App theme; pass null to use the default theme"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "sendWebAppData",
+            "description": "Sends data received from a keyboardButtonTypeWebApp Web App to a bot",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "button_text",
+                    "type": "string",
+                    "description": "Text of the keyboardButtonTypeWebApp button, which opened the Web App"
+                },
+                {
+                    "name": "data",
+                    "type": "string",
+                    "description": "Received data"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "openWebApp",
+            "description": "Informs TDLib that a Web App is being opened from attachment menu, a botMenuButton button, an internalLinkTypeAttachmentMenuBot link, or an inlineKeyboardButtonTypeWebApp button. For each bot, a confirmation alert about data sent to the bot must be shown once",
+            "class": "WebAppInfo",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat in which the Web App is opened"
+                },
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the bot, providing the Web App"
+                },
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "The URL from an inlineKeyboardButtonTypeWebApp button, a botMenuButton button, or an internalLinkTypeAttachmentMenuBot link, or an empty string otherwise"
+                },
+                {
+                    "name": "theme",
+                    "type": "themeParameters",
+                    "description": "Preferred Web App theme; pass null to use the default theme"
+                },
+                {
+                    "name": "reply_to_message_id",
+                    "type": "int53",
+                    "description": "Identifier of the replied message for the message sent by the Web App; 0 if none"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "closeWebApp",
+            "description": "Informs TDLib that a previously opened Web App was closed",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "web_app_launch_id",
+                    "type": "int64",
+                    "description": "Identifier of Web App launch, received from openWebApp"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "answerWebAppQuery",
+            "description": "Sets the result of interaction with a Web App and sends corresponding message on behalf of the user to the chat from which the query originated; for bots only",
+            "class": "SentWebAppMessage",
+            "properties": [
+                {
+                    "name": "web_app_query_id",
+                    "type": "string",
+                    "description": "Identifier of the Web App query"
+                },
+                {
+                    "name": "result",
+                    "type": "InputInlineQueryResult",
+                    "description": "The result of the query"
                 }
             ],
             "is_synchronous": false,
@@ -21065,7 +22325,7 @@
         },
         {
             "name": "createChatFilter",
-            "description": "Creates new chat filter. Returns information about the created chat filter",
+            "description": "Creates new chat filter. Returns information about the created chat filter. There can be up to GetOption(\"chat_filter_count_max\") chat filters, but the limit can be increased with Telegram Premium",
             "class": "ChatFilterInfo",
             "properties": [
                 {
@@ -21119,6 +22379,11 @@
                     "name": "chat_filter_ids",
                     "type": "vector\u003cint32\u003e",
                     "description": "Identifiers of chat filters in the new correct order"
+                },
+                {
+                    "name": "main_chat_list_position",
+                    "type": "int32",
+                    "description": "Position of the main chat list among chat filters, 0-based. Can be non-zero only for Premium users"
                 }
             ],
             "is_synchronous": false,
@@ -21186,7 +22451,7 @@
         },
         {
             "name": "setChatMessageTtl",
-            "description": "Changes the message TTL in a chat. Requires can_delete_messages administrator right in basic groups, supergroups and channels Message TTL can't be changed in a chat with the current user (Saved Messages) and the chat 777000 (Telegram)",
+            "description": "Changes the message TTL in a chat. Requires can_delete_messages administrator right in basic groups, supergroups and channels Message TTL can't be changed in a chat with the current user (Saved Messages) and the chat 777000 (Telegram).",
             "class": "Ok",
             "properties": [
                 {
@@ -21197,7 +22462,7 @@
                 {
                     "name": "ttl",
                     "type": "int32",
-                    "description": "New TTL value, in seconds; must be one of 0, 86400, 7 * 86400, or 31 * 86400 unless the chat is secret"
+                    "description": "New TTL value, in seconds; unless the chat is secret, it must be from 0 up to 365 * 86400 and be divisible by 86400"
                 }
             ],
             "is_synchronous": false,
@@ -21519,7 +22784,7 @@
         },
         {
             "name": "joinChat",
-            "description": "Adds the current user as a new member to a chat. Private and secret chats can't be joined using this method",
+            "description": "Adds the current user as a new member to a chat. Private and secret chats can't be joined using this method. May return an error with a message \"INVITE_REQUEST_SENT\" if only a join request was created",
             "class": "Ok",
             "properties": [
                 {
@@ -21750,6 +23015,56 @@
             "type": 2
         },
         {
+            "name": "getSavedNotificationSound",
+            "description": "Returns saved notification sound by its identifier. Returns a 404 error if there is no saved notification sound with the specified identifier",
+            "class": "NotificationSounds",
+            "properties": [
+                {
+                    "name": "notification_sound_id",
+                    "type": "int64",
+                    "description": "Identifier of the notification sound"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getSavedNotificationSounds",
+            "description": "Returns list of saved notification sounds. If a sound isn't in the list, then default sound needs to be used",
+            "class": "NotificationSounds",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "addSavedNotificationSound",
+            "description": "Adds a new notification sound to the list of saved notification sounds. The new notification sound is added to the top of the list. If it is already in the list, its position isn't changed",
+            "class": "NotificationSound",
+            "properties": [
+                {
+                    "name": "sound",
+                    "type": "InputFile",
+                    "description": "Notification sound file to add"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "removeSavedNotificationSound",
+            "description": "Removes a notification sound from the list of saved notification sounds",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "notification_sound_id",
+                    "type": "int64",
+                    "description": "Identifier of the notification sound"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "getChatNotificationSettingsExceptions",
             "description": "Returns list of chats with non-default notification settings",
             "class": "Chats",
@@ -21803,7 +23118,7 @@
         },
         {
             "name": "resetAllNotificationSettings",
-            "description": "Resets all notification settings to their default values. By default, all chats are unmuted, the sound is set to \"default\" and message previews are shown",
+            "description": "Resets all notification settings to their default values. By default, all chats are unmuted and message previews are shown",
             "class": "Ok",
             "properties": [],
             "is_synchronous": false,
@@ -21811,7 +23126,7 @@
         },
         {
             "name": "toggleChatIsPinned",
-            "description": "Changes the pinned state of a chat. There can be up to GetOption(\"pinned_chat_count_max\")/GetOption(\"pinned_archived_chat_count_max\") pinned non-secret chats and the same number of secret chats in the main/archive chat list",
+            "description": "Changes the pinned state of a chat. There can be up to GetOption(\"pinned_chat_count_max\")/GetOption(\"pinned_archived_chat_count_max\") pinned non-secret chats and the same number of secret chats in the main/archive chat list. The limit can be increased with Telegram Premium",
             "class": "Ok",
             "properties": [
                 {
@@ -21853,6 +23168,39 @@
             "type": 2
         },
         {
+            "name": "getAttachmentMenuBot",
+            "description": "Returns information about a bot that can be added to attachment menu",
+            "class": "AttachmentMenuBot",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Bot's user identifier"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "toggleBotIsAddedToAttachmentMenu",
+            "description": "Adds or removes a bot to attachment menu. Bot can be added to attachment menu, only if userTypeBot.can_be_added_to_attachment_menu == true",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Bot's user identifier"
+                },
+                {
+                    "name": "is_added",
+                    "type": "Bool",
+                    "description": "Pass true to add the bot to attachment menu; pass false to remove the bot from attachment menu"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "downloadFile",
             "description": "Downloads a file from the cloud. Download progress and completion of the download will be notified through updateFile updates",
             "class": "File",
@@ -21869,12 +23217,12 @@
                 },
                 {
                     "name": "offset",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "The starting position from which the file needs to be downloaded"
                 },
                 {
                     "name": "limit",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "Number of bytes which need to be downloaded starting from the \"offset\" position before the download will automatically be canceled; use 0 to download without a limit"
                 },
                 {
@@ -21889,7 +23237,7 @@
         {
             "name": "getFileDownloadedPrefixSize",
             "description": "Returns file downloaded prefix size from a given offset, in bytes",
-            "class": "Count",
+            "class": "FileDownloadedPrefixSize",
             "properties": [
                 {
                     "name": "file_id",
@@ -21898,7 +23246,7 @@
                 },
                 {
                     "name": "offset",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "Offset from which downloaded prefix size needs to be calculated"
                 }
             ],
@@ -21993,7 +23341,7 @@
                 },
                 {
                     "name": "offset",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "The offset from which to write the data to the file"
                 },
                 {
@@ -22017,12 +23365,12 @@
                 },
                 {
                     "name": "expected_size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "Expected size of the generated file, in bytes; 0 if unknown"
                 },
                 {
                     "name": "local_prefix_size",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "The number of bytes already generated"
                 }
             ],
@@ -22060,12 +23408,12 @@
                 },
                 {
                     "name": "offset",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "The offset from which to read the file"
                 },
                 {
                     "name": "count",
-                    "type": "int32",
+                    "type": "int53",
                     "description": "Number of bytes to read. An error will be returned if there are not enough bytes available in the file from the specified position. Pass 0 to read all available data from the specified position"
                 }
             ],
@@ -22227,7 +23575,7 @@
         },
         {
             "name": "getMessageFileType",
-            "description": "Returns information about a file with messages exported from another app",
+            "description": "Returns information about a file with messages exported from another application",
             "class": "MessageFileType",
             "properties": [
                 {
@@ -22538,7 +23886,7 @@
         },
         {
             "name": "joinChatByInviteLink",
-            "description": "Uses an invite link to add the current user to the chat if possible",
+            "description": "Uses an invite link to add the current user to the chat if possible. May return an error with a message \"INVITE_REQUEST_SENT\" if only a join request was created",
             "class": "Chat",
             "properties": [
                 {
@@ -22759,7 +24107,7 @@
         },
         {
             "name": "sendCallDebugInformation",
-            "description": "Sends debug information for a call",
+            "description": "Sends debug information for a call to Telegram servers",
             "class": "Ok",
             "properties": [
                 {
@@ -22771,6 +24119,25 @@
                     "name": "debug_information",
                     "type": "string",
                     "description": "Debug information in application-specific format"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "sendCallLog",
+            "description": "Sends log file for a call to Telegram servers",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "call_id",
+                    "type": "int32",
+                    "description": "Call identifier"
+                },
+                {
+                    "name": "log_file",
+                    "type": "InputFile",
+                    "description": "Call log file. Only inputFileLocal and inputFileGenerated are supported"
                 }
             ],
             "is_synchronous": false,
@@ -22817,7 +24184,7 @@
                 {
                     "name": "chat_id",
                     "type": "int53",
-                    "description": "Chat identifier, in which the video chat will be created"
+                    "description": "Identifier of a chat in which the video chat will be created"
                 },
                 {
                     "name": "title",
@@ -23549,7 +24916,7 @@
         },
         {
             "name": "searchUserByPhoneNumber",
-            "description": "Searches a user by their phone number",
+            "description": "Searches a user by their phone number. Returns a 404 error if the user can't be found",
             "class": "User",
             "properties": [
                 {
@@ -23678,7 +25045,7 @@
         {
             "name": "getTrendingStickerSets",
             "description": "Returns a list of trending sticker sets. For optimal performance, the number of returned sticker sets is chosen by TDLib",
-            "class": "StickerSets",
+            "class": "TrendingStickerSets",
             "properties": [
                 {
                     "name": "offset",
@@ -23986,6 +25353,14 @@
             "type": 2
         },
         {
+            "name": "getAllAnimatedEmojis",
+            "description": "Returns all emojis, which has a corresponding animated emoji",
+            "class": "Emojis",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "getEmojiSuggestionsUrl",
             "description": "Returns an HTTP URL which can be used to automatically log in to the translation platform and suggest new emoji replacements. The URL will be valid for 30 seconds after generation",
             "class": "HttpUrl",
@@ -24164,7 +25539,7 @@
                 {
                     "name": "bio",
                     "type": "string",
-                    "description": "The new value of the user bio; 0-70 characters without line feeds"
+                    "description": "The new value of the user bio; 0-GetOption(\"bio_length_max\") characters without line feeds"
                 }
             ],
             "is_synchronous": false,
@@ -24296,6 +25671,67 @@
                     "name": "language_code",
                     "type": "string",
                     "description": "A two-letter ISO 639-1 language code or an empty string"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "setMenuButton",
+            "description": "Sets menu button for the given user or for all users; for bots only",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "user_id",
+                    "type": "int53",
+                    "description": "Identifier of the user or 0 to set menu button for all users"
+                },
+                {
+                    "name": "menu_button",
+                    "type": "botMenuButton",
+                    "description": "New menu button"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "getMenuButton",
+            "description": "Returns menu button set by the bot for the given user; for bots only",
+            "class": "BotMenuButton",
+            "properties": [
+                {
+                    "name": "user_id",
+                    "type": "int53",
+                    "description": "Identifier of the user or 0 to get the default menu button"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "setDefaultGroupAdministratorRights",
+            "description": "Sets default administrator rights for adding the bot to basic group and supergroup chats; for bots only",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "default_group_administrator_rights",
+                    "type": "chatAdministratorRights",
+                    "description": "Default administrator rights for adding the bot to basic group and supergroup chats; may be null"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "setDefaultChannelAdministratorRights",
+            "description": "Sets default administrator rights for adding the bot to channel chats; for bots only",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "default_channel_administrator_rights",
+                    "type": "chatAdministratorRights",
+                    "description": "Default administrator rights for adding the bot to channels; may be null"
                 }
             ],
             "is_synchronous": false,
@@ -24471,6 +25907,44 @@
             "type": 2
         },
         {
+            "name": "toggleSupergroupJoinToSendMessages",
+            "description": "Toggles whether joining is mandatory to send messages to a discussion supergroup; requires can_restrict_members administrator right",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "supergroup_id",
+                    "type": "int53",
+                    "description": "Identifier of the supergroup"
+                },
+                {
+                    "name": "join_to_send_messages",
+                    "type": "Bool",
+                    "description": "New value of join_to_send_messages"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "toggleSupergroupJoinByRequest",
+            "description": "Toggles whether all users directly joining the supergroup need to be approved by supergroup administrators; requires can_restrict_members administrator right",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "supergroup_id",
+                    "type": "int53",
+                    "description": "Identifier of the channel"
+                },
+                {
+                    "name": "join_by_request",
+                    "type": "Bool",
+                    "description": "New value of join_by_request"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "toggleSupergroupIsAllHistoryAvailable",
             "description": "Toggles whether the message history of a supergroup is available to new members; requires can_change_info administrator right",
             "class": "Ok",
@@ -24610,18 +26084,13 @@
             "class": "PaymentForm",
             "properties": [
                 {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier of the Invoice message"
-                },
-                {
-                    "name": "message_id",
-                    "type": "int53",
-                    "description": "Message identifier"
+                    "name": "input_invoice",
+                    "type": "InputInvoice",
+                    "description": "The invoice"
                 },
                 {
                     "name": "theme",
-                    "type": "paymentFormTheme",
+                    "type": "themeParameters",
                     "description": "Preferred payment form theme; pass null to use the default theme"
                 }
             ],
@@ -24634,14 +26103,9 @@
             "class": "ValidatedOrderInfo",
             "properties": [
                 {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier of the Invoice message"
-                },
-                {
-                    "name": "message_id",
-                    "type": "int53",
-                    "description": "Message identifier"
+                    "name": "input_invoice",
+                    "type": "InputInvoice",
+                    "description": "The invoice"
                 },
                 {
                     "name": "order_info",
@@ -24663,14 +26127,9 @@
             "class": "PaymentResult",
             "properties": [
                 {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier of the Invoice message"
-                },
-                {
-                    "name": "message_id",
-                    "type": "int53",
-                    "description": "Message identifier"
+                    "name": "input_invoice",
+                    "type": "InputInvoice",
+                    "description": "The invoice"
                 },
                 {
                     "name": "payment_form_id",
@@ -24743,6 +26202,20 @@
             "properties": [],
             "is_synchronous": false,
             "type": 2
+        },
+        {
+            "name": "createInvoiceLink",
+            "description": "Creates a link for the given invoice; for bots only",
+            "class": "HttpUrl",
+            "properties": [
+                {
+                    "name": "invoice",
+                    "type": "InputMessageContent",
+                    "description": "Information about the invoice of the type inputMessageInvoice"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
         },
         {
             "name": "getSupportUser",
@@ -25913,7 +27386,7 @@
                 {
                     "name": "position",
                     "type": "int32",
-                    "description": "New position of the sticker in the set, zero-based"
+                    "description": "New position of the sticker in the set, 0-based"
                 }
             ],
             "is_synchronous": false,
@@ -25966,11 +27439,118 @@
                 {
                     "name": "chat_id",
                     "type": "int53",
-                    "description": "Identifier of a chat, in which the thumbnail will be shown. Use 0 if unknown"
+                    "description": "Identifier of a chat in which the thumbnail will be shown. Use 0 if unknown"
                 }
             ],
             "is_synchronous": false,
             "type": 1
+        },
+        {
+            "name": "getPremiumLimit",
+            "description": "Returns information about a limit, increased for Premium users. Returns a 404 error if the limit is unknown",
+            "class": "PremiumLimit",
+            "properties": [
+                {
+                    "name": "limit_type",
+                    "type": "PremiumLimitType",
+                    "description": "Type of the limit"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getPremiumFeatures",
+            "description": "Returns information about features, available to Premium users",
+            "class": "PremiumFeatures",
+            "properties": [
+                {
+                    "name": "source",
+                    "type": "PremiumSource",
+                    "description": "Source of the request; pass null if the method is called from some non-standard source"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getPremiumStickers",
+            "description": "Returns examples of premium stickers for demonstration purposes",
+            "class": "Stickers",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "viewPremiumFeature",
+            "description": "Informs TDLib that the user viewed detailed information about a Premium feature on the Premium features screen",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "feature",
+                    "type": "PremiumFeature",
+                    "description": "The viewed premium feature"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "clickPremiumSubscriptionButton",
+            "description": "Informs TDLib that the user clicked Premium subscription button on the Premium features screen",
+            "class": "Ok",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getPremiumState",
+            "description": "Returns state of Telegram Premium subscription and promotion videos for Premium features",
+            "class": "PremiumState",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "canPurchasePremium",
+            "description": "Checks whether Telegram Premium purchase is possible. Must be called before in-store Premium purchase",
+            "class": "Ok",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "assignAppStoreTransaction",
+            "description": "Informs server about a Telegram Premium purchase through App Store. For official applications only",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "receipt",
+                    "type": "bytes",
+                    "description": "App Store receipt"
+                },
+                {
+                    "name": "is_restore",
+                    "type": "Bool",
+                    "description": "True, if this is restore of Premium purchase"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "assignGooglePlayTransaction",
+            "description": "Informs server about a Telegram Premium purchase through Google Play. For official applications only",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "purchase_token",
+                    "type": "string",
+                    "description": "Google Play purchase token"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
         },
         {
             "name": "acceptTermsOfService",
@@ -26517,7 +28097,7 @@
                 {
                     "name": "dc_id",
                     "type": "int32",
-                    "description": "Identifier of a datacenter, with which to test connection"
+                    "description": "Identifier of a datacenter with which to test connection"
                 },
                 {
                     "name": "timeout",
