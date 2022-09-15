@@ -12,6 +12,7 @@ const (
 	ClassInputFile                              = "InputFile"
 	ClassThumbnailFormat                        = "ThumbnailFormat"
 	ClassMaskPoint                              = "MaskPoint"
+	ClassStickerFormat                          = "StickerFormat"
 	ClassStickerType                            = "StickerType"
 	ClassPollType                               = "PollType"
 	ClassUserType                               = "UserType"
@@ -58,6 +59,7 @@ const (
 	ClassGroupCallVideoQuality                  = "GroupCallVideoQuality"
 	ClassCallProblem                            = "CallProblem"
 	ClassDiceStickers                           = "DiceStickers"
+	ClassSpeechRecognitionResult                = "SpeechRecognitionResult"
 	ClassInputInlineQueryResult                 = "InputInlineQueryResult"
 	ClassInlineQueryResult                      = "InlineQueryResult"
 	ClassCallbackQueryPayload                   = "CallbackQueryPayload"
@@ -66,6 +68,7 @@ const (
 	ClassPremiumLimitType                       = "PremiumLimitType"
 	ClassPremiumFeature                         = "PremiumFeature"
 	ClassPremiumSource                          = "PremiumSource"
+	ClassStorePaymentPurpose                    = "StorePaymentPurpose"
 	ClassDeviceToken                            = "DeviceToken"
 	ClassBackgroundFill                         = "BackgroundFill"
 	ClassBackgroundType                         = "BackgroundType"
@@ -147,6 +150,7 @@ const (
 	ClassChatPhotos                             = "ChatPhotos"
 	ClassChatPermissions                        = "ChatPermissions"
 	ClassChatAdministratorRights                = "ChatAdministratorRights"
+	ClassPremiumGiftOption                      = "PremiumGiftOption"
 	ClassUser                                   = "User"
 	ClassBotInfo                                = "BotInfo"
 	ClassUserFullInfo                           = "UserFullInfo"
@@ -223,6 +227,7 @@ const (
 	ClassOrderInfo                              = "OrderInfo"
 	ClassShippingOption                         = "ShippingOption"
 	ClassSavedCredentials                       = "SavedCredentials"
+	ClassPaymentOption                          = "PaymentOption"
 	ClassPaymentForm                            = "PaymentForm"
 	ClassValidatedOrderInfo                     = "ValidatedOrderInfo"
 	ClassPaymentResult                          = "PaymentResult"
@@ -342,6 +347,7 @@ const (
 	ClassUpdates                                = "Updates"
 	ClassLogVerbosityLevel                      = "LogVerbosityLevel"
 	ClassLogTags                                = "LogTags"
+	ClassUserSupportInfo                        = "UserSupportInfo"
 	ClassTestInt                                = "TestInt"
 	ClassTestString                             = "TestString"
 	ClassTestBytes                              = "TestBytes"
@@ -352,1066 +358,1081 @@ const (
 )
 
 const (
-	TypeError                                           = "error"
-	TypeOk                                              = "ok"
-	TypeTdlibParameters                                 = "tdlibParameters"
-	TypeAuthenticationCodeTypeTelegramMessage           = "authenticationCodeTypeTelegramMessage"
-	TypeAuthenticationCodeTypeSms                       = "authenticationCodeTypeSms"
-	TypeAuthenticationCodeTypeCall                      = "authenticationCodeTypeCall"
-	TypeAuthenticationCodeTypeFlashCall                 = "authenticationCodeTypeFlashCall"
-	TypeAuthenticationCodeTypeMissedCall                = "authenticationCodeTypeMissedCall"
-	TypeAuthenticationCodeInfo                          = "authenticationCodeInfo"
-	TypeEmailAddressAuthenticationCodeInfo              = "emailAddressAuthenticationCodeInfo"
-	TypeTextEntity                                      = "textEntity"
-	TypeTextEntities                                    = "textEntities"
-	TypeFormattedText                                   = "formattedText"
-	TypeTermsOfService                                  = "termsOfService"
-	TypeAuthorizationStateWaitTdlibParameters           = "authorizationStateWaitTdlibParameters"
-	TypeAuthorizationStateWaitEncryptionKey             = "authorizationStateWaitEncryptionKey"
-	TypeAuthorizationStateWaitPhoneNumber               = "authorizationStateWaitPhoneNumber"
-	TypeAuthorizationStateWaitCode                      = "authorizationStateWaitCode"
-	TypeAuthorizationStateWaitOtherDeviceConfirmation   = "authorizationStateWaitOtherDeviceConfirmation"
-	TypeAuthorizationStateWaitRegistration              = "authorizationStateWaitRegistration"
-	TypeAuthorizationStateWaitPassword                  = "authorizationStateWaitPassword"
-	TypeAuthorizationStateReady                         = "authorizationStateReady"
-	TypeAuthorizationStateLoggingOut                    = "authorizationStateLoggingOut"
-	TypeAuthorizationStateClosing                       = "authorizationStateClosing"
-	TypeAuthorizationStateClosed                        = "authorizationStateClosed"
-	TypePasswordState                                   = "passwordState"
-	TypeRecoveryEmailAddress                            = "recoveryEmailAddress"
-	TypeTemporaryPasswordState                          = "temporaryPasswordState"
-	TypeLocalFile                                       = "localFile"
-	TypeRemoteFile                                      = "remoteFile"
-	TypeFile                                            = "file"
-	TypeInputFileId                                     = "inputFileId"
-	TypeInputFileRemote                                 = "inputFileRemote"
-	TypeInputFileLocal                                  = "inputFileLocal"
-	TypeInputFileGenerated                              = "inputFileGenerated"
-	TypePhotoSize                                       = "photoSize"
-	TypeMinithumbnail                                   = "minithumbnail"
-	TypeThumbnailFormatJpeg                             = "thumbnailFormatJpeg"
-	TypeThumbnailFormatGif                              = "thumbnailFormatGif"
-	TypeThumbnailFormatMpeg4                            = "thumbnailFormatMpeg4"
-	TypeThumbnailFormatPng                              = "thumbnailFormatPng"
-	TypeThumbnailFormatTgs                              = "thumbnailFormatTgs"
-	TypeThumbnailFormatWebm                             = "thumbnailFormatWebm"
-	TypeThumbnailFormatWebp                             = "thumbnailFormatWebp"
-	TypeThumbnail                                       = "thumbnail"
-	TypeMaskPointForehead                               = "maskPointForehead"
-	TypeMaskPointEyes                                   = "maskPointEyes"
-	TypeMaskPointMouth                                  = "maskPointMouth"
-	TypeMaskPointChin                                   = "maskPointChin"
-	TypeMaskPosition                                    = "maskPosition"
-	TypeStickerTypeStatic                               = "stickerTypeStatic"
-	TypeStickerTypeAnimated                             = "stickerTypeAnimated"
-	TypeStickerTypeVideo                                = "stickerTypeVideo"
-	TypeStickerTypeMask                                 = "stickerTypeMask"
-	TypeClosedVectorPath                                = "closedVectorPath"
-	TypePollOption                                      = "pollOption"
-	TypePollTypeRegular                                 = "pollTypeRegular"
-	TypePollTypeQuiz                                    = "pollTypeQuiz"
-	TypeAnimation                                       = "animation"
-	TypeAudio                                           = "audio"
-	TypeDocument                                        = "document"
-	TypePhoto                                           = "photo"
-	TypeSticker                                         = "sticker"
-	TypeVideo                                           = "video"
-	TypeVideoNote                                       = "videoNote"
-	TypeVoiceNote                                       = "voiceNote"
-	TypeAnimatedEmoji                                   = "animatedEmoji"
-	TypeContact                                         = "contact"
-	TypeLocation                                        = "location"
-	TypeVenue                                           = "venue"
-	TypeGame                                            = "game"
-	TypePoll                                            = "poll"
-	TypeProfilePhoto                                    = "profilePhoto"
-	TypeChatPhotoInfo                                   = "chatPhotoInfo"
-	TypeUserTypeRegular                                 = "userTypeRegular"
-	TypeUserTypeDeleted                                 = "userTypeDeleted"
-	TypeUserTypeBot                                     = "userTypeBot"
-	TypeUserTypeUnknown                                 = "userTypeUnknown"
-	TypeBotCommand                                      = "botCommand"
-	TypeBotCommands                                     = "botCommands"
-	TypeBotMenuButton                                   = "botMenuButton"
-	TypeChatLocation                                    = "chatLocation"
-	TypeAnimatedChatPhoto                               = "animatedChatPhoto"
-	TypeChatPhoto                                       = "chatPhoto"
-	TypeChatPhotos                                      = "chatPhotos"
-	TypeInputChatPhotoPrevious                          = "inputChatPhotoPrevious"
-	TypeInputChatPhotoStatic                            = "inputChatPhotoStatic"
-	TypeInputChatPhotoAnimation                         = "inputChatPhotoAnimation"
-	TypeChatPermissions                                 = "chatPermissions"
-	TypeChatAdministratorRights                         = "chatAdministratorRights"
-	TypeUser                                            = "user"
-	TypeBotInfo                                         = "botInfo"
-	TypeUserFullInfo                                    = "userFullInfo"
-	TypeUsers                                           = "users"
-	TypeChatAdministrator                               = "chatAdministrator"
-	TypeChatAdministrators                              = "chatAdministrators"
-	TypeChatMemberStatusCreator                         = "chatMemberStatusCreator"
-	TypeChatMemberStatusAdministrator                   = "chatMemberStatusAdministrator"
-	TypeChatMemberStatusMember                          = "chatMemberStatusMember"
-	TypeChatMemberStatusRestricted                      = "chatMemberStatusRestricted"
-	TypeChatMemberStatusLeft                            = "chatMemberStatusLeft"
-	TypeChatMemberStatusBanned                          = "chatMemberStatusBanned"
-	TypeChatMember                                      = "chatMember"
-	TypeChatMembers                                     = "chatMembers"
-	TypeChatMembersFilterContacts                       = "chatMembersFilterContacts"
-	TypeChatMembersFilterAdministrators                 = "chatMembersFilterAdministrators"
-	TypeChatMembersFilterMembers                        = "chatMembersFilterMembers"
-	TypeChatMembersFilterMention                        = "chatMembersFilterMention"
-	TypeChatMembersFilterRestricted                     = "chatMembersFilterRestricted"
-	TypeChatMembersFilterBanned                         = "chatMembersFilterBanned"
-	TypeChatMembersFilterBots                           = "chatMembersFilterBots"
-	TypeSupergroupMembersFilterRecent                   = "supergroupMembersFilterRecent"
-	TypeSupergroupMembersFilterContacts                 = "supergroupMembersFilterContacts"
-	TypeSupergroupMembersFilterAdministrators           = "supergroupMembersFilterAdministrators"
-	TypeSupergroupMembersFilterSearch                   = "supergroupMembersFilterSearch"
-	TypeSupergroupMembersFilterRestricted               = "supergroupMembersFilterRestricted"
-	TypeSupergroupMembersFilterBanned                   = "supergroupMembersFilterBanned"
-	TypeSupergroupMembersFilterMention                  = "supergroupMembersFilterMention"
-	TypeSupergroupMembersFilterBots                     = "supergroupMembersFilterBots"
-	TypeChatInviteLink                                  = "chatInviteLink"
-	TypeChatInviteLinks                                 = "chatInviteLinks"
-	TypeChatInviteLinkCount                             = "chatInviteLinkCount"
-	TypeChatInviteLinkCounts                            = "chatInviteLinkCounts"
-	TypeChatInviteLinkMember                            = "chatInviteLinkMember"
-	TypeChatInviteLinkMembers                           = "chatInviteLinkMembers"
-	TypeChatInviteLinkInfo                              = "chatInviteLinkInfo"
-	TypeChatJoinRequest                                 = "chatJoinRequest"
-	TypeChatJoinRequests                                = "chatJoinRequests"
-	TypeChatJoinRequestsInfo                            = "chatJoinRequestsInfo"
-	TypeBasicGroup                                      = "basicGroup"
-	TypeBasicGroupFullInfo                              = "basicGroupFullInfo"
-	TypeSupergroup                                      = "supergroup"
-	TypeSupergroupFullInfo                              = "supergroupFullInfo"
-	TypeSecretChatStatePending                          = "secretChatStatePending"
-	TypeSecretChatStateReady                            = "secretChatStateReady"
-	TypeSecretChatStateClosed                           = "secretChatStateClosed"
-	TypeSecretChat                                      = "secretChat"
-	TypeMessageSenderUser                               = "messageSenderUser"
-	TypeMessageSenderChat                               = "messageSenderChat"
-	TypeMessageSenders                                  = "messageSenders"
-	TypeMessageForwardOriginUser                        = "messageForwardOriginUser"
-	TypeMessageForwardOriginChat                        = "messageForwardOriginChat"
-	TypeMessageForwardOriginHiddenUser                  = "messageForwardOriginHiddenUser"
-	TypeMessageForwardOriginChannel                     = "messageForwardOriginChannel"
-	TypeMessageForwardOriginMessageImport               = "messageForwardOriginMessageImport"
-	TypeMessageForwardInfo                              = "messageForwardInfo"
-	TypeMessageReplyInfo                                = "messageReplyInfo"
-	TypeMessageReaction                                 = "messageReaction"
-	TypeMessageInteractionInfo                          = "messageInteractionInfo"
-	TypeUnreadReaction                                  = "unreadReaction"
-	TypeMessageSendingStatePending                      = "messageSendingStatePending"
-	TypeMessageSendingStateFailed                       = "messageSendingStateFailed"
-	TypeMessage                                         = "message"
-	TypeMessages                                        = "messages"
-	TypeFoundMessages                                   = "foundMessages"
-	TypeMessagePosition                                 = "messagePosition"
-	TypeMessagePositions                                = "messagePositions"
-	TypeMessageCalendarDay                              = "messageCalendarDay"
-	TypeMessageCalendar                                 = "messageCalendar"
-	TypeSponsoredMessage                                = "sponsoredMessage"
-	TypeFileDownload                                    = "fileDownload"
-	TypeDownloadedFileCounts                            = "downloadedFileCounts"
-	TypeFoundFileDownloads                              = "foundFileDownloads"
-	TypeNotificationSettingsScopePrivateChats           = "notificationSettingsScopePrivateChats"
-	TypeNotificationSettingsScopeGroupChats             = "notificationSettingsScopeGroupChats"
-	TypeNotificationSettingsScopeChannelChats           = "notificationSettingsScopeChannelChats"
-	TypeChatNotificationSettings                        = "chatNotificationSettings"
-	TypeScopeNotificationSettings                       = "scopeNotificationSettings"
-	TypeDraftMessage                                    = "draftMessage"
-	TypeChatTypePrivate                                 = "chatTypePrivate"
-	TypeChatTypeBasicGroup                              = "chatTypeBasicGroup"
-	TypeChatTypeSupergroup                              = "chatTypeSupergroup"
-	TypeChatTypeSecret                                  = "chatTypeSecret"
-	TypeChatFilter                                      = "chatFilter"
-	TypeChatFilterInfo                                  = "chatFilterInfo"
-	TypeRecommendedChatFilter                           = "recommendedChatFilter"
-	TypeRecommendedChatFilters                          = "recommendedChatFilters"
-	TypeChatListMain                                    = "chatListMain"
-	TypeChatListArchive                                 = "chatListArchive"
-	TypeChatListFilter                                  = "chatListFilter"
-	TypeChatLists                                       = "chatLists"
-	TypeChatSourceMtprotoProxy                          = "chatSourceMtprotoProxy"
-	TypeChatSourcePublicServiceAnnouncement             = "chatSourcePublicServiceAnnouncement"
-	TypeChatPosition                                    = "chatPosition"
-	TypeVideoChat                                       = "videoChat"
-	TypeChat                                            = "chat"
-	TypeChats                                           = "chats"
-	TypeChatNearby                                      = "chatNearby"
-	TypeChatsNearby                                     = "chatsNearby"
-	TypePublicChatTypeHasUsername                       = "publicChatTypeHasUsername"
-	TypePublicChatTypeIsLocationBased                   = "publicChatTypeIsLocationBased"
-	TypeChatActionBarReportSpam                         = "chatActionBarReportSpam"
-	TypeChatActionBarReportUnrelatedLocation            = "chatActionBarReportUnrelatedLocation"
-	TypeChatActionBarInviteMembers                      = "chatActionBarInviteMembers"
-	TypeChatActionBarReportAddBlock                     = "chatActionBarReportAddBlock"
-	TypeChatActionBarAddContact                         = "chatActionBarAddContact"
-	TypeChatActionBarSharePhoneNumber                   = "chatActionBarSharePhoneNumber"
-	TypeChatActionBarJoinRequest                        = "chatActionBarJoinRequest"
-	TypeKeyboardButtonTypeText                          = "keyboardButtonTypeText"
-	TypeKeyboardButtonTypeRequestPhoneNumber            = "keyboardButtonTypeRequestPhoneNumber"
-	TypeKeyboardButtonTypeRequestLocation               = "keyboardButtonTypeRequestLocation"
-	TypeKeyboardButtonTypeRequestPoll                   = "keyboardButtonTypeRequestPoll"
-	TypeKeyboardButtonTypeWebApp                        = "keyboardButtonTypeWebApp"
-	TypeKeyboardButton                                  = "keyboardButton"
-	TypeInlineKeyboardButtonTypeUrl                     = "inlineKeyboardButtonTypeUrl"
-	TypeInlineKeyboardButtonTypeLoginUrl                = "inlineKeyboardButtonTypeLoginUrl"
-	TypeInlineKeyboardButtonTypeWebApp                  = "inlineKeyboardButtonTypeWebApp"
-	TypeInlineKeyboardButtonTypeCallback                = "inlineKeyboardButtonTypeCallback"
-	TypeInlineKeyboardButtonTypeCallbackWithPassword    = "inlineKeyboardButtonTypeCallbackWithPassword"
-	TypeInlineKeyboardButtonTypeCallbackGame            = "inlineKeyboardButtonTypeCallbackGame"
-	TypeInlineKeyboardButtonTypeSwitchInline            = "inlineKeyboardButtonTypeSwitchInline"
-	TypeInlineKeyboardButtonTypeBuy                     = "inlineKeyboardButtonTypeBuy"
-	TypeInlineKeyboardButtonTypeUser                    = "inlineKeyboardButtonTypeUser"
-	TypeInlineKeyboardButton                            = "inlineKeyboardButton"
-	TypeReplyMarkupRemoveKeyboard                       = "replyMarkupRemoveKeyboard"
-	TypeReplyMarkupForceReply                           = "replyMarkupForceReply"
-	TypeReplyMarkupShowKeyboard                         = "replyMarkupShowKeyboard"
-	TypeReplyMarkupInlineKeyboard                       = "replyMarkupInlineKeyboard"
-	TypeLoginUrlInfoOpen                                = "loginUrlInfoOpen"
-	TypeLoginUrlInfoRequestConfirmation                 = "loginUrlInfoRequestConfirmation"
-	TypeWebAppInfo                                      = "webAppInfo"
-	TypeMessageThreadInfo                               = "messageThreadInfo"
-	TypeRichTextPlain                                   = "richTextPlain"
-	TypeRichTextBold                                    = "richTextBold"
-	TypeRichTextItalic                                  = "richTextItalic"
-	TypeRichTextUnderline                               = "richTextUnderline"
-	TypeRichTextStrikethrough                           = "richTextStrikethrough"
-	TypeRichTextFixed                                   = "richTextFixed"
-	TypeRichTextUrl                                     = "richTextUrl"
-	TypeRichTextEmailAddress                            = "richTextEmailAddress"
-	TypeRichTextSubscript                               = "richTextSubscript"
-	TypeRichTextSuperscript                             = "richTextSuperscript"
-	TypeRichTextMarked                                  = "richTextMarked"
-	TypeRichTextPhoneNumber                             = "richTextPhoneNumber"
-	TypeRichTextIcon                                    = "richTextIcon"
-	TypeRichTextReference                               = "richTextReference"
-	TypeRichTextAnchor                                  = "richTextAnchor"
-	TypeRichTextAnchorLink                              = "richTextAnchorLink"
-	TypeRichTexts                                       = "richTexts"
-	TypePageBlockCaption                                = "pageBlockCaption"
-	TypePageBlockListItem                               = "pageBlockListItem"
-	TypePageBlockHorizontalAlignmentLeft                = "pageBlockHorizontalAlignmentLeft"
-	TypePageBlockHorizontalAlignmentCenter              = "pageBlockHorizontalAlignmentCenter"
-	TypePageBlockHorizontalAlignmentRight               = "pageBlockHorizontalAlignmentRight"
-	TypePageBlockVerticalAlignmentTop                   = "pageBlockVerticalAlignmentTop"
-	TypePageBlockVerticalAlignmentMiddle                = "pageBlockVerticalAlignmentMiddle"
-	TypePageBlockVerticalAlignmentBottom                = "pageBlockVerticalAlignmentBottom"
-	TypePageBlockTableCell                              = "pageBlockTableCell"
-	TypePageBlockRelatedArticle                         = "pageBlockRelatedArticle"
-	TypePageBlockTitle                                  = "pageBlockTitle"
-	TypePageBlockSubtitle                               = "pageBlockSubtitle"
-	TypePageBlockAuthorDate                             = "pageBlockAuthorDate"
-	TypePageBlockHeader                                 = "pageBlockHeader"
-	TypePageBlockSubheader                              = "pageBlockSubheader"
-	TypePageBlockKicker                                 = "pageBlockKicker"
-	TypePageBlockParagraph                              = "pageBlockParagraph"
-	TypePageBlockPreformatted                           = "pageBlockPreformatted"
-	TypePageBlockFooter                                 = "pageBlockFooter"
-	TypePageBlockDivider                                = "pageBlockDivider"
-	TypePageBlockAnchor                                 = "pageBlockAnchor"
-	TypePageBlockList                                   = "pageBlockList"
-	TypePageBlockBlockQuote                             = "pageBlockBlockQuote"
-	TypePageBlockPullQuote                              = "pageBlockPullQuote"
-	TypePageBlockAnimation                              = "pageBlockAnimation"
-	TypePageBlockAudio                                  = "pageBlockAudio"
-	TypePageBlockPhoto                                  = "pageBlockPhoto"
-	TypePageBlockVideo                                  = "pageBlockVideo"
-	TypePageBlockVoiceNote                              = "pageBlockVoiceNote"
-	TypePageBlockCover                                  = "pageBlockCover"
-	TypePageBlockEmbedded                               = "pageBlockEmbedded"
-	TypePageBlockEmbeddedPost                           = "pageBlockEmbeddedPost"
-	TypePageBlockCollage                                = "pageBlockCollage"
-	TypePageBlockSlideshow                              = "pageBlockSlideshow"
-	TypePageBlockChatLink                               = "pageBlockChatLink"
-	TypePageBlockTable                                  = "pageBlockTable"
-	TypePageBlockDetails                                = "pageBlockDetails"
-	TypePageBlockRelatedArticles                        = "pageBlockRelatedArticles"
-	TypePageBlockMap                                    = "pageBlockMap"
-	TypeWebPageInstantView                              = "webPageInstantView"
-	TypeWebPage                                         = "webPage"
-	TypeCountryInfo                                     = "countryInfo"
-	TypeCountries                                       = "countries"
-	TypePhoneNumberInfo                                 = "phoneNumberInfo"
-	TypeBankCardActionOpenUrl                           = "bankCardActionOpenUrl"
-	TypeBankCardInfo                                    = "bankCardInfo"
-	TypeAddress                                         = "address"
-	TypeThemeParameters                                 = "themeParameters"
-	TypeLabeledPricePart                                = "labeledPricePart"
-	TypeInvoice                                         = "invoice"
-	TypeOrderInfo                                       = "orderInfo"
-	TypeShippingOption                                  = "shippingOption"
-	TypeSavedCredentials                                = "savedCredentials"
-	TypeInputCredentialsSaved                           = "inputCredentialsSaved"
-	TypeInputCredentialsNew                             = "inputCredentialsNew"
-	TypeInputCredentialsApplePay                        = "inputCredentialsApplePay"
-	TypeInputCredentialsGooglePay                       = "inputCredentialsGooglePay"
-	TypePaymentProviderSmartGlocal                      = "paymentProviderSmartGlocal"
-	TypePaymentProviderStripe                           = "paymentProviderStripe"
-	TypePaymentProviderOther                            = "paymentProviderOther"
-	TypePaymentForm                                     = "paymentForm"
-	TypeValidatedOrderInfo                              = "validatedOrderInfo"
-	TypePaymentResult                                   = "paymentResult"
-	TypePaymentReceipt                                  = "paymentReceipt"
-	TypeInputInvoiceMessage                             = "inputInvoiceMessage"
-	TypeInputInvoiceName                                = "inputInvoiceName"
-	TypeDatedFile                                       = "datedFile"
-	TypePassportElementTypePersonalDetails              = "passportElementTypePersonalDetails"
-	TypePassportElementTypePassport                     = "passportElementTypePassport"
-	TypePassportElementTypeDriverLicense                = "passportElementTypeDriverLicense"
-	TypePassportElementTypeIdentityCard                 = "passportElementTypeIdentityCard"
-	TypePassportElementTypeInternalPassport             = "passportElementTypeInternalPassport"
-	TypePassportElementTypeAddress                      = "passportElementTypeAddress"
-	TypePassportElementTypeUtilityBill                  = "passportElementTypeUtilityBill"
-	TypePassportElementTypeBankStatement                = "passportElementTypeBankStatement"
-	TypePassportElementTypeRentalAgreement              = "passportElementTypeRentalAgreement"
-	TypePassportElementTypePassportRegistration         = "passportElementTypePassportRegistration"
-	TypePassportElementTypeTemporaryRegistration        = "passportElementTypeTemporaryRegistration"
-	TypePassportElementTypePhoneNumber                  = "passportElementTypePhoneNumber"
-	TypePassportElementTypeEmailAddress                 = "passportElementTypeEmailAddress"
-	TypeDate                                            = "date"
-	TypePersonalDetails                                 = "personalDetails"
-	TypeIdentityDocument                                = "identityDocument"
-	TypeInputIdentityDocument                           = "inputIdentityDocument"
-	TypePersonalDocument                                = "personalDocument"
-	TypeInputPersonalDocument                           = "inputPersonalDocument"
-	TypePassportElementPersonalDetails                  = "passportElementPersonalDetails"
-	TypePassportElementPassport                         = "passportElementPassport"
-	TypePassportElementDriverLicense                    = "passportElementDriverLicense"
-	TypePassportElementIdentityCard                     = "passportElementIdentityCard"
-	TypePassportElementInternalPassport                 = "passportElementInternalPassport"
-	TypePassportElementAddress                          = "passportElementAddress"
-	TypePassportElementUtilityBill                      = "passportElementUtilityBill"
-	TypePassportElementBankStatement                    = "passportElementBankStatement"
-	TypePassportElementRentalAgreement                  = "passportElementRentalAgreement"
-	TypePassportElementPassportRegistration             = "passportElementPassportRegistration"
-	TypePassportElementTemporaryRegistration            = "passportElementTemporaryRegistration"
-	TypePassportElementPhoneNumber                      = "passportElementPhoneNumber"
-	TypePassportElementEmailAddress                     = "passportElementEmailAddress"
-	TypeInputPassportElementPersonalDetails             = "inputPassportElementPersonalDetails"
-	TypeInputPassportElementPassport                    = "inputPassportElementPassport"
-	TypeInputPassportElementDriverLicense               = "inputPassportElementDriverLicense"
-	TypeInputPassportElementIdentityCard                = "inputPassportElementIdentityCard"
-	TypeInputPassportElementInternalPassport            = "inputPassportElementInternalPassport"
-	TypeInputPassportElementAddress                     = "inputPassportElementAddress"
-	TypeInputPassportElementUtilityBill                 = "inputPassportElementUtilityBill"
-	TypeInputPassportElementBankStatement               = "inputPassportElementBankStatement"
-	TypeInputPassportElementRentalAgreement             = "inputPassportElementRentalAgreement"
-	TypeInputPassportElementPassportRegistration        = "inputPassportElementPassportRegistration"
-	TypeInputPassportElementTemporaryRegistration       = "inputPassportElementTemporaryRegistration"
-	TypeInputPassportElementPhoneNumber                 = "inputPassportElementPhoneNumber"
-	TypeInputPassportElementEmailAddress                = "inputPassportElementEmailAddress"
-	TypePassportElements                                = "passportElements"
-	TypePassportElementErrorSourceUnspecified           = "passportElementErrorSourceUnspecified"
-	TypePassportElementErrorSourceDataField             = "passportElementErrorSourceDataField"
-	TypePassportElementErrorSourceFrontSide             = "passportElementErrorSourceFrontSide"
-	TypePassportElementErrorSourceReverseSide           = "passportElementErrorSourceReverseSide"
-	TypePassportElementErrorSourceSelfie                = "passportElementErrorSourceSelfie"
-	TypePassportElementErrorSourceTranslationFile       = "passportElementErrorSourceTranslationFile"
-	TypePassportElementErrorSourceTranslationFiles      = "passportElementErrorSourceTranslationFiles"
-	TypePassportElementErrorSourceFile                  = "passportElementErrorSourceFile"
-	TypePassportElementErrorSourceFiles                 = "passportElementErrorSourceFiles"
-	TypePassportElementError                            = "passportElementError"
-	TypePassportSuitableElement                         = "passportSuitableElement"
-	TypePassportRequiredElement                         = "passportRequiredElement"
-	TypePassportAuthorizationForm                       = "passportAuthorizationForm"
-	TypePassportElementsWithErrors                      = "passportElementsWithErrors"
-	TypeEncryptedCredentials                            = "encryptedCredentials"
-	TypeEncryptedPassportElement                        = "encryptedPassportElement"
-	TypeInputPassportElementErrorSourceUnspecified      = "inputPassportElementErrorSourceUnspecified"
-	TypeInputPassportElementErrorSourceDataField        = "inputPassportElementErrorSourceDataField"
-	TypeInputPassportElementErrorSourceFrontSide        = "inputPassportElementErrorSourceFrontSide"
-	TypeInputPassportElementErrorSourceReverseSide      = "inputPassportElementErrorSourceReverseSide"
-	TypeInputPassportElementErrorSourceSelfie           = "inputPassportElementErrorSourceSelfie"
-	TypeInputPassportElementErrorSourceTranslationFile  = "inputPassportElementErrorSourceTranslationFile"
-	TypeInputPassportElementErrorSourceTranslationFiles = "inputPassportElementErrorSourceTranslationFiles"
-	TypeInputPassportElementErrorSourceFile             = "inputPassportElementErrorSourceFile"
-	TypeInputPassportElementErrorSourceFiles            = "inputPassportElementErrorSourceFiles"
-	TypeInputPassportElementError                       = "inputPassportElementError"
-	TypeMessageText                                     = "messageText"
-	TypeMessageAnimation                                = "messageAnimation"
-	TypeMessageAudio                                    = "messageAudio"
-	TypeMessageDocument                                 = "messageDocument"
-	TypeMessagePhoto                                    = "messagePhoto"
-	TypeMessageExpiredPhoto                             = "messageExpiredPhoto"
-	TypeMessageSticker                                  = "messageSticker"
-	TypeMessageVideo                                    = "messageVideo"
-	TypeMessageExpiredVideo                             = "messageExpiredVideo"
-	TypeMessageVideoNote                                = "messageVideoNote"
-	TypeMessageVoiceNote                                = "messageVoiceNote"
-	TypeMessageLocation                                 = "messageLocation"
-	TypeMessageVenue                                    = "messageVenue"
-	TypeMessageContact                                  = "messageContact"
-	TypeMessageAnimatedEmoji                            = "messageAnimatedEmoji"
-	TypeMessageDice                                     = "messageDice"
-	TypeMessageGame                                     = "messageGame"
-	TypeMessagePoll                                     = "messagePoll"
-	TypeMessageInvoice                                  = "messageInvoice"
-	TypeMessageCall                                     = "messageCall"
-	TypeMessageVideoChatScheduled                       = "messageVideoChatScheduled"
-	TypeMessageVideoChatStarted                         = "messageVideoChatStarted"
-	TypeMessageVideoChatEnded                           = "messageVideoChatEnded"
-	TypeMessageInviteVideoChatParticipants              = "messageInviteVideoChatParticipants"
-	TypeMessageBasicGroupChatCreate                     = "messageBasicGroupChatCreate"
-	TypeMessageSupergroupChatCreate                     = "messageSupergroupChatCreate"
-	TypeMessageChatChangeTitle                          = "messageChatChangeTitle"
-	TypeMessageChatChangePhoto                          = "messageChatChangePhoto"
-	TypeMessageChatDeletePhoto                          = "messageChatDeletePhoto"
-	TypeMessageChatAddMembers                           = "messageChatAddMembers"
-	TypeMessageChatJoinByLink                           = "messageChatJoinByLink"
-	TypeMessageChatJoinByRequest                        = "messageChatJoinByRequest"
-	TypeMessageChatDeleteMember                         = "messageChatDeleteMember"
-	TypeMessageChatUpgradeTo                            = "messageChatUpgradeTo"
-	TypeMessageChatUpgradeFrom                          = "messageChatUpgradeFrom"
-	TypeMessagePinMessage                               = "messagePinMessage"
-	TypeMessageScreenshotTaken                          = "messageScreenshotTaken"
-	TypeMessageChatSetTheme                             = "messageChatSetTheme"
-	TypeMessageChatSetTtl                               = "messageChatSetTtl"
-	TypeMessageCustomServiceAction                      = "messageCustomServiceAction"
-	TypeMessageGameScore                                = "messageGameScore"
-	TypeMessagePaymentSuccessful                        = "messagePaymentSuccessful"
-	TypeMessagePaymentSuccessfulBot                     = "messagePaymentSuccessfulBot"
-	TypeMessageContactRegistered                        = "messageContactRegistered"
-	TypeMessageWebsiteConnected                         = "messageWebsiteConnected"
-	TypeMessageWebAppDataSent                           = "messageWebAppDataSent"
-	TypeMessageWebAppDataReceived                       = "messageWebAppDataReceived"
-	TypeMessagePassportDataSent                         = "messagePassportDataSent"
-	TypeMessagePassportDataReceived                     = "messagePassportDataReceived"
-	TypeMessageProximityAlertTriggered                  = "messageProximityAlertTriggered"
-	TypeMessageUnsupported                              = "messageUnsupported"
-	TypeTextEntityTypeMention                           = "textEntityTypeMention"
-	TypeTextEntityTypeHashtag                           = "textEntityTypeHashtag"
-	TypeTextEntityTypeCashtag                           = "textEntityTypeCashtag"
-	TypeTextEntityTypeBotCommand                        = "textEntityTypeBotCommand"
-	TypeTextEntityTypeUrl                               = "textEntityTypeUrl"
-	TypeTextEntityTypeEmailAddress                      = "textEntityTypeEmailAddress"
-	TypeTextEntityTypePhoneNumber                       = "textEntityTypePhoneNumber"
-	TypeTextEntityTypeBankCardNumber                    = "textEntityTypeBankCardNumber"
-	TypeTextEntityTypeBold                              = "textEntityTypeBold"
-	TypeTextEntityTypeItalic                            = "textEntityTypeItalic"
-	TypeTextEntityTypeUnderline                         = "textEntityTypeUnderline"
-	TypeTextEntityTypeStrikethrough                     = "textEntityTypeStrikethrough"
-	TypeTextEntityTypeSpoiler                           = "textEntityTypeSpoiler"
-	TypeTextEntityTypeCode                              = "textEntityTypeCode"
-	TypeTextEntityTypePre                               = "textEntityTypePre"
-	TypeTextEntityTypePreCode                           = "textEntityTypePreCode"
-	TypeTextEntityTypeTextUrl                           = "textEntityTypeTextUrl"
-	TypeTextEntityTypeMentionName                       = "textEntityTypeMentionName"
-	TypeTextEntityTypeMediaTimestamp                    = "textEntityTypeMediaTimestamp"
-	TypeInputThumbnail                                  = "inputThumbnail"
-	TypeMessageSchedulingStateSendAtDate                = "messageSchedulingStateSendAtDate"
-	TypeMessageSchedulingStateSendWhenOnline            = "messageSchedulingStateSendWhenOnline"
-	TypeMessageSendOptions                              = "messageSendOptions"
-	TypeMessageCopyOptions                              = "messageCopyOptions"
-	TypeInputMessageText                                = "inputMessageText"
-	TypeInputMessageAnimation                           = "inputMessageAnimation"
-	TypeInputMessageAudio                               = "inputMessageAudio"
-	TypeInputMessageDocument                            = "inputMessageDocument"
-	TypeInputMessagePhoto                               = "inputMessagePhoto"
-	TypeInputMessageSticker                             = "inputMessageSticker"
-	TypeInputMessageVideo                               = "inputMessageVideo"
-	TypeInputMessageVideoNote                           = "inputMessageVideoNote"
-	TypeInputMessageVoiceNote                           = "inputMessageVoiceNote"
-	TypeInputMessageLocation                            = "inputMessageLocation"
-	TypeInputMessageVenue                               = "inputMessageVenue"
-	TypeInputMessageContact                             = "inputMessageContact"
-	TypeInputMessageDice                                = "inputMessageDice"
-	TypeInputMessageGame                                = "inputMessageGame"
-	TypeInputMessageInvoice                             = "inputMessageInvoice"
-	TypeInputMessagePoll                                = "inputMessagePoll"
-	TypeInputMessageForwarded                           = "inputMessageForwarded"
-	TypeSearchMessagesFilterEmpty                       = "searchMessagesFilterEmpty"
-	TypeSearchMessagesFilterAnimation                   = "searchMessagesFilterAnimation"
-	TypeSearchMessagesFilterAudio                       = "searchMessagesFilterAudio"
-	TypeSearchMessagesFilterDocument                    = "searchMessagesFilterDocument"
-	TypeSearchMessagesFilterPhoto                       = "searchMessagesFilterPhoto"
-	TypeSearchMessagesFilterVideo                       = "searchMessagesFilterVideo"
-	TypeSearchMessagesFilterVoiceNote                   = "searchMessagesFilterVoiceNote"
-	TypeSearchMessagesFilterPhotoAndVideo               = "searchMessagesFilterPhotoAndVideo"
-	TypeSearchMessagesFilterUrl                         = "searchMessagesFilterUrl"
-	TypeSearchMessagesFilterChatPhoto                   = "searchMessagesFilterChatPhoto"
-	TypeSearchMessagesFilterVideoNote                   = "searchMessagesFilterVideoNote"
-	TypeSearchMessagesFilterVoiceAndVideoNote           = "searchMessagesFilterVoiceAndVideoNote"
-	TypeSearchMessagesFilterMention                     = "searchMessagesFilterMention"
-	TypeSearchMessagesFilterUnreadMention               = "searchMessagesFilterUnreadMention"
-	TypeSearchMessagesFilterUnreadReaction              = "searchMessagesFilterUnreadReaction"
-	TypeSearchMessagesFilterFailedToSend                = "searchMessagesFilterFailedToSend"
-	TypeSearchMessagesFilterPinned                      = "searchMessagesFilterPinned"
-	TypeChatActionTyping                                = "chatActionTyping"
-	TypeChatActionRecordingVideo                        = "chatActionRecordingVideo"
-	TypeChatActionUploadingVideo                        = "chatActionUploadingVideo"
-	TypeChatActionRecordingVoiceNote                    = "chatActionRecordingVoiceNote"
-	TypeChatActionUploadingVoiceNote                    = "chatActionUploadingVoiceNote"
-	TypeChatActionUploadingPhoto                        = "chatActionUploadingPhoto"
-	TypeChatActionUploadingDocument                     = "chatActionUploadingDocument"
-	TypeChatActionChoosingSticker                       = "chatActionChoosingSticker"
-	TypeChatActionChoosingLocation                      = "chatActionChoosingLocation"
-	TypeChatActionChoosingContact                       = "chatActionChoosingContact"
-	TypeChatActionStartPlayingGame                      = "chatActionStartPlayingGame"
-	TypeChatActionRecordingVideoNote                    = "chatActionRecordingVideoNote"
-	TypeChatActionUploadingVideoNote                    = "chatActionUploadingVideoNote"
-	TypeChatActionWatchingAnimations                    = "chatActionWatchingAnimations"
-	TypeChatActionCancel                                = "chatActionCancel"
-	TypeUserStatusEmpty                                 = "userStatusEmpty"
-	TypeUserStatusOnline                                = "userStatusOnline"
-	TypeUserStatusOffline                               = "userStatusOffline"
-	TypeUserStatusRecently                              = "userStatusRecently"
-	TypeUserStatusLastWeek                              = "userStatusLastWeek"
-	TypeUserStatusLastMonth                             = "userStatusLastMonth"
-	TypeStickers                                        = "stickers"
-	TypeEmojis                                          = "emojis"
-	TypeStickerSet                                      = "stickerSet"
-	TypeStickerSetInfo                                  = "stickerSetInfo"
-	TypeStickerSets                                     = "stickerSets"
-	TypeTrendingStickerSets                             = "trendingStickerSets"
-	TypeCallDiscardReasonEmpty                          = "callDiscardReasonEmpty"
-	TypeCallDiscardReasonMissed                         = "callDiscardReasonMissed"
-	TypeCallDiscardReasonDeclined                       = "callDiscardReasonDeclined"
-	TypeCallDiscardReasonDisconnected                   = "callDiscardReasonDisconnected"
-	TypeCallDiscardReasonHungUp                         = "callDiscardReasonHungUp"
-	TypeCallProtocol                                    = "callProtocol"
-	TypeCallServerTypeTelegramReflector                 = "callServerTypeTelegramReflector"
-	TypeCallServerTypeWebrtc                            = "callServerTypeWebrtc"
-	TypeCallServer                                      = "callServer"
-	TypeCallId                                          = "callId"
-	TypeGroupCallId                                     = "groupCallId"
-	TypeCallStatePending                                = "callStatePending"
-	TypeCallStateExchangingKeys                         = "callStateExchangingKeys"
-	TypeCallStateReady                                  = "callStateReady"
-	TypeCallStateHangingUp                              = "callStateHangingUp"
-	TypeCallStateDiscarded                              = "callStateDiscarded"
-	TypeCallStateError                                  = "callStateError"
-	TypeGroupCallVideoQualityThumbnail                  = "groupCallVideoQualityThumbnail"
-	TypeGroupCallVideoQualityMedium                     = "groupCallVideoQualityMedium"
-	TypeGroupCallVideoQualityFull                       = "groupCallVideoQualityFull"
-	TypeGroupCallStream                                 = "groupCallStream"
-	TypeGroupCallStreams                                = "groupCallStreams"
-	TypeRtmpUrl                                         = "rtmpUrl"
-	TypeGroupCallRecentSpeaker                          = "groupCallRecentSpeaker"
-	TypeGroupCall                                       = "groupCall"
-	TypeGroupCallVideoSourceGroup                       = "groupCallVideoSourceGroup"
-	TypeGroupCallParticipantVideoInfo                   = "groupCallParticipantVideoInfo"
-	TypeGroupCallParticipant                            = "groupCallParticipant"
-	TypeCallProblemEcho                                 = "callProblemEcho"
-	TypeCallProblemNoise                                = "callProblemNoise"
-	TypeCallProblemInterruptions                        = "callProblemInterruptions"
-	TypeCallProblemDistortedSpeech                      = "callProblemDistortedSpeech"
-	TypeCallProblemSilentLocal                          = "callProblemSilentLocal"
-	TypeCallProblemSilentRemote                         = "callProblemSilentRemote"
-	TypeCallProblemDropped                              = "callProblemDropped"
-	TypeCallProblemDistortedVideo                       = "callProblemDistortedVideo"
-	TypeCallProblemPixelatedVideo                       = "callProblemPixelatedVideo"
-	TypeCall                                            = "call"
-	TypePhoneNumberAuthenticationSettings               = "phoneNumberAuthenticationSettings"
-	TypeAddedReaction                                   = "addedReaction"
-	TypeAddedReactions                                  = "addedReactions"
-	TypeAvailableReaction                               = "availableReaction"
-	TypeAvailableReactions                              = "availableReactions"
-	TypeReaction                                        = "reaction"
-	TypeAnimations                                      = "animations"
-	TypeDiceStickersRegular                             = "diceStickersRegular"
-	TypeDiceStickersSlotMachine                         = "diceStickersSlotMachine"
-	TypeImportedContacts                                = "importedContacts"
-	TypeAttachmentMenuBotColor                          = "attachmentMenuBotColor"
-	TypeAttachmentMenuBot                               = "attachmentMenuBot"
-	TypeSentWebAppMessage                               = "sentWebAppMessage"
-	TypeHttpUrl                                         = "httpUrl"
-	TypeInputInlineQueryResultAnimation                 = "inputInlineQueryResultAnimation"
-	TypeInputInlineQueryResultArticle                   = "inputInlineQueryResultArticle"
-	TypeInputInlineQueryResultAudio                     = "inputInlineQueryResultAudio"
-	TypeInputInlineQueryResultContact                   = "inputInlineQueryResultContact"
-	TypeInputInlineQueryResultDocument                  = "inputInlineQueryResultDocument"
-	TypeInputInlineQueryResultGame                      = "inputInlineQueryResultGame"
-	TypeInputInlineQueryResultLocation                  = "inputInlineQueryResultLocation"
-	TypeInputInlineQueryResultPhoto                     = "inputInlineQueryResultPhoto"
-	TypeInputInlineQueryResultSticker                   = "inputInlineQueryResultSticker"
-	TypeInputInlineQueryResultVenue                     = "inputInlineQueryResultVenue"
-	TypeInputInlineQueryResultVideo                     = "inputInlineQueryResultVideo"
-	TypeInputInlineQueryResultVoiceNote                 = "inputInlineQueryResultVoiceNote"
-	TypeInlineQueryResultArticle                        = "inlineQueryResultArticle"
-	TypeInlineQueryResultContact                        = "inlineQueryResultContact"
-	TypeInlineQueryResultLocation                       = "inlineQueryResultLocation"
-	TypeInlineQueryResultVenue                          = "inlineQueryResultVenue"
-	TypeInlineQueryResultGame                           = "inlineQueryResultGame"
-	TypeInlineQueryResultAnimation                      = "inlineQueryResultAnimation"
-	TypeInlineQueryResultAudio                          = "inlineQueryResultAudio"
-	TypeInlineQueryResultDocument                       = "inlineQueryResultDocument"
-	TypeInlineQueryResultPhoto                          = "inlineQueryResultPhoto"
-	TypeInlineQueryResultSticker                        = "inlineQueryResultSticker"
-	TypeInlineQueryResultVideo                          = "inlineQueryResultVideo"
-	TypeInlineQueryResultVoiceNote                      = "inlineQueryResultVoiceNote"
-	TypeInlineQueryResults                              = "inlineQueryResults"
-	TypeCallbackQueryPayloadData                        = "callbackQueryPayloadData"
-	TypeCallbackQueryPayloadDataWithPassword            = "callbackQueryPayloadDataWithPassword"
-	TypeCallbackQueryPayloadGame                        = "callbackQueryPayloadGame"
-	TypeCallbackQueryAnswer                             = "callbackQueryAnswer"
-	TypeCustomRequestResult                             = "customRequestResult"
-	TypeGameHighScore                                   = "gameHighScore"
-	TypeGameHighScores                                  = "gameHighScores"
-	TypeChatEventMessageEdited                          = "chatEventMessageEdited"
-	TypeChatEventMessageDeleted                         = "chatEventMessageDeleted"
-	TypeChatEventMessagePinned                          = "chatEventMessagePinned"
-	TypeChatEventMessageUnpinned                        = "chatEventMessageUnpinned"
-	TypeChatEventPollStopped                            = "chatEventPollStopped"
-	TypeChatEventMemberJoined                           = "chatEventMemberJoined"
-	TypeChatEventMemberJoinedByInviteLink               = "chatEventMemberJoinedByInviteLink"
-	TypeChatEventMemberJoinedByRequest                  = "chatEventMemberJoinedByRequest"
-	TypeChatEventMemberInvited                          = "chatEventMemberInvited"
-	TypeChatEventMemberLeft                             = "chatEventMemberLeft"
-	TypeChatEventMemberPromoted                         = "chatEventMemberPromoted"
-	TypeChatEventMemberRestricted                       = "chatEventMemberRestricted"
-	TypeChatEventAvailableReactionsChanged              = "chatEventAvailableReactionsChanged"
-	TypeChatEventDescriptionChanged                     = "chatEventDescriptionChanged"
-	TypeChatEventLinkedChatChanged                      = "chatEventLinkedChatChanged"
-	TypeChatEventLocationChanged                        = "chatEventLocationChanged"
-	TypeChatEventMessageTtlChanged                      = "chatEventMessageTtlChanged"
-	TypeChatEventPermissionsChanged                     = "chatEventPermissionsChanged"
-	TypeChatEventPhotoChanged                           = "chatEventPhotoChanged"
-	TypeChatEventSlowModeDelayChanged                   = "chatEventSlowModeDelayChanged"
-	TypeChatEventStickerSetChanged                      = "chatEventStickerSetChanged"
-	TypeChatEventTitleChanged                           = "chatEventTitleChanged"
-	TypeChatEventUsernameChanged                        = "chatEventUsernameChanged"
-	TypeChatEventHasProtectedContentToggled             = "chatEventHasProtectedContentToggled"
-	TypeChatEventInvitesToggled                         = "chatEventInvitesToggled"
-	TypeChatEventIsAllHistoryAvailableToggled           = "chatEventIsAllHistoryAvailableToggled"
-	TypeChatEventSignMessagesToggled                    = "chatEventSignMessagesToggled"
-	TypeChatEventInviteLinkEdited                       = "chatEventInviteLinkEdited"
-	TypeChatEventInviteLinkRevoked                      = "chatEventInviteLinkRevoked"
-	TypeChatEventInviteLinkDeleted                      = "chatEventInviteLinkDeleted"
-	TypeChatEventVideoChatCreated                       = "chatEventVideoChatCreated"
-	TypeChatEventVideoChatEnded                         = "chatEventVideoChatEnded"
-	TypeChatEventVideoChatMuteNewParticipantsToggled    = "chatEventVideoChatMuteNewParticipantsToggled"
-	TypeChatEventVideoChatParticipantIsMutedToggled     = "chatEventVideoChatParticipantIsMutedToggled"
-	TypeChatEventVideoChatParticipantVolumeLevelChanged = "chatEventVideoChatParticipantVolumeLevelChanged"
-	TypeChatEvent                                       = "chatEvent"
-	TypeChatEvents                                      = "chatEvents"
-	TypeChatEventLogFilters                             = "chatEventLogFilters"
-	TypeLanguagePackStringValueOrdinary                 = "languagePackStringValueOrdinary"
-	TypeLanguagePackStringValuePluralized               = "languagePackStringValuePluralized"
-	TypeLanguagePackStringValueDeleted                  = "languagePackStringValueDeleted"
-	TypeLanguagePackString                              = "languagePackString"
-	TypeLanguagePackStrings                             = "languagePackStrings"
-	TypeLanguagePackInfo                                = "languagePackInfo"
-	TypeLocalizationTargetInfo                          = "localizationTargetInfo"
-	TypePremiumLimitTypeSupergroupCount                 = "premiumLimitTypeSupergroupCount"
-	TypePremiumLimitTypePinnedChatCount                 = "premiumLimitTypePinnedChatCount"
-	TypePremiumLimitTypeCreatedPublicChatCount          = "premiumLimitTypeCreatedPublicChatCount"
-	TypePremiumLimitTypeSavedAnimationCount             = "premiumLimitTypeSavedAnimationCount"
-	TypePremiumLimitTypeFavoriteStickerCount            = "premiumLimitTypeFavoriteStickerCount"
-	TypePremiumLimitTypeChatFilterCount                 = "premiumLimitTypeChatFilterCount"
-	TypePremiumLimitTypeChatFilterChosenChatCount       = "premiumLimitTypeChatFilterChosenChatCount"
-	TypePremiumLimitTypePinnedArchivedChatCount         = "premiumLimitTypePinnedArchivedChatCount"
-	TypePremiumLimitTypeCaptionLength                   = "premiumLimitTypeCaptionLength"
-	TypePremiumLimitTypeBioLength                       = "premiumLimitTypeBioLength"
-	TypePremiumFeatureIncreasedLimits                   = "premiumFeatureIncreasedLimits"
-	TypePremiumFeatureIncreasedUploadFileSize           = "premiumFeatureIncreasedUploadFileSize"
-	TypePremiumFeatureImprovedDownloadSpeed             = "premiumFeatureImprovedDownloadSpeed"
-	TypePremiumFeatureVoiceRecognition                  = "premiumFeatureVoiceRecognition"
-	TypePremiumFeatureDisabledAds                       = "premiumFeatureDisabledAds"
-	TypePremiumFeatureUniqueReactions                   = "premiumFeatureUniqueReactions"
-	TypePremiumFeatureUniqueStickers                    = "premiumFeatureUniqueStickers"
-	TypePremiumFeatureAdvancedChatManagement            = "premiumFeatureAdvancedChatManagement"
-	TypePremiumFeatureProfileBadge                      = "premiumFeatureProfileBadge"
-	TypePremiumFeatureAnimatedProfilePhoto              = "premiumFeatureAnimatedProfilePhoto"
-	TypePremiumFeatureAppIcons                          = "premiumFeatureAppIcons"
-	TypePremiumLimit                                    = "premiumLimit"
-	TypePremiumFeatures                                 = "premiumFeatures"
-	TypePremiumSourceLimitExceeded                      = "premiumSourceLimitExceeded"
-	TypePremiumSourceFeature                            = "premiumSourceFeature"
-	TypePremiumSourceLink                               = "premiumSourceLink"
-	TypePremiumSourceSettings                           = "premiumSourceSettings"
-	TypePremiumFeaturePromotionAnimation                = "premiumFeaturePromotionAnimation"
-	TypePremiumState                                    = "premiumState"
-	TypeDeviceTokenFirebaseCloudMessaging               = "deviceTokenFirebaseCloudMessaging"
-	TypeDeviceTokenApplePush                            = "deviceTokenApplePush"
-	TypeDeviceTokenApplePushVoIP                        = "deviceTokenApplePushVoIP"
-	TypeDeviceTokenWindowsPush                          = "deviceTokenWindowsPush"
-	TypeDeviceTokenMicrosoftPush                        = "deviceTokenMicrosoftPush"
-	TypeDeviceTokenMicrosoftPushVoIP                    = "deviceTokenMicrosoftPushVoIP"
-	TypeDeviceTokenWebPush                              = "deviceTokenWebPush"
-	TypeDeviceTokenSimplePush                           = "deviceTokenSimplePush"
-	TypeDeviceTokenUbuntuPush                           = "deviceTokenUbuntuPush"
-	TypeDeviceTokenBlackBerryPush                       = "deviceTokenBlackBerryPush"
-	TypeDeviceTokenTizenPush                            = "deviceTokenTizenPush"
-	TypePushReceiverId                                  = "pushReceiverId"
-	TypeBackgroundFillSolid                             = "backgroundFillSolid"
-	TypeBackgroundFillGradient                          = "backgroundFillGradient"
-	TypeBackgroundFillFreeformGradient                  = "backgroundFillFreeformGradient"
-	TypeBackgroundTypeWallpaper                         = "backgroundTypeWallpaper"
-	TypeBackgroundTypePattern                           = "backgroundTypePattern"
-	TypeBackgroundTypeFill                              = "backgroundTypeFill"
-	TypeBackground                                      = "background"
-	TypeBackgrounds                                     = "backgrounds"
-	TypeInputBackgroundLocal                            = "inputBackgroundLocal"
-	TypeInputBackgroundRemote                           = "inputBackgroundRemote"
-	TypeThemeSettings                                   = "themeSettings"
-	TypeChatTheme                                       = "chatTheme"
-	TypeHashtags                                        = "hashtags"
-	TypeCanTransferOwnershipResultOk                    = "canTransferOwnershipResultOk"
-	TypeCanTransferOwnershipResultPasswordNeeded        = "canTransferOwnershipResultPasswordNeeded"
-	TypeCanTransferOwnershipResultPasswordTooFresh      = "canTransferOwnershipResultPasswordTooFresh"
-	TypeCanTransferOwnershipResultSessionTooFresh       = "canTransferOwnershipResultSessionTooFresh"
-	TypeCheckChatUsernameResultOk                       = "checkChatUsernameResultOk"
-	TypeCheckChatUsernameResultUsernameInvalid          = "checkChatUsernameResultUsernameInvalid"
-	TypeCheckChatUsernameResultUsernameOccupied         = "checkChatUsernameResultUsernameOccupied"
-	TypeCheckChatUsernameResultPublicChatsTooMuch       = "checkChatUsernameResultPublicChatsTooMuch"
-	TypeCheckChatUsernameResultPublicGroupsUnavailable  = "checkChatUsernameResultPublicGroupsUnavailable"
-	TypeCheckStickerSetNameResultOk                     = "checkStickerSetNameResultOk"
-	TypeCheckStickerSetNameResultNameInvalid            = "checkStickerSetNameResultNameInvalid"
-	TypeCheckStickerSetNameResultNameOccupied           = "checkStickerSetNameResultNameOccupied"
-	TypeResetPasswordResultOk                           = "resetPasswordResultOk"
-	TypeResetPasswordResultPending                      = "resetPasswordResultPending"
-	TypeResetPasswordResultDeclined                     = "resetPasswordResultDeclined"
-	TypeMessageFileTypePrivate                          = "messageFileTypePrivate"
-	TypeMessageFileTypeGroup                            = "messageFileTypeGroup"
-	TypeMessageFileTypeUnknown                          = "messageFileTypeUnknown"
-	TypePushMessageContentHidden                        = "pushMessageContentHidden"
-	TypePushMessageContentAnimation                     = "pushMessageContentAnimation"
-	TypePushMessageContentAudio                         = "pushMessageContentAudio"
-	TypePushMessageContentContact                       = "pushMessageContentContact"
-	TypePushMessageContentContactRegistered             = "pushMessageContentContactRegistered"
-	TypePushMessageContentDocument                      = "pushMessageContentDocument"
-	TypePushMessageContentGame                          = "pushMessageContentGame"
-	TypePushMessageContentGameScore                     = "pushMessageContentGameScore"
-	TypePushMessageContentInvoice                       = "pushMessageContentInvoice"
-	TypePushMessageContentLocation                      = "pushMessageContentLocation"
-	TypePushMessageContentPhoto                         = "pushMessageContentPhoto"
-	TypePushMessageContentPoll                          = "pushMessageContentPoll"
-	TypePushMessageContentScreenshotTaken               = "pushMessageContentScreenshotTaken"
-	TypePushMessageContentSticker                       = "pushMessageContentSticker"
-	TypePushMessageContentText                          = "pushMessageContentText"
-	TypePushMessageContentVideo                         = "pushMessageContentVideo"
-	TypePushMessageContentVideoNote                     = "pushMessageContentVideoNote"
-	TypePushMessageContentVoiceNote                     = "pushMessageContentVoiceNote"
-	TypePushMessageContentBasicGroupChatCreate          = "pushMessageContentBasicGroupChatCreate"
-	TypePushMessageContentChatAddMembers                = "pushMessageContentChatAddMembers"
-	TypePushMessageContentChatChangePhoto               = "pushMessageContentChatChangePhoto"
-	TypePushMessageContentChatChangeTitle               = "pushMessageContentChatChangeTitle"
-	TypePushMessageContentChatSetTheme                  = "pushMessageContentChatSetTheme"
-	TypePushMessageContentChatDeleteMember              = "pushMessageContentChatDeleteMember"
-	TypePushMessageContentChatJoinByLink                = "pushMessageContentChatJoinByLink"
-	TypePushMessageContentChatJoinByRequest             = "pushMessageContentChatJoinByRequest"
-	TypePushMessageContentRecurringPayment              = "pushMessageContentRecurringPayment"
-	TypePushMessageContentMessageForwards               = "pushMessageContentMessageForwards"
-	TypePushMessageContentMediaAlbum                    = "pushMessageContentMediaAlbum"
-	TypeNotificationTypeNewMessage                      = "notificationTypeNewMessage"
-	TypeNotificationTypeNewSecretChat                   = "notificationTypeNewSecretChat"
-	TypeNotificationTypeNewCall                         = "notificationTypeNewCall"
-	TypeNotificationTypeNewPushMessage                  = "notificationTypeNewPushMessage"
-	TypeNotificationGroupTypeMessages                   = "notificationGroupTypeMessages"
-	TypeNotificationGroupTypeMentions                   = "notificationGroupTypeMentions"
-	TypeNotificationGroupTypeSecretChat                 = "notificationGroupTypeSecretChat"
-	TypeNotificationGroupTypeCalls                      = "notificationGroupTypeCalls"
-	TypeNotificationSound                               = "notificationSound"
-	TypeNotificationSounds                              = "notificationSounds"
-	TypeNotification                                    = "notification"
-	TypeNotificationGroup                               = "notificationGroup"
-	TypeOptionValueBoolean                              = "optionValueBoolean"
-	TypeOptionValueEmpty                                = "optionValueEmpty"
-	TypeOptionValueInteger                              = "optionValueInteger"
-	TypeOptionValueString                               = "optionValueString"
-	TypeJsonObjectMember                                = "jsonObjectMember"
-	TypeJsonValueNull                                   = "jsonValueNull"
-	TypeJsonValueBoolean                                = "jsonValueBoolean"
-	TypeJsonValueNumber                                 = "jsonValueNumber"
-	TypeJsonValueString                                 = "jsonValueString"
-	TypeJsonValueArray                                  = "jsonValueArray"
-	TypeJsonValueObject                                 = "jsonValueObject"
-	TypeUserPrivacySettingRuleAllowAll                  = "userPrivacySettingRuleAllowAll"
-	TypeUserPrivacySettingRuleAllowContacts             = "userPrivacySettingRuleAllowContacts"
-	TypeUserPrivacySettingRuleAllowUsers                = "userPrivacySettingRuleAllowUsers"
-	TypeUserPrivacySettingRuleAllowChatMembers          = "userPrivacySettingRuleAllowChatMembers"
-	TypeUserPrivacySettingRuleRestrictAll               = "userPrivacySettingRuleRestrictAll"
-	TypeUserPrivacySettingRuleRestrictContacts          = "userPrivacySettingRuleRestrictContacts"
-	TypeUserPrivacySettingRuleRestrictUsers             = "userPrivacySettingRuleRestrictUsers"
-	TypeUserPrivacySettingRuleRestrictChatMembers       = "userPrivacySettingRuleRestrictChatMembers"
-	TypeUserPrivacySettingRules                         = "userPrivacySettingRules"
-	TypeUserPrivacySettingShowStatus                    = "userPrivacySettingShowStatus"
-	TypeUserPrivacySettingShowProfilePhoto              = "userPrivacySettingShowProfilePhoto"
-	TypeUserPrivacySettingShowLinkInForwardedMessages   = "userPrivacySettingShowLinkInForwardedMessages"
-	TypeUserPrivacySettingShowPhoneNumber               = "userPrivacySettingShowPhoneNumber"
-	TypeUserPrivacySettingAllowChatInvites              = "userPrivacySettingAllowChatInvites"
-	TypeUserPrivacySettingAllowCalls                    = "userPrivacySettingAllowCalls"
-	TypeUserPrivacySettingAllowPeerToPeerCalls          = "userPrivacySettingAllowPeerToPeerCalls"
-	TypeUserPrivacySettingAllowFindingByPhoneNumber     = "userPrivacySettingAllowFindingByPhoneNumber"
-	TypeAccountTtl                                      = "accountTtl"
-	TypeSessionTypeAndroid                              = "sessionTypeAndroid"
-	TypeSessionTypeApple                                = "sessionTypeApple"
-	TypeSessionTypeBrave                                = "sessionTypeBrave"
-	TypeSessionTypeChrome                               = "sessionTypeChrome"
-	TypeSessionTypeEdge                                 = "sessionTypeEdge"
-	TypeSessionTypeFirefox                              = "sessionTypeFirefox"
-	TypeSessionTypeIpad                                 = "sessionTypeIpad"
-	TypeSessionTypeIphone                               = "sessionTypeIphone"
-	TypeSessionTypeLinux                                = "sessionTypeLinux"
-	TypeSessionTypeMac                                  = "sessionTypeMac"
-	TypeSessionTypeOpera                                = "sessionTypeOpera"
-	TypeSessionTypeSafari                               = "sessionTypeSafari"
-	TypeSessionTypeUbuntu                               = "sessionTypeUbuntu"
-	TypeSessionTypeUnknown                              = "sessionTypeUnknown"
-	TypeSessionTypeVivaldi                              = "sessionTypeVivaldi"
-	TypeSessionTypeWindows                              = "sessionTypeWindows"
-	TypeSessionTypeXbox                                 = "sessionTypeXbox"
-	TypeSession                                         = "session"
-	TypeSessions                                        = "sessions"
-	TypeConnectedWebsite                                = "connectedWebsite"
-	TypeConnectedWebsites                               = "connectedWebsites"
-	TypeChatReportReasonSpam                            = "chatReportReasonSpam"
-	TypeChatReportReasonViolence                        = "chatReportReasonViolence"
-	TypeChatReportReasonPornography                     = "chatReportReasonPornography"
-	TypeChatReportReasonChildAbuse                      = "chatReportReasonChildAbuse"
-	TypeChatReportReasonCopyright                       = "chatReportReasonCopyright"
-	TypeChatReportReasonUnrelatedLocation               = "chatReportReasonUnrelatedLocation"
-	TypeChatReportReasonFake                            = "chatReportReasonFake"
-	TypeChatReportReasonIllegalDrugs                    = "chatReportReasonIllegalDrugs"
-	TypeChatReportReasonPersonalDetails                 = "chatReportReasonPersonalDetails"
-	TypeChatReportReasonCustom                          = "chatReportReasonCustom"
-	TypeTargetChatCurrent                               = "targetChatCurrent"
-	TypeTargetChatChosen                                = "targetChatChosen"
-	TypeTargetChatInternalLink                          = "targetChatInternalLink"
-	TypeInternalLinkTypeActiveSessions                  = "internalLinkTypeActiveSessions"
-	TypeInternalLinkTypeAttachmentMenuBot               = "internalLinkTypeAttachmentMenuBot"
-	TypeInternalLinkTypeAuthenticationCode              = "internalLinkTypeAuthenticationCode"
-	TypeInternalLinkTypeBackground                      = "internalLinkTypeBackground"
-	TypeInternalLinkTypeBotStart                        = "internalLinkTypeBotStart"
-	TypeInternalLinkTypeBotStartInGroup                 = "internalLinkTypeBotStartInGroup"
-	TypeInternalLinkTypeBotAddToChannel                 = "internalLinkTypeBotAddToChannel"
-	TypeInternalLinkTypeChangePhoneNumber               = "internalLinkTypeChangePhoneNumber"
-	TypeInternalLinkTypeChatInvite                      = "internalLinkTypeChatInvite"
-	TypeInternalLinkTypeFilterSettings                  = "internalLinkTypeFilterSettings"
-	TypeInternalLinkTypeGame                            = "internalLinkTypeGame"
-	TypeInternalLinkTypeInvoice                         = "internalLinkTypeInvoice"
-	TypeInternalLinkTypeLanguagePack                    = "internalLinkTypeLanguagePack"
-	TypeInternalLinkTypeLanguageSettings                = "internalLinkTypeLanguageSettings"
-	TypeInternalLinkTypeMessage                         = "internalLinkTypeMessage"
-	TypeInternalLinkTypeMessageDraft                    = "internalLinkTypeMessageDraft"
-	TypeInternalLinkTypePassportDataRequest             = "internalLinkTypePassportDataRequest"
-	TypeInternalLinkTypePhoneNumberConfirmation         = "internalLinkTypePhoneNumberConfirmation"
-	TypeInternalLinkTypePremiumFeatures                 = "internalLinkTypePremiumFeatures"
-	TypeInternalLinkTypePrivacyAndSecuritySettings      = "internalLinkTypePrivacyAndSecuritySettings"
-	TypeInternalLinkTypeProxy                           = "internalLinkTypeProxy"
-	TypeInternalLinkTypePublicChat                      = "internalLinkTypePublicChat"
-	TypeInternalLinkTypeQrCodeAuthentication            = "internalLinkTypeQrCodeAuthentication"
-	TypeInternalLinkTypeSettings                        = "internalLinkTypeSettings"
-	TypeInternalLinkTypeStickerSet                      = "internalLinkTypeStickerSet"
-	TypeInternalLinkTypeTheme                           = "internalLinkTypeTheme"
-	TypeInternalLinkTypeThemeSettings                   = "internalLinkTypeThemeSettings"
-	TypeInternalLinkTypeUnknownDeepLink                 = "internalLinkTypeUnknownDeepLink"
-	TypeInternalLinkTypeUnsupportedProxy                = "internalLinkTypeUnsupportedProxy"
-	TypeInternalLinkTypeUserPhoneNumber                 = "internalLinkTypeUserPhoneNumber"
-	TypeInternalLinkTypeVideoChat                       = "internalLinkTypeVideoChat"
-	TypeMessageLink                                     = "messageLink"
-	TypeMessageLinkInfo                                 = "messageLinkInfo"
-	TypeFilePart                                        = "filePart"
-	TypeFileTypeNone                                    = "fileTypeNone"
-	TypeFileTypeAnimation                               = "fileTypeAnimation"
-	TypeFileTypeAudio                                   = "fileTypeAudio"
-	TypeFileTypeDocument                                = "fileTypeDocument"
-	TypeFileTypeNotificationSound                       = "fileTypeNotificationSound"
-	TypeFileTypePhoto                                   = "fileTypePhoto"
-	TypeFileTypeProfilePhoto                            = "fileTypeProfilePhoto"
-	TypeFileTypeSecret                                  = "fileTypeSecret"
-	TypeFileTypeSecretThumbnail                         = "fileTypeSecretThumbnail"
-	TypeFileTypeSecure                                  = "fileTypeSecure"
-	TypeFileTypeSticker                                 = "fileTypeSticker"
-	TypeFileTypeThumbnail                               = "fileTypeThumbnail"
-	TypeFileTypeUnknown                                 = "fileTypeUnknown"
-	TypeFileTypeVideo                                   = "fileTypeVideo"
-	TypeFileTypeVideoNote                               = "fileTypeVideoNote"
-	TypeFileTypeVoiceNote                               = "fileTypeVoiceNote"
-	TypeFileTypeWallpaper                               = "fileTypeWallpaper"
-	TypeStorageStatisticsByFileType                     = "storageStatisticsByFileType"
-	TypeStorageStatisticsByChat                         = "storageStatisticsByChat"
-	TypeStorageStatistics                               = "storageStatistics"
-	TypeStorageStatisticsFast                           = "storageStatisticsFast"
-	TypeDatabaseStatistics                              = "databaseStatistics"
-	TypeNetworkTypeNone                                 = "networkTypeNone"
-	TypeNetworkTypeMobile                               = "networkTypeMobile"
-	TypeNetworkTypeMobileRoaming                        = "networkTypeMobileRoaming"
-	TypeNetworkTypeWiFi                                 = "networkTypeWiFi"
-	TypeNetworkTypeOther                                = "networkTypeOther"
-	TypeNetworkStatisticsEntryFile                      = "networkStatisticsEntryFile"
-	TypeNetworkStatisticsEntryCall                      = "networkStatisticsEntryCall"
-	TypeNetworkStatistics                               = "networkStatistics"
-	TypeAutoDownloadSettings                            = "autoDownloadSettings"
-	TypeAutoDownloadSettingsPresets                     = "autoDownloadSettingsPresets"
-	TypeConnectionStateWaitingForNetwork                = "connectionStateWaitingForNetwork"
-	TypeConnectionStateConnectingToProxy                = "connectionStateConnectingToProxy"
-	TypeConnectionStateConnecting                       = "connectionStateConnecting"
-	TypeConnectionStateUpdating                         = "connectionStateUpdating"
-	TypeConnectionStateReady                            = "connectionStateReady"
-	TypeTopChatCategoryUsers                            = "topChatCategoryUsers"
-	TypeTopChatCategoryBots                             = "topChatCategoryBots"
-	TypeTopChatCategoryGroups                           = "topChatCategoryGroups"
-	TypeTopChatCategoryChannels                         = "topChatCategoryChannels"
-	TypeTopChatCategoryInlineBots                       = "topChatCategoryInlineBots"
-	TypeTopChatCategoryCalls                            = "topChatCategoryCalls"
-	TypeTopChatCategoryForwardChats                     = "topChatCategoryForwardChats"
-	TypeTMeUrlTypeUser                                  = "tMeUrlTypeUser"
-	TypeTMeUrlTypeSupergroup                            = "tMeUrlTypeSupergroup"
-	TypeTMeUrlTypeChatInvite                            = "tMeUrlTypeChatInvite"
-	TypeTMeUrlTypeStickerSet                            = "tMeUrlTypeStickerSet"
-	TypeTMeUrl                                          = "tMeUrl"
-	TypeTMeUrls                                         = "tMeUrls"
-	TypeSuggestedActionEnableArchiveAndMuteNewChats     = "suggestedActionEnableArchiveAndMuteNewChats"
-	TypeSuggestedActionCheckPassword                    = "suggestedActionCheckPassword"
-	TypeSuggestedActionCheckPhoneNumber                 = "suggestedActionCheckPhoneNumber"
-	TypeSuggestedActionViewChecksHint                   = "suggestedActionViewChecksHint"
-	TypeSuggestedActionConvertToBroadcastGroup          = "suggestedActionConvertToBroadcastGroup"
-	TypeSuggestedActionSetPassword                      = "suggestedActionSetPassword"
-	TypeCount                                           = "count"
-	TypeText                                            = "text"
-	TypeSeconds                                         = "seconds"
-	TypeFileDownloadedPrefixSize                        = "fileDownloadedPrefixSize"
-	TypeDeepLinkInfo                                    = "deepLinkInfo"
-	TypeTextParseModeMarkdown                           = "textParseModeMarkdown"
-	TypeTextParseModeHTML                               = "textParseModeHTML"
-	TypeProxyTypeSocks5                                 = "proxyTypeSocks5"
-	TypeProxyTypeHttp                                   = "proxyTypeHttp"
-	TypeProxyTypeMtproto                                = "proxyTypeMtproto"
-	TypeProxy                                           = "proxy"
-	TypeProxies                                         = "proxies"
-	TypeInputSticker                                    = "inputSticker"
-	TypeDateRange                                       = "dateRange"
-	TypeStatisticalValue                                = "statisticalValue"
-	TypeStatisticalGraphData                            = "statisticalGraphData"
-	TypeStatisticalGraphAsync                           = "statisticalGraphAsync"
-	TypeStatisticalGraphError                           = "statisticalGraphError"
-	TypeChatStatisticsMessageInteractionInfo            = "chatStatisticsMessageInteractionInfo"
-	TypeChatStatisticsMessageSenderInfo                 = "chatStatisticsMessageSenderInfo"
-	TypeChatStatisticsAdministratorActionsInfo          = "chatStatisticsAdministratorActionsInfo"
-	TypeChatStatisticsInviterInfo                       = "chatStatisticsInviterInfo"
-	TypeChatStatisticsSupergroup                        = "chatStatisticsSupergroup"
-	TypeChatStatisticsChannel                           = "chatStatisticsChannel"
-	TypeMessageStatistics                               = "messageStatistics"
-	TypePoint                                           = "point"
-	TypeVectorPathCommandLine                           = "vectorPathCommandLine"
-	TypeVectorPathCommandCubicBezierCurve               = "vectorPathCommandCubicBezierCurve"
-	TypeBotCommandScopeDefault                          = "botCommandScopeDefault"
-	TypeBotCommandScopeAllPrivateChats                  = "botCommandScopeAllPrivateChats"
-	TypeBotCommandScopeAllGroupChats                    = "botCommandScopeAllGroupChats"
-	TypeBotCommandScopeAllChatAdministrators            = "botCommandScopeAllChatAdministrators"
-	TypeBotCommandScopeChat                             = "botCommandScopeChat"
-	TypeBotCommandScopeChatAdministrators               = "botCommandScopeChatAdministrators"
-	TypeBotCommandScopeChatMember                       = "botCommandScopeChatMember"
-	TypeUpdateAuthorizationState                        = "updateAuthorizationState"
-	TypeUpdateNewMessage                                = "updateNewMessage"
-	TypeUpdateMessageSendAcknowledged                   = "updateMessageSendAcknowledged"
-	TypeUpdateMessageSendSucceeded                      = "updateMessageSendSucceeded"
-	TypeUpdateMessageSendFailed                         = "updateMessageSendFailed"
-	TypeUpdateMessageContent                            = "updateMessageContent"
-	TypeUpdateMessageEdited                             = "updateMessageEdited"
-	TypeUpdateMessageIsPinned                           = "updateMessageIsPinned"
-	TypeUpdateMessageInteractionInfo                    = "updateMessageInteractionInfo"
-	TypeUpdateMessageContentOpened                      = "updateMessageContentOpened"
-	TypeUpdateMessageMentionRead                        = "updateMessageMentionRead"
-	TypeUpdateMessageUnreadReactions                    = "updateMessageUnreadReactions"
-	TypeUpdateMessageLiveLocationViewed                 = "updateMessageLiveLocationViewed"
-	TypeUpdateNewChat                                   = "updateNewChat"
-	TypeUpdateChatTitle                                 = "updateChatTitle"
-	TypeUpdateChatPhoto                                 = "updateChatPhoto"
-	TypeUpdateChatPermissions                           = "updateChatPermissions"
-	TypeUpdateChatLastMessage                           = "updateChatLastMessage"
-	TypeUpdateChatPosition                              = "updateChatPosition"
-	TypeUpdateChatReadInbox                             = "updateChatReadInbox"
-	TypeUpdateChatReadOutbox                            = "updateChatReadOutbox"
-	TypeUpdateChatActionBar                             = "updateChatActionBar"
-	TypeUpdateChatAvailableReactions                    = "updateChatAvailableReactions"
-	TypeUpdateChatDraftMessage                          = "updateChatDraftMessage"
-	TypeUpdateChatMessageSender                         = "updateChatMessageSender"
-	TypeUpdateChatMessageTtl                            = "updateChatMessageTtl"
-	TypeUpdateChatNotificationSettings                  = "updateChatNotificationSettings"
-	TypeUpdateChatPendingJoinRequests                   = "updateChatPendingJoinRequests"
-	TypeUpdateChatReplyMarkup                           = "updateChatReplyMarkup"
-	TypeUpdateChatTheme                                 = "updateChatTheme"
-	TypeUpdateChatUnreadMentionCount                    = "updateChatUnreadMentionCount"
-	TypeUpdateChatUnreadReactionCount                   = "updateChatUnreadReactionCount"
-	TypeUpdateChatVideoChat                             = "updateChatVideoChat"
-	TypeUpdateChatDefaultDisableNotification            = "updateChatDefaultDisableNotification"
-	TypeUpdateChatHasProtectedContent                   = "updateChatHasProtectedContent"
-	TypeUpdateChatHasScheduledMessages                  = "updateChatHasScheduledMessages"
-	TypeUpdateChatIsBlocked                             = "updateChatIsBlocked"
-	TypeUpdateChatIsMarkedAsUnread                      = "updateChatIsMarkedAsUnread"
-	TypeUpdateChatFilters                               = "updateChatFilters"
-	TypeUpdateChatOnlineMemberCount                     = "updateChatOnlineMemberCount"
-	TypeUpdateScopeNotificationSettings                 = "updateScopeNotificationSettings"
-	TypeUpdateNotification                              = "updateNotification"
-	TypeUpdateNotificationGroup                         = "updateNotificationGroup"
-	TypeUpdateActiveNotifications                       = "updateActiveNotifications"
-	TypeUpdateHavePendingNotifications                  = "updateHavePendingNotifications"
-	TypeUpdateDeleteMessages                            = "updateDeleteMessages"
-	TypeUpdateChatAction                                = "updateChatAction"
-	TypeUpdateUserStatus                                = "updateUserStatus"
-	TypeUpdateUser                                      = "updateUser"
-	TypeUpdateBasicGroup                                = "updateBasicGroup"
-	TypeUpdateSupergroup                                = "updateSupergroup"
-	TypeUpdateSecretChat                                = "updateSecretChat"
-	TypeUpdateUserFullInfo                              = "updateUserFullInfo"
-	TypeUpdateBasicGroupFullInfo                        = "updateBasicGroupFullInfo"
-	TypeUpdateSupergroupFullInfo                        = "updateSupergroupFullInfo"
-	TypeUpdateServiceNotification                       = "updateServiceNotification"
-	TypeUpdateFile                                      = "updateFile"
-	TypeUpdateFileGenerationStart                       = "updateFileGenerationStart"
-	TypeUpdateFileGenerationStop                        = "updateFileGenerationStop"
-	TypeUpdateFileDownloads                             = "updateFileDownloads"
-	TypeUpdateFileAddedToDownloads                      = "updateFileAddedToDownloads"
-	TypeUpdateFileDownload                              = "updateFileDownload"
-	TypeUpdateFileRemovedFromDownloads                  = "updateFileRemovedFromDownloads"
-	TypeUpdateCall                                      = "updateCall"
-	TypeUpdateGroupCall                                 = "updateGroupCall"
-	TypeUpdateGroupCallParticipant                      = "updateGroupCallParticipant"
-	TypeUpdateNewCallSignalingData                      = "updateNewCallSignalingData"
-	TypeUpdateUserPrivacySettingRules                   = "updateUserPrivacySettingRules"
-	TypeUpdateUnreadMessageCount                        = "updateUnreadMessageCount"
-	TypeUpdateUnreadChatCount                           = "updateUnreadChatCount"
-	TypeUpdateOption                                    = "updateOption"
-	TypeUpdateStickerSet                                = "updateStickerSet"
-	TypeUpdateInstalledStickerSets                      = "updateInstalledStickerSets"
-	TypeUpdateTrendingStickerSets                       = "updateTrendingStickerSets"
-	TypeUpdateRecentStickers                            = "updateRecentStickers"
-	TypeUpdateFavoriteStickers                          = "updateFavoriteStickers"
-	TypeUpdateSavedAnimations                           = "updateSavedAnimations"
-	TypeUpdateSavedNotificationSounds                   = "updateSavedNotificationSounds"
-	TypeUpdateSelectedBackground                        = "updateSelectedBackground"
-	TypeUpdateChatThemes                                = "updateChatThemes"
-	TypeUpdateLanguagePackStrings                       = "updateLanguagePackStrings"
-	TypeUpdateConnectionState                           = "updateConnectionState"
-	TypeUpdateTermsOfService                            = "updateTermsOfService"
-	TypeUpdateUsersNearby                               = "updateUsersNearby"
-	TypeUpdateAttachmentMenuBots                        = "updateAttachmentMenuBots"
-	TypeUpdateWebAppMessageSent                         = "updateWebAppMessageSent"
-	TypeUpdateReactions                                 = "updateReactions"
-	TypeUpdateDiceEmojis                                = "updateDiceEmojis"
-	TypeUpdateAnimatedEmojiMessageClicked               = "updateAnimatedEmojiMessageClicked"
-	TypeUpdateAnimationSearchParameters                 = "updateAnimationSearchParameters"
-	TypeUpdateSuggestedActions                          = "updateSuggestedActions"
-	TypeUpdateNewInlineQuery                            = "updateNewInlineQuery"
-	TypeUpdateNewChosenInlineResult                     = "updateNewChosenInlineResult"
-	TypeUpdateNewCallbackQuery                          = "updateNewCallbackQuery"
-	TypeUpdateNewInlineCallbackQuery                    = "updateNewInlineCallbackQuery"
-	TypeUpdateNewShippingQuery                          = "updateNewShippingQuery"
-	TypeUpdateNewPreCheckoutQuery                       = "updateNewPreCheckoutQuery"
-	TypeUpdateNewCustomEvent                            = "updateNewCustomEvent"
-	TypeUpdateNewCustomQuery                            = "updateNewCustomQuery"
-	TypeUpdatePoll                                      = "updatePoll"
-	TypeUpdatePollAnswer                                = "updatePollAnswer"
-	TypeUpdateChatMember                                = "updateChatMember"
-	TypeUpdateNewChatJoinRequest                        = "updateNewChatJoinRequest"
-	TypeUpdates                                         = "updates"
-	TypeLogStreamDefault                                = "logStreamDefault"
-	TypeLogStreamFile                                   = "logStreamFile"
-	TypeLogStreamEmpty                                  = "logStreamEmpty"
-	TypeLogVerbosityLevel                               = "logVerbosityLevel"
-	TypeLogTags                                         = "logTags"
-	TypeTestInt                                         = "testInt"
-	TypeTestString                                      = "testString"
-	TypeTestBytes                                       = "testBytes"
-	TypeTestVectorInt                                   = "testVectorInt"
-	TypeTestVectorIntObject                             = "testVectorIntObject"
-	TypeTestVectorString                                = "testVectorString"
-	TypeTestVectorStringObject                          = "testVectorStringObject"
+	TypeError                                                   = "error"
+	TypeOk                                                      = "ok"
+	TypeTdlibParameters                                         = "tdlibParameters"
+	TypeAuthenticationCodeTypeTelegramMessage                   = "authenticationCodeTypeTelegramMessage"
+	TypeAuthenticationCodeTypeSms                               = "authenticationCodeTypeSms"
+	TypeAuthenticationCodeTypeCall                              = "authenticationCodeTypeCall"
+	TypeAuthenticationCodeTypeFlashCall                         = "authenticationCodeTypeFlashCall"
+	TypeAuthenticationCodeTypeMissedCall                        = "authenticationCodeTypeMissedCall"
+	TypeAuthenticationCodeInfo                                  = "authenticationCodeInfo"
+	TypeEmailAddressAuthenticationCodeInfo                      = "emailAddressAuthenticationCodeInfo"
+	TypeTextEntity                                              = "textEntity"
+	TypeTextEntities                                            = "textEntities"
+	TypeFormattedText                                           = "formattedText"
+	TypeTermsOfService                                          = "termsOfService"
+	TypeAuthorizationStateWaitTdlibParameters                   = "authorizationStateWaitTdlibParameters"
+	TypeAuthorizationStateWaitEncryptionKey                     = "authorizationStateWaitEncryptionKey"
+	TypeAuthorizationStateWaitPhoneNumber                       = "authorizationStateWaitPhoneNumber"
+	TypeAuthorizationStateWaitCode                              = "authorizationStateWaitCode"
+	TypeAuthorizationStateWaitOtherDeviceConfirmation           = "authorizationStateWaitOtherDeviceConfirmation"
+	TypeAuthorizationStateWaitRegistration                      = "authorizationStateWaitRegistration"
+	TypeAuthorizationStateWaitPassword                          = "authorizationStateWaitPassword"
+	TypeAuthorizationStateReady                                 = "authorizationStateReady"
+	TypeAuthorizationStateLoggingOut                            = "authorizationStateLoggingOut"
+	TypeAuthorizationStateClosing                               = "authorizationStateClosing"
+	TypeAuthorizationStateClosed                                = "authorizationStateClosed"
+	TypePasswordState                                           = "passwordState"
+	TypeRecoveryEmailAddress                                    = "recoveryEmailAddress"
+	TypeTemporaryPasswordState                                  = "temporaryPasswordState"
+	TypeLocalFile                                               = "localFile"
+	TypeRemoteFile                                              = "remoteFile"
+	TypeFile                                                    = "file"
+	TypeInputFileId                                             = "inputFileId"
+	TypeInputFileRemote                                         = "inputFileRemote"
+	TypeInputFileLocal                                          = "inputFileLocal"
+	TypeInputFileGenerated                                      = "inputFileGenerated"
+	TypePhotoSize                                               = "photoSize"
+	TypeMinithumbnail                                           = "minithumbnail"
+	TypeThumbnailFormatJpeg                                     = "thumbnailFormatJpeg"
+	TypeThumbnailFormatGif                                      = "thumbnailFormatGif"
+	TypeThumbnailFormatMpeg4                                    = "thumbnailFormatMpeg4"
+	TypeThumbnailFormatPng                                      = "thumbnailFormatPng"
+	TypeThumbnailFormatTgs                                      = "thumbnailFormatTgs"
+	TypeThumbnailFormatWebm                                     = "thumbnailFormatWebm"
+	TypeThumbnailFormatWebp                                     = "thumbnailFormatWebp"
+	TypeThumbnail                                               = "thumbnail"
+	TypeMaskPointForehead                                       = "maskPointForehead"
+	TypeMaskPointEyes                                           = "maskPointEyes"
+	TypeMaskPointMouth                                          = "maskPointMouth"
+	TypeMaskPointChin                                           = "maskPointChin"
+	TypeMaskPosition                                            = "maskPosition"
+	TypeStickerFormatWebp                                       = "stickerFormatWebp"
+	TypeStickerFormatTgs                                        = "stickerFormatTgs"
+	TypeStickerFormatWebm                                       = "stickerFormatWebm"
+	TypeStickerTypeRegular                                      = "stickerTypeRegular"
+	TypeStickerTypeMask                                         = "stickerTypeMask"
+	TypeStickerTypeCustomEmoji                                  = "stickerTypeCustomEmoji"
+	TypeClosedVectorPath                                        = "closedVectorPath"
+	TypePollOption                                              = "pollOption"
+	TypePollTypeRegular                                         = "pollTypeRegular"
+	TypePollTypeQuiz                                            = "pollTypeQuiz"
+	TypeAnimation                                               = "animation"
+	TypeAudio                                                   = "audio"
+	TypeDocument                                                = "document"
+	TypePhoto                                                   = "photo"
+	TypeSticker                                                 = "sticker"
+	TypeVideo                                                   = "video"
+	TypeVideoNote                                               = "videoNote"
+	TypeVoiceNote                                               = "voiceNote"
+	TypeAnimatedEmoji                                           = "animatedEmoji"
+	TypeContact                                                 = "contact"
+	TypeLocation                                                = "location"
+	TypeVenue                                                   = "venue"
+	TypeGame                                                    = "game"
+	TypePoll                                                    = "poll"
+	TypeProfilePhoto                                            = "profilePhoto"
+	TypeChatPhotoInfo                                           = "chatPhotoInfo"
+	TypeUserTypeRegular                                         = "userTypeRegular"
+	TypeUserTypeDeleted                                         = "userTypeDeleted"
+	TypeUserTypeBot                                             = "userTypeBot"
+	TypeUserTypeUnknown                                         = "userTypeUnknown"
+	TypeBotCommand                                              = "botCommand"
+	TypeBotCommands                                             = "botCommands"
+	TypeBotMenuButton                                           = "botMenuButton"
+	TypeChatLocation                                            = "chatLocation"
+	TypeAnimatedChatPhoto                                       = "animatedChatPhoto"
+	TypeChatPhoto                                               = "chatPhoto"
+	TypeChatPhotos                                              = "chatPhotos"
+	TypeInputChatPhotoPrevious                                  = "inputChatPhotoPrevious"
+	TypeInputChatPhotoStatic                                    = "inputChatPhotoStatic"
+	TypeInputChatPhotoAnimation                                 = "inputChatPhotoAnimation"
+	TypeChatPermissions                                         = "chatPermissions"
+	TypeChatAdministratorRights                                 = "chatAdministratorRights"
+	TypePremiumGiftOption                                       = "premiumGiftOption"
+	TypeUser                                                    = "user"
+	TypeBotInfo                                                 = "botInfo"
+	TypeUserFullInfo                                            = "userFullInfo"
+	TypeUsers                                                   = "users"
+	TypeChatAdministrator                                       = "chatAdministrator"
+	TypeChatAdministrators                                      = "chatAdministrators"
+	TypeChatMemberStatusCreator                                 = "chatMemberStatusCreator"
+	TypeChatMemberStatusAdministrator                           = "chatMemberStatusAdministrator"
+	TypeChatMemberStatusMember                                  = "chatMemberStatusMember"
+	TypeChatMemberStatusRestricted                              = "chatMemberStatusRestricted"
+	TypeChatMemberStatusLeft                                    = "chatMemberStatusLeft"
+	TypeChatMemberStatusBanned                                  = "chatMemberStatusBanned"
+	TypeChatMember                                              = "chatMember"
+	TypeChatMembers                                             = "chatMembers"
+	TypeChatMembersFilterContacts                               = "chatMembersFilterContacts"
+	TypeChatMembersFilterAdministrators                         = "chatMembersFilterAdministrators"
+	TypeChatMembersFilterMembers                                = "chatMembersFilterMembers"
+	TypeChatMembersFilterMention                                = "chatMembersFilterMention"
+	TypeChatMembersFilterRestricted                             = "chatMembersFilterRestricted"
+	TypeChatMembersFilterBanned                                 = "chatMembersFilterBanned"
+	TypeChatMembersFilterBots                                   = "chatMembersFilterBots"
+	TypeSupergroupMembersFilterRecent                           = "supergroupMembersFilterRecent"
+	TypeSupergroupMembersFilterContacts                         = "supergroupMembersFilterContacts"
+	TypeSupergroupMembersFilterAdministrators                   = "supergroupMembersFilterAdministrators"
+	TypeSupergroupMembersFilterSearch                           = "supergroupMembersFilterSearch"
+	TypeSupergroupMembersFilterRestricted                       = "supergroupMembersFilterRestricted"
+	TypeSupergroupMembersFilterBanned                           = "supergroupMembersFilterBanned"
+	TypeSupergroupMembersFilterMention                          = "supergroupMembersFilterMention"
+	TypeSupergroupMembersFilterBots                             = "supergroupMembersFilterBots"
+	TypeChatInviteLink                                          = "chatInviteLink"
+	TypeChatInviteLinks                                         = "chatInviteLinks"
+	TypeChatInviteLinkCount                                     = "chatInviteLinkCount"
+	TypeChatInviteLinkCounts                                    = "chatInviteLinkCounts"
+	TypeChatInviteLinkMember                                    = "chatInviteLinkMember"
+	TypeChatInviteLinkMembers                                   = "chatInviteLinkMembers"
+	TypeChatInviteLinkInfo                                      = "chatInviteLinkInfo"
+	TypeChatJoinRequest                                         = "chatJoinRequest"
+	TypeChatJoinRequests                                        = "chatJoinRequests"
+	TypeChatJoinRequestsInfo                                    = "chatJoinRequestsInfo"
+	TypeBasicGroup                                              = "basicGroup"
+	TypeBasicGroupFullInfo                                      = "basicGroupFullInfo"
+	TypeSupergroup                                              = "supergroup"
+	TypeSupergroupFullInfo                                      = "supergroupFullInfo"
+	TypeSecretChatStatePending                                  = "secretChatStatePending"
+	TypeSecretChatStateReady                                    = "secretChatStateReady"
+	TypeSecretChatStateClosed                                   = "secretChatStateClosed"
+	TypeSecretChat                                              = "secretChat"
+	TypeMessageSenderUser                                       = "messageSenderUser"
+	TypeMessageSenderChat                                       = "messageSenderChat"
+	TypeMessageSenders                                          = "messageSenders"
+	TypeMessageForwardOriginUser                                = "messageForwardOriginUser"
+	TypeMessageForwardOriginChat                                = "messageForwardOriginChat"
+	TypeMessageForwardOriginHiddenUser                          = "messageForwardOriginHiddenUser"
+	TypeMessageForwardOriginChannel                             = "messageForwardOriginChannel"
+	TypeMessageForwardOriginMessageImport                       = "messageForwardOriginMessageImport"
+	TypeMessageForwardInfo                                      = "messageForwardInfo"
+	TypeMessageReplyInfo                                        = "messageReplyInfo"
+	TypeMessageReaction                                         = "messageReaction"
+	TypeMessageInteractionInfo                                  = "messageInteractionInfo"
+	TypeUnreadReaction                                          = "unreadReaction"
+	TypeMessageSendingStatePending                              = "messageSendingStatePending"
+	TypeMessageSendingStateFailed                               = "messageSendingStateFailed"
+	TypeMessage                                                 = "message"
+	TypeMessages                                                = "messages"
+	TypeFoundMessages                                           = "foundMessages"
+	TypeMessagePosition                                         = "messagePosition"
+	TypeMessagePositions                                        = "messagePositions"
+	TypeMessageCalendarDay                                      = "messageCalendarDay"
+	TypeMessageCalendar                                         = "messageCalendar"
+	TypeSponsoredMessage                                        = "sponsoredMessage"
+	TypeFileDownload                                            = "fileDownload"
+	TypeDownloadedFileCounts                                    = "downloadedFileCounts"
+	TypeFoundFileDownloads                                      = "foundFileDownloads"
+	TypeNotificationSettingsScopePrivateChats                   = "notificationSettingsScopePrivateChats"
+	TypeNotificationSettingsScopeGroupChats                     = "notificationSettingsScopeGroupChats"
+	TypeNotificationSettingsScopeChannelChats                   = "notificationSettingsScopeChannelChats"
+	TypeChatNotificationSettings                                = "chatNotificationSettings"
+	TypeScopeNotificationSettings                               = "scopeNotificationSettings"
+	TypeDraftMessage                                            = "draftMessage"
+	TypeChatTypePrivate                                         = "chatTypePrivate"
+	TypeChatTypeBasicGroup                                      = "chatTypeBasicGroup"
+	TypeChatTypeSupergroup                                      = "chatTypeSupergroup"
+	TypeChatTypeSecret                                          = "chatTypeSecret"
+	TypeChatFilter                                              = "chatFilter"
+	TypeChatFilterInfo                                          = "chatFilterInfo"
+	TypeRecommendedChatFilter                                   = "recommendedChatFilter"
+	TypeRecommendedChatFilters                                  = "recommendedChatFilters"
+	TypeChatListMain                                            = "chatListMain"
+	TypeChatListArchive                                         = "chatListArchive"
+	TypeChatListFilter                                          = "chatListFilter"
+	TypeChatLists                                               = "chatLists"
+	TypeChatSourceMtprotoProxy                                  = "chatSourceMtprotoProxy"
+	TypeChatSourcePublicServiceAnnouncement                     = "chatSourcePublicServiceAnnouncement"
+	TypeChatPosition                                            = "chatPosition"
+	TypeVideoChat                                               = "videoChat"
+	TypeChat                                                    = "chat"
+	TypeChats                                                   = "chats"
+	TypeChatNearby                                              = "chatNearby"
+	TypeChatsNearby                                             = "chatsNearby"
+	TypePublicChatTypeHasUsername                               = "publicChatTypeHasUsername"
+	TypePublicChatTypeIsLocationBased                           = "publicChatTypeIsLocationBased"
+	TypeChatActionBarReportSpam                                 = "chatActionBarReportSpam"
+	TypeChatActionBarReportUnrelatedLocation                    = "chatActionBarReportUnrelatedLocation"
+	TypeChatActionBarInviteMembers                              = "chatActionBarInviteMembers"
+	TypeChatActionBarReportAddBlock                             = "chatActionBarReportAddBlock"
+	TypeChatActionBarAddContact                                 = "chatActionBarAddContact"
+	TypeChatActionBarSharePhoneNumber                           = "chatActionBarSharePhoneNumber"
+	TypeChatActionBarJoinRequest                                = "chatActionBarJoinRequest"
+	TypeKeyboardButtonTypeText                                  = "keyboardButtonTypeText"
+	TypeKeyboardButtonTypeRequestPhoneNumber                    = "keyboardButtonTypeRequestPhoneNumber"
+	TypeKeyboardButtonTypeRequestLocation                       = "keyboardButtonTypeRequestLocation"
+	TypeKeyboardButtonTypeRequestPoll                           = "keyboardButtonTypeRequestPoll"
+	TypeKeyboardButtonTypeWebApp                                = "keyboardButtonTypeWebApp"
+	TypeKeyboardButton                                          = "keyboardButton"
+	TypeInlineKeyboardButtonTypeUrl                             = "inlineKeyboardButtonTypeUrl"
+	TypeInlineKeyboardButtonTypeLoginUrl                        = "inlineKeyboardButtonTypeLoginUrl"
+	TypeInlineKeyboardButtonTypeWebApp                          = "inlineKeyboardButtonTypeWebApp"
+	TypeInlineKeyboardButtonTypeCallback                        = "inlineKeyboardButtonTypeCallback"
+	TypeInlineKeyboardButtonTypeCallbackWithPassword            = "inlineKeyboardButtonTypeCallbackWithPassword"
+	TypeInlineKeyboardButtonTypeCallbackGame                    = "inlineKeyboardButtonTypeCallbackGame"
+	TypeInlineKeyboardButtonTypeSwitchInline                    = "inlineKeyboardButtonTypeSwitchInline"
+	TypeInlineKeyboardButtonTypeBuy                             = "inlineKeyboardButtonTypeBuy"
+	TypeInlineKeyboardButtonTypeUser                            = "inlineKeyboardButtonTypeUser"
+	TypeInlineKeyboardButton                                    = "inlineKeyboardButton"
+	TypeReplyMarkupRemoveKeyboard                               = "replyMarkupRemoveKeyboard"
+	TypeReplyMarkupForceReply                                   = "replyMarkupForceReply"
+	TypeReplyMarkupShowKeyboard                                 = "replyMarkupShowKeyboard"
+	TypeReplyMarkupInlineKeyboard                               = "replyMarkupInlineKeyboard"
+	TypeLoginUrlInfoOpen                                        = "loginUrlInfoOpen"
+	TypeLoginUrlInfoRequestConfirmation                         = "loginUrlInfoRequestConfirmation"
+	TypeWebAppInfo                                              = "webAppInfo"
+	TypeMessageThreadInfo                                       = "messageThreadInfo"
+	TypeRichTextPlain                                           = "richTextPlain"
+	TypeRichTextBold                                            = "richTextBold"
+	TypeRichTextItalic                                          = "richTextItalic"
+	TypeRichTextUnderline                                       = "richTextUnderline"
+	TypeRichTextStrikethrough                                   = "richTextStrikethrough"
+	TypeRichTextFixed                                           = "richTextFixed"
+	TypeRichTextUrl                                             = "richTextUrl"
+	TypeRichTextEmailAddress                                    = "richTextEmailAddress"
+	TypeRichTextSubscript                                       = "richTextSubscript"
+	TypeRichTextSuperscript                                     = "richTextSuperscript"
+	TypeRichTextMarked                                          = "richTextMarked"
+	TypeRichTextPhoneNumber                                     = "richTextPhoneNumber"
+	TypeRichTextIcon                                            = "richTextIcon"
+	TypeRichTextReference                                       = "richTextReference"
+	TypeRichTextAnchor                                          = "richTextAnchor"
+	TypeRichTextAnchorLink                                      = "richTextAnchorLink"
+	TypeRichTexts                                               = "richTexts"
+	TypePageBlockCaption                                        = "pageBlockCaption"
+	TypePageBlockListItem                                       = "pageBlockListItem"
+	TypePageBlockHorizontalAlignmentLeft                        = "pageBlockHorizontalAlignmentLeft"
+	TypePageBlockHorizontalAlignmentCenter                      = "pageBlockHorizontalAlignmentCenter"
+	TypePageBlockHorizontalAlignmentRight                       = "pageBlockHorizontalAlignmentRight"
+	TypePageBlockVerticalAlignmentTop                           = "pageBlockVerticalAlignmentTop"
+	TypePageBlockVerticalAlignmentMiddle                        = "pageBlockVerticalAlignmentMiddle"
+	TypePageBlockVerticalAlignmentBottom                        = "pageBlockVerticalAlignmentBottom"
+	TypePageBlockTableCell                                      = "pageBlockTableCell"
+	TypePageBlockRelatedArticle                                 = "pageBlockRelatedArticle"
+	TypePageBlockTitle                                          = "pageBlockTitle"
+	TypePageBlockSubtitle                                       = "pageBlockSubtitle"
+	TypePageBlockAuthorDate                                     = "pageBlockAuthorDate"
+	TypePageBlockHeader                                         = "pageBlockHeader"
+	TypePageBlockSubheader                                      = "pageBlockSubheader"
+	TypePageBlockKicker                                         = "pageBlockKicker"
+	TypePageBlockParagraph                                      = "pageBlockParagraph"
+	TypePageBlockPreformatted                                   = "pageBlockPreformatted"
+	TypePageBlockFooter                                         = "pageBlockFooter"
+	TypePageBlockDivider                                        = "pageBlockDivider"
+	TypePageBlockAnchor                                         = "pageBlockAnchor"
+	TypePageBlockList                                           = "pageBlockList"
+	TypePageBlockBlockQuote                                     = "pageBlockBlockQuote"
+	TypePageBlockPullQuote                                      = "pageBlockPullQuote"
+	TypePageBlockAnimation                                      = "pageBlockAnimation"
+	TypePageBlockAudio                                          = "pageBlockAudio"
+	TypePageBlockPhoto                                          = "pageBlockPhoto"
+	TypePageBlockVideo                                          = "pageBlockVideo"
+	TypePageBlockVoiceNote                                      = "pageBlockVoiceNote"
+	TypePageBlockCover                                          = "pageBlockCover"
+	TypePageBlockEmbedded                                       = "pageBlockEmbedded"
+	TypePageBlockEmbeddedPost                                   = "pageBlockEmbeddedPost"
+	TypePageBlockCollage                                        = "pageBlockCollage"
+	TypePageBlockSlideshow                                      = "pageBlockSlideshow"
+	TypePageBlockChatLink                                       = "pageBlockChatLink"
+	TypePageBlockTable                                          = "pageBlockTable"
+	TypePageBlockDetails                                        = "pageBlockDetails"
+	TypePageBlockRelatedArticles                                = "pageBlockRelatedArticles"
+	TypePageBlockMap                                            = "pageBlockMap"
+	TypeWebPageInstantView                                      = "webPageInstantView"
+	TypeWebPage                                                 = "webPage"
+	TypeCountryInfo                                             = "countryInfo"
+	TypeCountries                                               = "countries"
+	TypePhoneNumberInfo                                         = "phoneNumberInfo"
+	TypeBankCardActionOpenUrl                                   = "bankCardActionOpenUrl"
+	TypeBankCardInfo                                            = "bankCardInfo"
+	TypeAddress                                                 = "address"
+	TypeThemeParameters                                         = "themeParameters"
+	TypeLabeledPricePart                                        = "labeledPricePart"
+	TypeInvoice                                                 = "invoice"
+	TypeOrderInfo                                               = "orderInfo"
+	TypeShippingOption                                          = "shippingOption"
+	TypeSavedCredentials                                        = "savedCredentials"
+	TypeInputCredentialsSaved                                   = "inputCredentialsSaved"
+	TypeInputCredentialsNew                                     = "inputCredentialsNew"
+	TypeInputCredentialsApplePay                                = "inputCredentialsApplePay"
+	TypeInputCredentialsGooglePay                               = "inputCredentialsGooglePay"
+	TypePaymentProviderSmartGlocal                              = "paymentProviderSmartGlocal"
+	TypePaymentProviderStripe                                   = "paymentProviderStripe"
+	TypePaymentProviderOther                                    = "paymentProviderOther"
+	TypePaymentOption                                           = "paymentOption"
+	TypePaymentForm                                             = "paymentForm"
+	TypeValidatedOrderInfo                                      = "validatedOrderInfo"
+	TypePaymentResult                                           = "paymentResult"
+	TypePaymentReceipt                                          = "paymentReceipt"
+	TypeInputInvoiceMessage                                     = "inputInvoiceMessage"
+	TypeInputInvoiceName                                        = "inputInvoiceName"
+	TypeDatedFile                                               = "datedFile"
+	TypePassportElementTypePersonalDetails                      = "passportElementTypePersonalDetails"
+	TypePassportElementTypePassport                             = "passportElementTypePassport"
+	TypePassportElementTypeDriverLicense                        = "passportElementTypeDriverLicense"
+	TypePassportElementTypeIdentityCard                         = "passportElementTypeIdentityCard"
+	TypePassportElementTypeInternalPassport                     = "passportElementTypeInternalPassport"
+	TypePassportElementTypeAddress                              = "passportElementTypeAddress"
+	TypePassportElementTypeUtilityBill                          = "passportElementTypeUtilityBill"
+	TypePassportElementTypeBankStatement                        = "passportElementTypeBankStatement"
+	TypePassportElementTypeRentalAgreement                      = "passportElementTypeRentalAgreement"
+	TypePassportElementTypePassportRegistration                 = "passportElementTypePassportRegistration"
+	TypePassportElementTypeTemporaryRegistration                = "passportElementTypeTemporaryRegistration"
+	TypePassportElementTypePhoneNumber                          = "passportElementTypePhoneNumber"
+	TypePassportElementTypeEmailAddress                         = "passportElementTypeEmailAddress"
+	TypeDate                                                    = "date"
+	TypePersonalDetails                                         = "personalDetails"
+	TypeIdentityDocument                                        = "identityDocument"
+	TypeInputIdentityDocument                                   = "inputIdentityDocument"
+	TypePersonalDocument                                        = "personalDocument"
+	TypeInputPersonalDocument                                   = "inputPersonalDocument"
+	TypePassportElementPersonalDetails                          = "passportElementPersonalDetails"
+	TypePassportElementPassport                                 = "passportElementPassport"
+	TypePassportElementDriverLicense                            = "passportElementDriverLicense"
+	TypePassportElementIdentityCard                             = "passportElementIdentityCard"
+	TypePassportElementInternalPassport                         = "passportElementInternalPassport"
+	TypePassportElementAddress                                  = "passportElementAddress"
+	TypePassportElementUtilityBill                              = "passportElementUtilityBill"
+	TypePassportElementBankStatement                            = "passportElementBankStatement"
+	TypePassportElementRentalAgreement                          = "passportElementRentalAgreement"
+	TypePassportElementPassportRegistration                     = "passportElementPassportRegistration"
+	TypePassportElementTemporaryRegistration                    = "passportElementTemporaryRegistration"
+	TypePassportElementPhoneNumber                              = "passportElementPhoneNumber"
+	TypePassportElementEmailAddress                             = "passportElementEmailAddress"
+	TypeInputPassportElementPersonalDetails                     = "inputPassportElementPersonalDetails"
+	TypeInputPassportElementPassport                            = "inputPassportElementPassport"
+	TypeInputPassportElementDriverLicense                       = "inputPassportElementDriverLicense"
+	TypeInputPassportElementIdentityCard                        = "inputPassportElementIdentityCard"
+	TypeInputPassportElementInternalPassport                    = "inputPassportElementInternalPassport"
+	TypeInputPassportElementAddress                             = "inputPassportElementAddress"
+	TypeInputPassportElementUtilityBill                         = "inputPassportElementUtilityBill"
+	TypeInputPassportElementBankStatement                       = "inputPassportElementBankStatement"
+	TypeInputPassportElementRentalAgreement                     = "inputPassportElementRentalAgreement"
+	TypeInputPassportElementPassportRegistration                = "inputPassportElementPassportRegistration"
+	TypeInputPassportElementTemporaryRegistration               = "inputPassportElementTemporaryRegistration"
+	TypeInputPassportElementPhoneNumber                         = "inputPassportElementPhoneNumber"
+	TypeInputPassportElementEmailAddress                        = "inputPassportElementEmailAddress"
+	TypePassportElements                                        = "passportElements"
+	TypePassportElementErrorSourceUnspecified                   = "passportElementErrorSourceUnspecified"
+	TypePassportElementErrorSourceDataField                     = "passportElementErrorSourceDataField"
+	TypePassportElementErrorSourceFrontSide                     = "passportElementErrorSourceFrontSide"
+	TypePassportElementErrorSourceReverseSide                   = "passportElementErrorSourceReverseSide"
+	TypePassportElementErrorSourceSelfie                        = "passportElementErrorSourceSelfie"
+	TypePassportElementErrorSourceTranslationFile               = "passportElementErrorSourceTranslationFile"
+	TypePassportElementErrorSourceTranslationFiles              = "passportElementErrorSourceTranslationFiles"
+	TypePassportElementErrorSourceFile                          = "passportElementErrorSourceFile"
+	TypePassportElementErrorSourceFiles                         = "passportElementErrorSourceFiles"
+	TypePassportElementError                                    = "passportElementError"
+	TypePassportSuitableElement                                 = "passportSuitableElement"
+	TypePassportRequiredElement                                 = "passportRequiredElement"
+	TypePassportAuthorizationForm                               = "passportAuthorizationForm"
+	TypePassportElementsWithErrors                              = "passportElementsWithErrors"
+	TypeEncryptedCredentials                                    = "encryptedCredentials"
+	TypeEncryptedPassportElement                                = "encryptedPassportElement"
+	TypeInputPassportElementErrorSourceUnspecified              = "inputPassportElementErrorSourceUnspecified"
+	TypeInputPassportElementErrorSourceDataField                = "inputPassportElementErrorSourceDataField"
+	TypeInputPassportElementErrorSourceFrontSide                = "inputPassportElementErrorSourceFrontSide"
+	TypeInputPassportElementErrorSourceReverseSide              = "inputPassportElementErrorSourceReverseSide"
+	TypeInputPassportElementErrorSourceSelfie                   = "inputPassportElementErrorSourceSelfie"
+	TypeInputPassportElementErrorSourceTranslationFile          = "inputPassportElementErrorSourceTranslationFile"
+	TypeInputPassportElementErrorSourceTranslationFiles         = "inputPassportElementErrorSourceTranslationFiles"
+	TypeInputPassportElementErrorSourceFile                     = "inputPassportElementErrorSourceFile"
+	TypeInputPassportElementErrorSourceFiles                    = "inputPassportElementErrorSourceFiles"
+	TypeInputPassportElementError                               = "inputPassportElementError"
+	TypeMessageText                                             = "messageText"
+	TypeMessageAnimation                                        = "messageAnimation"
+	TypeMessageAudio                                            = "messageAudio"
+	TypeMessageDocument                                         = "messageDocument"
+	TypeMessagePhoto                                            = "messagePhoto"
+	TypeMessageExpiredPhoto                                     = "messageExpiredPhoto"
+	TypeMessageSticker                                          = "messageSticker"
+	TypeMessageVideo                                            = "messageVideo"
+	TypeMessageExpiredVideo                                     = "messageExpiredVideo"
+	TypeMessageVideoNote                                        = "messageVideoNote"
+	TypeMessageVoiceNote                                        = "messageVoiceNote"
+	TypeMessageLocation                                         = "messageLocation"
+	TypeMessageVenue                                            = "messageVenue"
+	TypeMessageContact                                          = "messageContact"
+	TypeMessageAnimatedEmoji                                    = "messageAnimatedEmoji"
+	TypeMessageDice                                             = "messageDice"
+	TypeMessageGame                                             = "messageGame"
+	TypeMessagePoll                                             = "messagePoll"
+	TypeMessageInvoice                                          = "messageInvoice"
+	TypeMessageCall                                             = "messageCall"
+	TypeMessageVideoChatScheduled                               = "messageVideoChatScheduled"
+	TypeMessageVideoChatStarted                                 = "messageVideoChatStarted"
+	TypeMessageVideoChatEnded                                   = "messageVideoChatEnded"
+	TypeMessageInviteVideoChatParticipants                      = "messageInviteVideoChatParticipants"
+	TypeMessageBasicGroupChatCreate                             = "messageBasicGroupChatCreate"
+	TypeMessageSupergroupChatCreate                             = "messageSupergroupChatCreate"
+	TypeMessageChatChangeTitle                                  = "messageChatChangeTitle"
+	TypeMessageChatChangePhoto                                  = "messageChatChangePhoto"
+	TypeMessageChatDeletePhoto                                  = "messageChatDeletePhoto"
+	TypeMessageChatAddMembers                                   = "messageChatAddMembers"
+	TypeMessageChatJoinByLink                                   = "messageChatJoinByLink"
+	TypeMessageChatJoinByRequest                                = "messageChatJoinByRequest"
+	TypeMessageChatDeleteMember                                 = "messageChatDeleteMember"
+	TypeMessageChatUpgradeTo                                    = "messageChatUpgradeTo"
+	TypeMessageChatUpgradeFrom                                  = "messageChatUpgradeFrom"
+	TypeMessagePinMessage                                       = "messagePinMessage"
+	TypeMessageScreenshotTaken                                  = "messageScreenshotTaken"
+	TypeMessageChatSetTheme                                     = "messageChatSetTheme"
+	TypeMessageChatSetTtl                                       = "messageChatSetTtl"
+	TypeMessageCustomServiceAction                              = "messageCustomServiceAction"
+	TypeMessageGameScore                                        = "messageGameScore"
+	TypeMessagePaymentSuccessful                                = "messagePaymentSuccessful"
+	TypeMessagePaymentSuccessfulBot                             = "messagePaymentSuccessfulBot"
+	TypeMessageGiftedPremium                                    = "messageGiftedPremium"
+	TypeMessageContactRegistered                                = "messageContactRegistered"
+	TypeMessageWebsiteConnected                                 = "messageWebsiteConnected"
+	TypeMessageWebAppDataSent                                   = "messageWebAppDataSent"
+	TypeMessageWebAppDataReceived                               = "messageWebAppDataReceived"
+	TypeMessagePassportDataSent                                 = "messagePassportDataSent"
+	TypeMessagePassportDataReceived                             = "messagePassportDataReceived"
+	TypeMessageProximityAlertTriggered                          = "messageProximityAlertTriggered"
+	TypeMessageUnsupported                                      = "messageUnsupported"
+	TypeTextEntityTypeMention                                   = "textEntityTypeMention"
+	TypeTextEntityTypeHashtag                                   = "textEntityTypeHashtag"
+	TypeTextEntityTypeCashtag                                   = "textEntityTypeCashtag"
+	TypeTextEntityTypeBotCommand                                = "textEntityTypeBotCommand"
+	TypeTextEntityTypeUrl                                       = "textEntityTypeUrl"
+	TypeTextEntityTypeEmailAddress                              = "textEntityTypeEmailAddress"
+	TypeTextEntityTypePhoneNumber                               = "textEntityTypePhoneNumber"
+	TypeTextEntityTypeBankCardNumber                            = "textEntityTypeBankCardNumber"
+	TypeTextEntityTypeBold                                      = "textEntityTypeBold"
+	TypeTextEntityTypeItalic                                    = "textEntityTypeItalic"
+	TypeTextEntityTypeUnderline                                 = "textEntityTypeUnderline"
+	TypeTextEntityTypeStrikethrough                             = "textEntityTypeStrikethrough"
+	TypeTextEntityTypeSpoiler                                   = "textEntityTypeSpoiler"
+	TypeTextEntityTypeCode                                      = "textEntityTypeCode"
+	TypeTextEntityTypePre                                       = "textEntityTypePre"
+	TypeTextEntityTypePreCode                                   = "textEntityTypePreCode"
+	TypeTextEntityTypeTextUrl                                   = "textEntityTypeTextUrl"
+	TypeTextEntityTypeMentionName                               = "textEntityTypeMentionName"
+	TypeTextEntityTypeCustomEmoji                               = "textEntityTypeCustomEmoji"
+	TypeTextEntityTypeMediaTimestamp                            = "textEntityTypeMediaTimestamp"
+	TypeInputThumbnail                                          = "inputThumbnail"
+	TypeMessageSchedulingStateSendAtDate                        = "messageSchedulingStateSendAtDate"
+	TypeMessageSchedulingStateSendWhenOnline                    = "messageSchedulingStateSendWhenOnline"
+	TypeMessageSendOptions                                      = "messageSendOptions"
+	TypeMessageCopyOptions                                      = "messageCopyOptions"
+	TypeInputMessageText                                        = "inputMessageText"
+	TypeInputMessageAnimation                                   = "inputMessageAnimation"
+	TypeInputMessageAudio                                       = "inputMessageAudio"
+	TypeInputMessageDocument                                    = "inputMessageDocument"
+	TypeInputMessagePhoto                                       = "inputMessagePhoto"
+	TypeInputMessageSticker                                     = "inputMessageSticker"
+	TypeInputMessageVideo                                       = "inputMessageVideo"
+	TypeInputMessageVideoNote                                   = "inputMessageVideoNote"
+	TypeInputMessageVoiceNote                                   = "inputMessageVoiceNote"
+	TypeInputMessageLocation                                    = "inputMessageLocation"
+	TypeInputMessageVenue                                       = "inputMessageVenue"
+	TypeInputMessageContact                                     = "inputMessageContact"
+	TypeInputMessageDice                                        = "inputMessageDice"
+	TypeInputMessageGame                                        = "inputMessageGame"
+	TypeInputMessageInvoice                                     = "inputMessageInvoice"
+	TypeInputMessagePoll                                        = "inputMessagePoll"
+	TypeInputMessageForwarded                                   = "inputMessageForwarded"
+	TypeSearchMessagesFilterEmpty                               = "searchMessagesFilterEmpty"
+	TypeSearchMessagesFilterAnimation                           = "searchMessagesFilterAnimation"
+	TypeSearchMessagesFilterAudio                               = "searchMessagesFilterAudio"
+	TypeSearchMessagesFilterDocument                            = "searchMessagesFilterDocument"
+	TypeSearchMessagesFilterPhoto                               = "searchMessagesFilterPhoto"
+	TypeSearchMessagesFilterVideo                               = "searchMessagesFilterVideo"
+	TypeSearchMessagesFilterVoiceNote                           = "searchMessagesFilterVoiceNote"
+	TypeSearchMessagesFilterPhotoAndVideo                       = "searchMessagesFilterPhotoAndVideo"
+	TypeSearchMessagesFilterUrl                                 = "searchMessagesFilterUrl"
+	TypeSearchMessagesFilterChatPhoto                           = "searchMessagesFilterChatPhoto"
+	TypeSearchMessagesFilterVideoNote                           = "searchMessagesFilterVideoNote"
+	TypeSearchMessagesFilterVoiceAndVideoNote                   = "searchMessagesFilterVoiceAndVideoNote"
+	TypeSearchMessagesFilterMention                             = "searchMessagesFilterMention"
+	TypeSearchMessagesFilterUnreadMention                       = "searchMessagesFilterUnreadMention"
+	TypeSearchMessagesFilterUnreadReaction                      = "searchMessagesFilterUnreadReaction"
+	TypeSearchMessagesFilterFailedToSend                        = "searchMessagesFilterFailedToSend"
+	TypeSearchMessagesFilterPinned                              = "searchMessagesFilterPinned"
+	TypeChatActionTyping                                        = "chatActionTyping"
+	TypeChatActionRecordingVideo                                = "chatActionRecordingVideo"
+	TypeChatActionUploadingVideo                                = "chatActionUploadingVideo"
+	TypeChatActionRecordingVoiceNote                            = "chatActionRecordingVoiceNote"
+	TypeChatActionUploadingVoiceNote                            = "chatActionUploadingVoiceNote"
+	TypeChatActionUploadingPhoto                                = "chatActionUploadingPhoto"
+	TypeChatActionUploadingDocument                             = "chatActionUploadingDocument"
+	TypeChatActionChoosingSticker                               = "chatActionChoosingSticker"
+	TypeChatActionChoosingLocation                              = "chatActionChoosingLocation"
+	TypeChatActionChoosingContact                               = "chatActionChoosingContact"
+	TypeChatActionStartPlayingGame                              = "chatActionStartPlayingGame"
+	TypeChatActionRecordingVideoNote                            = "chatActionRecordingVideoNote"
+	TypeChatActionUploadingVideoNote                            = "chatActionUploadingVideoNote"
+	TypeChatActionWatchingAnimations                            = "chatActionWatchingAnimations"
+	TypeChatActionCancel                                        = "chatActionCancel"
+	TypeUserStatusEmpty                                         = "userStatusEmpty"
+	TypeUserStatusOnline                                        = "userStatusOnline"
+	TypeUserStatusOffline                                       = "userStatusOffline"
+	TypeUserStatusRecently                                      = "userStatusRecently"
+	TypeUserStatusLastWeek                                      = "userStatusLastWeek"
+	TypeUserStatusLastMonth                                     = "userStatusLastMonth"
+	TypeStickers                                                = "stickers"
+	TypeEmojis                                                  = "emojis"
+	TypeStickerSet                                              = "stickerSet"
+	TypeStickerSetInfo                                          = "stickerSetInfo"
+	TypeStickerSets                                             = "stickerSets"
+	TypeTrendingStickerSets                                     = "trendingStickerSets"
+	TypeCallDiscardReasonEmpty                                  = "callDiscardReasonEmpty"
+	TypeCallDiscardReasonMissed                                 = "callDiscardReasonMissed"
+	TypeCallDiscardReasonDeclined                               = "callDiscardReasonDeclined"
+	TypeCallDiscardReasonDisconnected                           = "callDiscardReasonDisconnected"
+	TypeCallDiscardReasonHungUp                                 = "callDiscardReasonHungUp"
+	TypeCallProtocol                                            = "callProtocol"
+	TypeCallServerTypeTelegramReflector                         = "callServerTypeTelegramReflector"
+	TypeCallServerTypeWebrtc                                    = "callServerTypeWebrtc"
+	TypeCallServer                                              = "callServer"
+	TypeCallId                                                  = "callId"
+	TypeGroupCallId                                             = "groupCallId"
+	TypeCallStatePending                                        = "callStatePending"
+	TypeCallStateExchangingKeys                                 = "callStateExchangingKeys"
+	TypeCallStateReady                                          = "callStateReady"
+	TypeCallStateHangingUp                                      = "callStateHangingUp"
+	TypeCallStateDiscarded                                      = "callStateDiscarded"
+	TypeCallStateError                                          = "callStateError"
+	TypeGroupCallVideoQualityThumbnail                          = "groupCallVideoQualityThumbnail"
+	TypeGroupCallVideoQualityMedium                             = "groupCallVideoQualityMedium"
+	TypeGroupCallVideoQualityFull                               = "groupCallVideoQualityFull"
+	TypeGroupCallStream                                         = "groupCallStream"
+	TypeGroupCallStreams                                        = "groupCallStreams"
+	TypeRtmpUrl                                                 = "rtmpUrl"
+	TypeGroupCallRecentSpeaker                                  = "groupCallRecentSpeaker"
+	TypeGroupCall                                               = "groupCall"
+	TypeGroupCallVideoSourceGroup                               = "groupCallVideoSourceGroup"
+	TypeGroupCallParticipantVideoInfo                           = "groupCallParticipantVideoInfo"
+	TypeGroupCallParticipant                                    = "groupCallParticipant"
+	TypeCallProblemEcho                                         = "callProblemEcho"
+	TypeCallProblemNoise                                        = "callProblemNoise"
+	TypeCallProblemInterruptions                                = "callProblemInterruptions"
+	TypeCallProblemDistortedSpeech                              = "callProblemDistortedSpeech"
+	TypeCallProblemSilentLocal                                  = "callProblemSilentLocal"
+	TypeCallProblemSilentRemote                                 = "callProblemSilentRemote"
+	TypeCallProblemDropped                                      = "callProblemDropped"
+	TypeCallProblemDistortedVideo                               = "callProblemDistortedVideo"
+	TypeCallProblemPixelatedVideo                               = "callProblemPixelatedVideo"
+	TypeCall                                                    = "call"
+	TypePhoneNumberAuthenticationSettings                       = "phoneNumberAuthenticationSettings"
+	TypeAddedReaction                                           = "addedReaction"
+	TypeAddedReactions                                          = "addedReactions"
+	TypeAvailableReaction                                       = "availableReaction"
+	TypeAvailableReactions                                      = "availableReactions"
+	TypeReaction                                                = "reaction"
+	TypeAnimations                                              = "animations"
+	TypeDiceStickersRegular                                     = "diceStickersRegular"
+	TypeDiceStickersSlotMachine                                 = "diceStickersSlotMachine"
+	TypeImportedContacts                                        = "importedContacts"
+	TypeSpeechRecognitionResultPending                          = "speechRecognitionResultPending"
+	TypeSpeechRecognitionResultText                             = "speechRecognitionResultText"
+	TypeSpeechRecognitionResultError                            = "speechRecognitionResultError"
+	TypeAttachmentMenuBotColor                                  = "attachmentMenuBotColor"
+	TypeAttachmentMenuBot                                       = "attachmentMenuBot"
+	TypeSentWebAppMessage                                       = "sentWebAppMessage"
+	TypeHttpUrl                                                 = "httpUrl"
+	TypeInputInlineQueryResultAnimation                         = "inputInlineQueryResultAnimation"
+	TypeInputInlineQueryResultArticle                           = "inputInlineQueryResultArticle"
+	TypeInputInlineQueryResultAudio                             = "inputInlineQueryResultAudio"
+	TypeInputInlineQueryResultContact                           = "inputInlineQueryResultContact"
+	TypeInputInlineQueryResultDocument                          = "inputInlineQueryResultDocument"
+	TypeInputInlineQueryResultGame                              = "inputInlineQueryResultGame"
+	TypeInputInlineQueryResultLocation                          = "inputInlineQueryResultLocation"
+	TypeInputInlineQueryResultPhoto                             = "inputInlineQueryResultPhoto"
+	TypeInputInlineQueryResultSticker                           = "inputInlineQueryResultSticker"
+	TypeInputInlineQueryResultVenue                             = "inputInlineQueryResultVenue"
+	TypeInputInlineQueryResultVideo                             = "inputInlineQueryResultVideo"
+	TypeInputInlineQueryResultVoiceNote                         = "inputInlineQueryResultVoiceNote"
+	TypeInlineQueryResultArticle                                = "inlineQueryResultArticle"
+	TypeInlineQueryResultContact                                = "inlineQueryResultContact"
+	TypeInlineQueryResultLocation                               = "inlineQueryResultLocation"
+	TypeInlineQueryResultVenue                                  = "inlineQueryResultVenue"
+	TypeInlineQueryResultGame                                   = "inlineQueryResultGame"
+	TypeInlineQueryResultAnimation                              = "inlineQueryResultAnimation"
+	TypeInlineQueryResultAudio                                  = "inlineQueryResultAudio"
+	TypeInlineQueryResultDocument                               = "inlineQueryResultDocument"
+	TypeInlineQueryResultPhoto                                  = "inlineQueryResultPhoto"
+	TypeInlineQueryResultSticker                                = "inlineQueryResultSticker"
+	TypeInlineQueryResultVideo                                  = "inlineQueryResultVideo"
+	TypeInlineQueryResultVoiceNote                              = "inlineQueryResultVoiceNote"
+	TypeInlineQueryResults                                      = "inlineQueryResults"
+	TypeCallbackQueryPayloadData                                = "callbackQueryPayloadData"
+	TypeCallbackQueryPayloadDataWithPassword                    = "callbackQueryPayloadDataWithPassword"
+	TypeCallbackQueryPayloadGame                                = "callbackQueryPayloadGame"
+	TypeCallbackQueryAnswer                                     = "callbackQueryAnswer"
+	TypeCustomRequestResult                                     = "customRequestResult"
+	TypeGameHighScore                                           = "gameHighScore"
+	TypeGameHighScores                                          = "gameHighScores"
+	TypeChatEventMessageEdited                                  = "chatEventMessageEdited"
+	TypeChatEventMessageDeleted                                 = "chatEventMessageDeleted"
+	TypeChatEventMessagePinned                                  = "chatEventMessagePinned"
+	TypeChatEventMessageUnpinned                                = "chatEventMessageUnpinned"
+	TypeChatEventPollStopped                                    = "chatEventPollStopped"
+	TypeChatEventMemberJoined                                   = "chatEventMemberJoined"
+	TypeChatEventMemberJoinedByInviteLink                       = "chatEventMemberJoinedByInviteLink"
+	TypeChatEventMemberJoinedByRequest                          = "chatEventMemberJoinedByRequest"
+	TypeChatEventMemberInvited                                  = "chatEventMemberInvited"
+	TypeChatEventMemberLeft                                     = "chatEventMemberLeft"
+	TypeChatEventMemberPromoted                                 = "chatEventMemberPromoted"
+	TypeChatEventMemberRestricted                               = "chatEventMemberRestricted"
+	TypeChatEventAvailableReactionsChanged                      = "chatEventAvailableReactionsChanged"
+	TypeChatEventDescriptionChanged                             = "chatEventDescriptionChanged"
+	TypeChatEventLinkedChatChanged                              = "chatEventLinkedChatChanged"
+	TypeChatEventLocationChanged                                = "chatEventLocationChanged"
+	TypeChatEventMessageTtlChanged                              = "chatEventMessageTtlChanged"
+	TypeChatEventPermissionsChanged                             = "chatEventPermissionsChanged"
+	TypeChatEventPhotoChanged                                   = "chatEventPhotoChanged"
+	TypeChatEventSlowModeDelayChanged                           = "chatEventSlowModeDelayChanged"
+	TypeChatEventStickerSetChanged                              = "chatEventStickerSetChanged"
+	TypeChatEventTitleChanged                                   = "chatEventTitleChanged"
+	TypeChatEventUsernameChanged                                = "chatEventUsernameChanged"
+	TypeChatEventHasProtectedContentToggled                     = "chatEventHasProtectedContentToggled"
+	TypeChatEventInvitesToggled                                 = "chatEventInvitesToggled"
+	TypeChatEventIsAllHistoryAvailableToggled                   = "chatEventIsAllHistoryAvailableToggled"
+	TypeChatEventSignMessagesToggled                            = "chatEventSignMessagesToggled"
+	TypeChatEventInviteLinkEdited                               = "chatEventInviteLinkEdited"
+	TypeChatEventInviteLinkRevoked                              = "chatEventInviteLinkRevoked"
+	TypeChatEventInviteLinkDeleted                              = "chatEventInviteLinkDeleted"
+	TypeChatEventVideoChatCreated                               = "chatEventVideoChatCreated"
+	TypeChatEventVideoChatEnded                                 = "chatEventVideoChatEnded"
+	TypeChatEventVideoChatMuteNewParticipantsToggled            = "chatEventVideoChatMuteNewParticipantsToggled"
+	TypeChatEventVideoChatParticipantIsMutedToggled             = "chatEventVideoChatParticipantIsMutedToggled"
+	TypeChatEventVideoChatParticipantVolumeLevelChanged         = "chatEventVideoChatParticipantVolumeLevelChanged"
+	TypeChatEvent                                               = "chatEvent"
+	TypeChatEvents                                              = "chatEvents"
+	TypeChatEventLogFilters                                     = "chatEventLogFilters"
+	TypeLanguagePackStringValueOrdinary                         = "languagePackStringValueOrdinary"
+	TypeLanguagePackStringValuePluralized                       = "languagePackStringValuePluralized"
+	TypeLanguagePackStringValueDeleted                          = "languagePackStringValueDeleted"
+	TypeLanguagePackString                                      = "languagePackString"
+	TypeLanguagePackStrings                                     = "languagePackStrings"
+	TypeLanguagePackInfo                                        = "languagePackInfo"
+	TypeLocalizationTargetInfo                                  = "localizationTargetInfo"
+	TypePremiumLimitTypeSupergroupCount                         = "premiumLimitTypeSupergroupCount"
+	TypePremiumLimitTypePinnedChatCount                         = "premiumLimitTypePinnedChatCount"
+	TypePremiumLimitTypeCreatedPublicChatCount                  = "premiumLimitTypeCreatedPublicChatCount"
+	TypePremiumLimitTypeSavedAnimationCount                     = "premiumLimitTypeSavedAnimationCount"
+	TypePremiumLimitTypeFavoriteStickerCount                    = "premiumLimitTypeFavoriteStickerCount"
+	TypePremiumLimitTypeChatFilterCount                         = "premiumLimitTypeChatFilterCount"
+	TypePremiumLimitTypeChatFilterChosenChatCount               = "premiumLimitTypeChatFilterChosenChatCount"
+	TypePremiumLimitTypePinnedArchivedChatCount                 = "premiumLimitTypePinnedArchivedChatCount"
+	TypePremiumLimitTypeCaptionLength                           = "premiumLimitTypeCaptionLength"
+	TypePremiumLimitTypeBioLength                               = "premiumLimitTypeBioLength"
+	TypePremiumFeatureIncreasedLimits                           = "premiumFeatureIncreasedLimits"
+	TypePremiumFeatureIncreasedUploadFileSize                   = "premiumFeatureIncreasedUploadFileSize"
+	TypePremiumFeatureImprovedDownloadSpeed                     = "premiumFeatureImprovedDownloadSpeed"
+	TypePremiumFeatureVoiceRecognition                          = "premiumFeatureVoiceRecognition"
+	TypePremiumFeatureDisabledAds                               = "premiumFeatureDisabledAds"
+	TypePremiumFeatureUniqueReactions                           = "premiumFeatureUniqueReactions"
+	TypePremiumFeatureUniqueStickers                            = "premiumFeatureUniqueStickers"
+	TypePremiumFeatureCustomEmoji                               = "premiumFeatureCustomEmoji"
+	TypePremiumFeatureAdvancedChatManagement                    = "premiumFeatureAdvancedChatManagement"
+	TypePremiumFeatureProfileBadge                              = "premiumFeatureProfileBadge"
+	TypePremiumFeatureAnimatedProfilePhoto                      = "premiumFeatureAnimatedProfilePhoto"
+	TypePremiumFeatureAppIcons                                  = "premiumFeatureAppIcons"
+	TypePremiumLimit                                            = "premiumLimit"
+	TypePremiumFeatures                                         = "premiumFeatures"
+	TypePremiumSourceLimitExceeded                              = "premiumSourceLimitExceeded"
+	TypePremiumSourceFeature                                    = "premiumSourceFeature"
+	TypePremiumSourceLink                                       = "premiumSourceLink"
+	TypePremiumSourceSettings                                   = "premiumSourceSettings"
+	TypePremiumFeaturePromotionAnimation                        = "premiumFeaturePromotionAnimation"
+	TypePremiumState                                            = "premiumState"
+	TypeStorePaymentPurposePremiumSubscription                  = "storePaymentPurposePremiumSubscription"
+	TypeStorePaymentPurposeGiftedPremium                        = "storePaymentPurposeGiftedPremium"
+	TypeDeviceTokenFirebaseCloudMessaging                       = "deviceTokenFirebaseCloudMessaging"
+	TypeDeviceTokenApplePush                                    = "deviceTokenApplePush"
+	TypeDeviceTokenApplePushVoIP                                = "deviceTokenApplePushVoIP"
+	TypeDeviceTokenWindowsPush                                  = "deviceTokenWindowsPush"
+	TypeDeviceTokenMicrosoftPush                                = "deviceTokenMicrosoftPush"
+	TypeDeviceTokenMicrosoftPushVoIP                            = "deviceTokenMicrosoftPushVoIP"
+	TypeDeviceTokenWebPush                                      = "deviceTokenWebPush"
+	TypeDeviceTokenSimplePush                                   = "deviceTokenSimplePush"
+	TypeDeviceTokenUbuntuPush                                   = "deviceTokenUbuntuPush"
+	TypeDeviceTokenBlackBerryPush                               = "deviceTokenBlackBerryPush"
+	TypeDeviceTokenTizenPush                                    = "deviceTokenTizenPush"
+	TypePushReceiverId                                          = "pushReceiverId"
+	TypeBackgroundFillSolid                                     = "backgroundFillSolid"
+	TypeBackgroundFillGradient                                  = "backgroundFillGradient"
+	TypeBackgroundFillFreeformGradient                          = "backgroundFillFreeformGradient"
+	TypeBackgroundTypeWallpaper                                 = "backgroundTypeWallpaper"
+	TypeBackgroundTypePattern                                   = "backgroundTypePattern"
+	TypeBackgroundTypeFill                                      = "backgroundTypeFill"
+	TypeBackground                                              = "background"
+	TypeBackgrounds                                             = "backgrounds"
+	TypeInputBackgroundLocal                                    = "inputBackgroundLocal"
+	TypeInputBackgroundRemote                                   = "inputBackgroundRemote"
+	TypeThemeSettings                                           = "themeSettings"
+	TypeChatTheme                                               = "chatTheme"
+	TypeHashtags                                                = "hashtags"
+	TypeCanTransferOwnershipResultOk                            = "canTransferOwnershipResultOk"
+	TypeCanTransferOwnershipResultPasswordNeeded                = "canTransferOwnershipResultPasswordNeeded"
+	TypeCanTransferOwnershipResultPasswordTooFresh              = "canTransferOwnershipResultPasswordTooFresh"
+	TypeCanTransferOwnershipResultSessionTooFresh               = "canTransferOwnershipResultSessionTooFresh"
+	TypeCheckChatUsernameResultOk                               = "checkChatUsernameResultOk"
+	TypeCheckChatUsernameResultUsernameInvalid                  = "checkChatUsernameResultUsernameInvalid"
+	TypeCheckChatUsernameResultUsernameOccupied                 = "checkChatUsernameResultUsernameOccupied"
+	TypeCheckChatUsernameResultPublicChatsTooMuch               = "checkChatUsernameResultPublicChatsTooMuch"
+	TypeCheckChatUsernameResultPublicGroupsUnavailable          = "checkChatUsernameResultPublicGroupsUnavailable"
+	TypeCheckStickerSetNameResultOk                             = "checkStickerSetNameResultOk"
+	TypeCheckStickerSetNameResultNameInvalid                    = "checkStickerSetNameResultNameInvalid"
+	TypeCheckStickerSetNameResultNameOccupied                   = "checkStickerSetNameResultNameOccupied"
+	TypeResetPasswordResultOk                                   = "resetPasswordResultOk"
+	TypeResetPasswordResultPending                              = "resetPasswordResultPending"
+	TypeResetPasswordResultDeclined                             = "resetPasswordResultDeclined"
+	TypeMessageFileTypePrivate                                  = "messageFileTypePrivate"
+	TypeMessageFileTypeGroup                                    = "messageFileTypeGroup"
+	TypeMessageFileTypeUnknown                                  = "messageFileTypeUnknown"
+	TypePushMessageContentHidden                                = "pushMessageContentHidden"
+	TypePushMessageContentAnimation                             = "pushMessageContentAnimation"
+	TypePushMessageContentAudio                                 = "pushMessageContentAudio"
+	TypePushMessageContentContact                               = "pushMessageContentContact"
+	TypePushMessageContentContactRegistered                     = "pushMessageContentContactRegistered"
+	TypePushMessageContentDocument                              = "pushMessageContentDocument"
+	TypePushMessageContentGame                                  = "pushMessageContentGame"
+	TypePushMessageContentGameScore                             = "pushMessageContentGameScore"
+	TypePushMessageContentInvoice                               = "pushMessageContentInvoice"
+	TypePushMessageContentLocation                              = "pushMessageContentLocation"
+	TypePushMessageContentPhoto                                 = "pushMessageContentPhoto"
+	TypePushMessageContentPoll                                  = "pushMessageContentPoll"
+	TypePushMessageContentScreenshotTaken                       = "pushMessageContentScreenshotTaken"
+	TypePushMessageContentSticker                               = "pushMessageContentSticker"
+	TypePushMessageContentText                                  = "pushMessageContentText"
+	TypePushMessageContentVideo                                 = "pushMessageContentVideo"
+	TypePushMessageContentVideoNote                             = "pushMessageContentVideoNote"
+	TypePushMessageContentVoiceNote                             = "pushMessageContentVoiceNote"
+	TypePushMessageContentBasicGroupChatCreate                  = "pushMessageContentBasicGroupChatCreate"
+	TypePushMessageContentChatAddMembers                        = "pushMessageContentChatAddMembers"
+	TypePushMessageContentChatChangePhoto                       = "pushMessageContentChatChangePhoto"
+	TypePushMessageContentChatChangeTitle                       = "pushMessageContentChatChangeTitle"
+	TypePushMessageContentChatSetTheme                          = "pushMessageContentChatSetTheme"
+	TypePushMessageContentChatDeleteMember                      = "pushMessageContentChatDeleteMember"
+	TypePushMessageContentChatJoinByLink                        = "pushMessageContentChatJoinByLink"
+	TypePushMessageContentChatJoinByRequest                     = "pushMessageContentChatJoinByRequest"
+	TypePushMessageContentRecurringPayment                      = "pushMessageContentRecurringPayment"
+	TypePushMessageContentMessageForwards                       = "pushMessageContentMessageForwards"
+	TypePushMessageContentMediaAlbum                            = "pushMessageContentMediaAlbum"
+	TypeNotificationTypeNewMessage                              = "notificationTypeNewMessage"
+	TypeNotificationTypeNewSecretChat                           = "notificationTypeNewSecretChat"
+	TypeNotificationTypeNewCall                                 = "notificationTypeNewCall"
+	TypeNotificationTypeNewPushMessage                          = "notificationTypeNewPushMessage"
+	TypeNotificationGroupTypeMessages                           = "notificationGroupTypeMessages"
+	TypeNotificationGroupTypeMentions                           = "notificationGroupTypeMentions"
+	TypeNotificationGroupTypeSecretChat                         = "notificationGroupTypeSecretChat"
+	TypeNotificationGroupTypeCalls                              = "notificationGroupTypeCalls"
+	TypeNotificationSound                                       = "notificationSound"
+	TypeNotificationSounds                                      = "notificationSounds"
+	TypeNotification                                            = "notification"
+	TypeNotificationGroup                                       = "notificationGroup"
+	TypeOptionValueBoolean                                      = "optionValueBoolean"
+	TypeOptionValueEmpty                                        = "optionValueEmpty"
+	TypeOptionValueInteger                                      = "optionValueInteger"
+	TypeOptionValueString                                       = "optionValueString"
+	TypeJsonObjectMember                                        = "jsonObjectMember"
+	TypeJsonValueNull                                           = "jsonValueNull"
+	TypeJsonValueBoolean                                        = "jsonValueBoolean"
+	TypeJsonValueNumber                                         = "jsonValueNumber"
+	TypeJsonValueString                                         = "jsonValueString"
+	TypeJsonValueArray                                          = "jsonValueArray"
+	TypeJsonValueObject                                         = "jsonValueObject"
+	TypeUserPrivacySettingRuleAllowAll                          = "userPrivacySettingRuleAllowAll"
+	TypeUserPrivacySettingRuleAllowContacts                     = "userPrivacySettingRuleAllowContacts"
+	TypeUserPrivacySettingRuleAllowUsers                        = "userPrivacySettingRuleAllowUsers"
+	TypeUserPrivacySettingRuleAllowChatMembers                  = "userPrivacySettingRuleAllowChatMembers"
+	TypeUserPrivacySettingRuleRestrictAll                       = "userPrivacySettingRuleRestrictAll"
+	TypeUserPrivacySettingRuleRestrictContacts                  = "userPrivacySettingRuleRestrictContacts"
+	TypeUserPrivacySettingRuleRestrictUsers                     = "userPrivacySettingRuleRestrictUsers"
+	TypeUserPrivacySettingRuleRestrictChatMembers               = "userPrivacySettingRuleRestrictChatMembers"
+	TypeUserPrivacySettingRules                                 = "userPrivacySettingRules"
+	TypeUserPrivacySettingShowStatus                            = "userPrivacySettingShowStatus"
+	TypeUserPrivacySettingShowProfilePhoto                      = "userPrivacySettingShowProfilePhoto"
+	TypeUserPrivacySettingShowLinkInForwardedMessages           = "userPrivacySettingShowLinkInForwardedMessages"
+	TypeUserPrivacySettingShowPhoneNumber                       = "userPrivacySettingShowPhoneNumber"
+	TypeUserPrivacySettingAllowChatInvites                      = "userPrivacySettingAllowChatInvites"
+	TypeUserPrivacySettingAllowCalls                            = "userPrivacySettingAllowCalls"
+	TypeUserPrivacySettingAllowPeerToPeerCalls                  = "userPrivacySettingAllowPeerToPeerCalls"
+	TypeUserPrivacySettingAllowFindingByPhoneNumber             = "userPrivacySettingAllowFindingByPhoneNumber"
+	TypeUserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages = "userPrivacySettingAllowPrivateVoiceAndVideoNoteMessages"
+	TypeAccountTtl                                              = "accountTtl"
+	TypeSessionTypeAndroid                                      = "sessionTypeAndroid"
+	TypeSessionTypeApple                                        = "sessionTypeApple"
+	TypeSessionTypeBrave                                        = "sessionTypeBrave"
+	TypeSessionTypeChrome                                       = "sessionTypeChrome"
+	TypeSessionTypeEdge                                         = "sessionTypeEdge"
+	TypeSessionTypeFirefox                                      = "sessionTypeFirefox"
+	TypeSessionTypeIpad                                         = "sessionTypeIpad"
+	TypeSessionTypeIphone                                       = "sessionTypeIphone"
+	TypeSessionTypeLinux                                        = "sessionTypeLinux"
+	TypeSessionTypeMac                                          = "sessionTypeMac"
+	TypeSessionTypeOpera                                        = "sessionTypeOpera"
+	TypeSessionTypeSafari                                       = "sessionTypeSafari"
+	TypeSessionTypeUbuntu                                       = "sessionTypeUbuntu"
+	TypeSessionTypeUnknown                                      = "sessionTypeUnknown"
+	TypeSessionTypeVivaldi                                      = "sessionTypeVivaldi"
+	TypeSessionTypeWindows                                      = "sessionTypeWindows"
+	TypeSessionTypeXbox                                         = "sessionTypeXbox"
+	TypeSession                                                 = "session"
+	TypeSessions                                                = "sessions"
+	TypeConnectedWebsite                                        = "connectedWebsite"
+	TypeConnectedWebsites                                       = "connectedWebsites"
+	TypeChatReportReasonSpam                                    = "chatReportReasonSpam"
+	TypeChatReportReasonViolence                                = "chatReportReasonViolence"
+	TypeChatReportReasonPornography                             = "chatReportReasonPornography"
+	TypeChatReportReasonChildAbuse                              = "chatReportReasonChildAbuse"
+	TypeChatReportReasonCopyright                               = "chatReportReasonCopyright"
+	TypeChatReportReasonUnrelatedLocation                       = "chatReportReasonUnrelatedLocation"
+	TypeChatReportReasonFake                                    = "chatReportReasonFake"
+	TypeChatReportReasonIllegalDrugs                            = "chatReportReasonIllegalDrugs"
+	TypeChatReportReasonPersonalDetails                         = "chatReportReasonPersonalDetails"
+	TypeChatReportReasonCustom                                  = "chatReportReasonCustom"
+	TypeTargetChatCurrent                                       = "targetChatCurrent"
+	TypeTargetChatChosen                                        = "targetChatChosen"
+	TypeTargetChatInternalLink                                  = "targetChatInternalLink"
+	TypeInternalLinkTypeActiveSessions                          = "internalLinkTypeActiveSessions"
+	TypeInternalLinkTypeAttachmentMenuBot                       = "internalLinkTypeAttachmentMenuBot"
+	TypeInternalLinkTypeAuthenticationCode                      = "internalLinkTypeAuthenticationCode"
+	TypeInternalLinkTypeBackground                              = "internalLinkTypeBackground"
+	TypeInternalLinkTypeBotStart                                = "internalLinkTypeBotStart"
+	TypeInternalLinkTypeBotStartInGroup                         = "internalLinkTypeBotStartInGroup"
+	TypeInternalLinkTypeBotAddToChannel                         = "internalLinkTypeBotAddToChannel"
+	TypeInternalLinkTypeChangePhoneNumber                       = "internalLinkTypeChangePhoneNumber"
+	TypeInternalLinkTypeChatInvite                              = "internalLinkTypeChatInvite"
+	TypeInternalLinkTypeFilterSettings                          = "internalLinkTypeFilterSettings"
+	TypeInternalLinkTypeGame                                    = "internalLinkTypeGame"
+	TypeInternalLinkTypeInvoice                                 = "internalLinkTypeInvoice"
+	TypeInternalLinkTypeLanguagePack                            = "internalLinkTypeLanguagePack"
+	TypeInternalLinkTypeLanguageSettings                        = "internalLinkTypeLanguageSettings"
+	TypeInternalLinkTypeMessage                                 = "internalLinkTypeMessage"
+	TypeInternalLinkTypeMessageDraft                            = "internalLinkTypeMessageDraft"
+	TypeInternalLinkTypePassportDataRequest                     = "internalLinkTypePassportDataRequest"
+	TypeInternalLinkTypePhoneNumberConfirmation                 = "internalLinkTypePhoneNumberConfirmation"
+	TypeInternalLinkTypePremiumFeatures                         = "internalLinkTypePremiumFeatures"
+	TypeInternalLinkTypePrivacyAndSecuritySettings              = "internalLinkTypePrivacyAndSecuritySettings"
+	TypeInternalLinkTypeProxy                                   = "internalLinkTypeProxy"
+	TypeInternalLinkTypePublicChat                              = "internalLinkTypePublicChat"
+	TypeInternalLinkTypeQrCodeAuthentication                    = "internalLinkTypeQrCodeAuthentication"
+	TypeInternalLinkTypeRestorePurchases                        = "internalLinkTypeRestorePurchases"
+	TypeInternalLinkTypeSettings                                = "internalLinkTypeSettings"
+	TypeInternalLinkTypeStickerSet                              = "internalLinkTypeStickerSet"
+	TypeInternalLinkTypeTheme                                   = "internalLinkTypeTheme"
+	TypeInternalLinkTypeThemeSettings                           = "internalLinkTypeThemeSettings"
+	TypeInternalLinkTypeUnknownDeepLink                         = "internalLinkTypeUnknownDeepLink"
+	TypeInternalLinkTypeUnsupportedProxy                        = "internalLinkTypeUnsupportedProxy"
+	TypeInternalLinkTypeUserPhoneNumber                         = "internalLinkTypeUserPhoneNumber"
+	TypeInternalLinkTypeVideoChat                               = "internalLinkTypeVideoChat"
+	TypeMessageLink                                             = "messageLink"
+	TypeMessageLinkInfo                                         = "messageLinkInfo"
+	TypeFilePart                                                = "filePart"
+	TypeFileTypeNone                                            = "fileTypeNone"
+	TypeFileTypeAnimation                                       = "fileTypeAnimation"
+	TypeFileTypeAudio                                           = "fileTypeAudio"
+	TypeFileTypeDocument                                        = "fileTypeDocument"
+	TypeFileTypeNotificationSound                               = "fileTypeNotificationSound"
+	TypeFileTypePhoto                                           = "fileTypePhoto"
+	TypeFileTypeProfilePhoto                                    = "fileTypeProfilePhoto"
+	TypeFileTypeSecret                                          = "fileTypeSecret"
+	TypeFileTypeSecretThumbnail                                 = "fileTypeSecretThumbnail"
+	TypeFileTypeSecure                                          = "fileTypeSecure"
+	TypeFileTypeSticker                                         = "fileTypeSticker"
+	TypeFileTypeThumbnail                                       = "fileTypeThumbnail"
+	TypeFileTypeUnknown                                         = "fileTypeUnknown"
+	TypeFileTypeVideo                                           = "fileTypeVideo"
+	TypeFileTypeVideoNote                                       = "fileTypeVideoNote"
+	TypeFileTypeVoiceNote                                       = "fileTypeVoiceNote"
+	TypeFileTypeWallpaper                                       = "fileTypeWallpaper"
+	TypeStorageStatisticsByFileType                             = "storageStatisticsByFileType"
+	TypeStorageStatisticsByChat                                 = "storageStatisticsByChat"
+	TypeStorageStatistics                                       = "storageStatistics"
+	TypeStorageStatisticsFast                                   = "storageStatisticsFast"
+	TypeDatabaseStatistics                                      = "databaseStatistics"
+	TypeNetworkTypeNone                                         = "networkTypeNone"
+	TypeNetworkTypeMobile                                       = "networkTypeMobile"
+	TypeNetworkTypeMobileRoaming                                = "networkTypeMobileRoaming"
+	TypeNetworkTypeWiFi                                         = "networkTypeWiFi"
+	TypeNetworkTypeOther                                        = "networkTypeOther"
+	TypeNetworkStatisticsEntryFile                              = "networkStatisticsEntryFile"
+	TypeNetworkStatisticsEntryCall                              = "networkStatisticsEntryCall"
+	TypeNetworkStatistics                                       = "networkStatistics"
+	TypeAutoDownloadSettings                                    = "autoDownloadSettings"
+	TypeAutoDownloadSettingsPresets                             = "autoDownloadSettingsPresets"
+	TypeConnectionStateWaitingForNetwork                        = "connectionStateWaitingForNetwork"
+	TypeConnectionStateConnectingToProxy                        = "connectionStateConnectingToProxy"
+	TypeConnectionStateConnecting                               = "connectionStateConnecting"
+	TypeConnectionStateUpdating                                 = "connectionStateUpdating"
+	TypeConnectionStateReady                                    = "connectionStateReady"
+	TypeTopChatCategoryUsers                                    = "topChatCategoryUsers"
+	TypeTopChatCategoryBots                                     = "topChatCategoryBots"
+	TypeTopChatCategoryGroups                                   = "topChatCategoryGroups"
+	TypeTopChatCategoryChannels                                 = "topChatCategoryChannels"
+	TypeTopChatCategoryInlineBots                               = "topChatCategoryInlineBots"
+	TypeTopChatCategoryCalls                                    = "topChatCategoryCalls"
+	TypeTopChatCategoryForwardChats                             = "topChatCategoryForwardChats"
+	TypeTMeUrlTypeUser                                          = "tMeUrlTypeUser"
+	TypeTMeUrlTypeSupergroup                                    = "tMeUrlTypeSupergroup"
+	TypeTMeUrlTypeChatInvite                                    = "tMeUrlTypeChatInvite"
+	TypeTMeUrlTypeStickerSet                                    = "tMeUrlTypeStickerSet"
+	TypeTMeUrl                                                  = "tMeUrl"
+	TypeTMeUrls                                                 = "tMeUrls"
+	TypeSuggestedActionEnableArchiveAndMuteNewChats             = "suggestedActionEnableArchiveAndMuteNewChats"
+	TypeSuggestedActionCheckPassword                            = "suggestedActionCheckPassword"
+	TypeSuggestedActionCheckPhoneNumber                         = "suggestedActionCheckPhoneNumber"
+	TypeSuggestedActionViewChecksHint                           = "suggestedActionViewChecksHint"
+	TypeSuggestedActionConvertToBroadcastGroup                  = "suggestedActionConvertToBroadcastGroup"
+	TypeSuggestedActionSetPassword                              = "suggestedActionSetPassword"
+	TypeCount                                                   = "count"
+	TypeText                                                    = "text"
+	TypeSeconds                                                 = "seconds"
+	TypeFileDownloadedPrefixSize                                = "fileDownloadedPrefixSize"
+	TypeDeepLinkInfo                                            = "deepLinkInfo"
+	TypeTextParseModeMarkdown                                   = "textParseModeMarkdown"
+	TypeTextParseModeHTML                                       = "textParseModeHTML"
+	TypeProxyTypeSocks5                                         = "proxyTypeSocks5"
+	TypeProxyTypeHttp                                           = "proxyTypeHttp"
+	TypeProxyTypeMtproto                                        = "proxyTypeMtproto"
+	TypeProxy                                                   = "proxy"
+	TypeProxies                                                 = "proxies"
+	TypeInputSticker                                            = "inputSticker"
+	TypeDateRange                                               = "dateRange"
+	TypeStatisticalValue                                        = "statisticalValue"
+	TypeStatisticalGraphData                                    = "statisticalGraphData"
+	TypeStatisticalGraphAsync                                   = "statisticalGraphAsync"
+	TypeStatisticalGraphError                                   = "statisticalGraphError"
+	TypeChatStatisticsMessageInteractionInfo                    = "chatStatisticsMessageInteractionInfo"
+	TypeChatStatisticsMessageSenderInfo                         = "chatStatisticsMessageSenderInfo"
+	TypeChatStatisticsAdministratorActionsInfo                  = "chatStatisticsAdministratorActionsInfo"
+	TypeChatStatisticsInviterInfo                               = "chatStatisticsInviterInfo"
+	TypeChatStatisticsSupergroup                                = "chatStatisticsSupergroup"
+	TypeChatStatisticsChannel                                   = "chatStatisticsChannel"
+	TypeMessageStatistics                                       = "messageStatistics"
+	TypePoint                                                   = "point"
+	TypeVectorPathCommandLine                                   = "vectorPathCommandLine"
+	TypeVectorPathCommandCubicBezierCurve                       = "vectorPathCommandCubicBezierCurve"
+	TypeBotCommandScopeDefault                                  = "botCommandScopeDefault"
+	TypeBotCommandScopeAllPrivateChats                          = "botCommandScopeAllPrivateChats"
+	TypeBotCommandScopeAllGroupChats                            = "botCommandScopeAllGroupChats"
+	TypeBotCommandScopeAllChatAdministrators                    = "botCommandScopeAllChatAdministrators"
+	TypeBotCommandScopeChat                                     = "botCommandScopeChat"
+	TypeBotCommandScopeChatAdministrators                       = "botCommandScopeChatAdministrators"
+	TypeBotCommandScopeChatMember                               = "botCommandScopeChatMember"
+	TypeUpdateAuthorizationState                                = "updateAuthorizationState"
+	TypeUpdateNewMessage                                        = "updateNewMessage"
+	TypeUpdateMessageSendAcknowledged                           = "updateMessageSendAcknowledged"
+	TypeUpdateMessageSendSucceeded                              = "updateMessageSendSucceeded"
+	TypeUpdateMessageSendFailed                                 = "updateMessageSendFailed"
+	TypeUpdateMessageContent                                    = "updateMessageContent"
+	TypeUpdateMessageEdited                                     = "updateMessageEdited"
+	TypeUpdateMessageIsPinned                                   = "updateMessageIsPinned"
+	TypeUpdateMessageInteractionInfo                            = "updateMessageInteractionInfo"
+	TypeUpdateMessageContentOpened                              = "updateMessageContentOpened"
+	TypeUpdateMessageMentionRead                                = "updateMessageMentionRead"
+	TypeUpdateMessageUnreadReactions                            = "updateMessageUnreadReactions"
+	TypeUpdateMessageLiveLocationViewed                         = "updateMessageLiveLocationViewed"
+	TypeUpdateNewChat                                           = "updateNewChat"
+	TypeUpdateChatTitle                                         = "updateChatTitle"
+	TypeUpdateChatPhoto                                         = "updateChatPhoto"
+	TypeUpdateChatPermissions                                   = "updateChatPermissions"
+	TypeUpdateChatLastMessage                                   = "updateChatLastMessage"
+	TypeUpdateChatPosition                                      = "updateChatPosition"
+	TypeUpdateChatReadInbox                                     = "updateChatReadInbox"
+	TypeUpdateChatReadOutbox                                    = "updateChatReadOutbox"
+	TypeUpdateChatActionBar                                     = "updateChatActionBar"
+	TypeUpdateChatAvailableReactions                            = "updateChatAvailableReactions"
+	TypeUpdateChatDraftMessage                                  = "updateChatDraftMessage"
+	TypeUpdateChatMessageSender                                 = "updateChatMessageSender"
+	TypeUpdateChatMessageTtl                                    = "updateChatMessageTtl"
+	TypeUpdateChatNotificationSettings                          = "updateChatNotificationSettings"
+	TypeUpdateChatPendingJoinRequests                           = "updateChatPendingJoinRequests"
+	TypeUpdateChatReplyMarkup                                   = "updateChatReplyMarkup"
+	TypeUpdateChatTheme                                         = "updateChatTheme"
+	TypeUpdateChatUnreadMentionCount                            = "updateChatUnreadMentionCount"
+	TypeUpdateChatUnreadReactionCount                           = "updateChatUnreadReactionCount"
+	TypeUpdateChatVideoChat                                     = "updateChatVideoChat"
+	TypeUpdateChatDefaultDisableNotification                    = "updateChatDefaultDisableNotification"
+	TypeUpdateChatHasProtectedContent                           = "updateChatHasProtectedContent"
+	TypeUpdateChatHasScheduledMessages                          = "updateChatHasScheduledMessages"
+	TypeUpdateChatIsBlocked                                     = "updateChatIsBlocked"
+	TypeUpdateChatIsMarkedAsUnread                              = "updateChatIsMarkedAsUnread"
+	TypeUpdateChatFilters                                       = "updateChatFilters"
+	TypeUpdateChatOnlineMemberCount                             = "updateChatOnlineMemberCount"
+	TypeUpdateScopeNotificationSettings                         = "updateScopeNotificationSettings"
+	TypeUpdateNotification                                      = "updateNotification"
+	TypeUpdateNotificationGroup                                 = "updateNotificationGroup"
+	TypeUpdateActiveNotifications                               = "updateActiveNotifications"
+	TypeUpdateHavePendingNotifications                          = "updateHavePendingNotifications"
+	TypeUpdateDeleteMessages                                    = "updateDeleteMessages"
+	TypeUpdateChatAction                                        = "updateChatAction"
+	TypeUpdateUserStatus                                        = "updateUserStatus"
+	TypeUpdateUser                                              = "updateUser"
+	TypeUpdateBasicGroup                                        = "updateBasicGroup"
+	TypeUpdateSupergroup                                        = "updateSupergroup"
+	TypeUpdateSecretChat                                        = "updateSecretChat"
+	TypeUpdateUserFullInfo                                      = "updateUserFullInfo"
+	TypeUpdateBasicGroupFullInfo                                = "updateBasicGroupFullInfo"
+	TypeUpdateSupergroupFullInfo                                = "updateSupergroupFullInfo"
+	TypeUpdateServiceNotification                               = "updateServiceNotification"
+	TypeUpdateFile                                              = "updateFile"
+	TypeUpdateFileGenerationStart                               = "updateFileGenerationStart"
+	TypeUpdateFileGenerationStop                                = "updateFileGenerationStop"
+	TypeUpdateFileDownloads                                     = "updateFileDownloads"
+	TypeUpdateFileAddedToDownloads                              = "updateFileAddedToDownloads"
+	TypeUpdateFileDownload                                      = "updateFileDownload"
+	TypeUpdateFileRemovedFromDownloads                          = "updateFileRemovedFromDownloads"
+	TypeUpdateCall                                              = "updateCall"
+	TypeUpdateGroupCall                                         = "updateGroupCall"
+	TypeUpdateGroupCallParticipant                              = "updateGroupCallParticipant"
+	TypeUpdateNewCallSignalingData                              = "updateNewCallSignalingData"
+	TypeUpdateUserPrivacySettingRules                           = "updateUserPrivacySettingRules"
+	TypeUpdateUnreadMessageCount                                = "updateUnreadMessageCount"
+	TypeUpdateUnreadChatCount                                   = "updateUnreadChatCount"
+	TypeUpdateOption                                            = "updateOption"
+	TypeUpdateStickerSet                                        = "updateStickerSet"
+	TypeUpdateInstalledStickerSets                              = "updateInstalledStickerSets"
+	TypeUpdateTrendingStickerSets                               = "updateTrendingStickerSets"
+	TypeUpdateRecentStickers                                    = "updateRecentStickers"
+	TypeUpdateFavoriteStickers                                  = "updateFavoriteStickers"
+	TypeUpdateSavedAnimations                                   = "updateSavedAnimations"
+	TypeUpdateSavedNotificationSounds                           = "updateSavedNotificationSounds"
+	TypeUpdateSelectedBackground                                = "updateSelectedBackground"
+	TypeUpdateChatThemes                                        = "updateChatThemes"
+	TypeUpdateLanguagePackStrings                               = "updateLanguagePackStrings"
+	TypeUpdateConnectionState                                   = "updateConnectionState"
+	TypeUpdateTermsOfService                                    = "updateTermsOfService"
+	TypeUpdateUsersNearby                                       = "updateUsersNearby"
+	TypeUpdateAttachmentMenuBots                                = "updateAttachmentMenuBots"
+	TypeUpdateWebAppMessageSent                                 = "updateWebAppMessageSent"
+	TypeUpdateReactions                                         = "updateReactions"
+	TypeUpdateDiceEmojis                                        = "updateDiceEmojis"
+	TypeUpdateAnimatedEmojiMessageClicked                       = "updateAnimatedEmojiMessageClicked"
+	TypeUpdateAnimationSearchParameters                         = "updateAnimationSearchParameters"
+	TypeUpdateSuggestedActions                                  = "updateSuggestedActions"
+	TypeUpdateNewInlineQuery                                    = "updateNewInlineQuery"
+	TypeUpdateNewChosenInlineResult                             = "updateNewChosenInlineResult"
+	TypeUpdateNewCallbackQuery                                  = "updateNewCallbackQuery"
+	TypeUpdateNewInlineCallbackQuery                            = "updateNewInlineCallbackQuery"
+	TypeUpdateNewShippingQuery                                  = "updateNewShippingQuery"
+	TypeUpdateNewPreCheckoutQuery                               = "updateNewPreCheckoutQuery"
+	TypeUpdateNewCustomEvent                                    = "updateNewCustomEvent"
+	TypeUpdateNewCustomQuery                                    = "updateNewCustomQuery"
+	TypeUpdatePoll                                              = "updatePoll"
+	TypeUpdatePollAnswer                                        = "updatePollAnswer"
+	TypeUpdateChatMember                                        = "updateChatMember"
+	TypeUpdateNewChatJoinRequest                                = "updateNewChatJoinRequest"
+	TypeUpdates                                                 = "updates"
+	TypeLogStreamDefault                                        = "logStreamDefault"
+	TypeLogStreamFile                                           = "logStreamFile"
+	TypeLogStreamEmpty                                          = "logStreamEmpty"
+	TypeLogVerbosityLevel                                       = "logVerbosityLevel"
+	TypeLogTags                                                 = "logTags"
+	TypeUserSupportInfo                                         = "userSupportInfo"
+	TypeTestInt                                                 = "testInt"
+	TypeTestString                                              = "testString"
+	TypeTestBytes                                               = "testBytes"
+	TypeTestVectorInt                                           = "testVectorInt"
+	TypeTestVectorIntObject                                     = "testVectorIntObject"
+	TypeTestVectorString                                        = "testVectorString"
+	TypeTestVectorStringObject                                  = "testVectorStringObject"
 )
 
 // Provides information about the method by which an authentication code is delivered to the user
@@ -1437,6 +1458,11 @@ type ThumbnailFormat interface {
 // Part of the face, relative to which a mask is placed
 type MaskPoint interface {
 	MaskPointType() string
+}
+
+// Describes format of a sticker
+type StickerFormat interface {
+	StickerFormatType() string
 }
 
 // Describes type of a sticker
@@ -1669,6 +1695,11 @@ type DiceStickers interface {
 	DiceStickersType() string
 }
 
+// Describes result of speech recognition in a voice note
+type SpeechRecognitionResult interface {
+	SpeechRecognitionResultType() string
+}
+
 // Represents a single result of an inline query; for bots only
 type InputInlineQueryResult interface {
 	InputInlineQueryResultType() string
@@ -1707,6 +1738,11 @@ type PremiumFeature interface {
 // Describes a source from which the Premium features screen is opened
 type PremiumSource interface {
 	PremiumSourceType() string
+}
+
+// Describes a purpose of an in-store payment
+type StorePaymentPurpose interface {
+	StorePaymentPurposeType() string
 }
 
 // Represents a data needed to subscribe for push notifications through registerDevice method. To use specific push notification service, the correct application platform must be specified and a valid server authentication data must be uploaded at https://my.telegram.org
@@ -2478,7 +2514,7 @@ func (*AuthorizationStateWaitRegistration) AuthorizationStateType() string {
 	return TypeAuthorizationStateWaitRegistration
 }
 
-// The user has been authorized, but needs to enter a password to start using the application
+// The user has been authorized, but needs to enter a 2-step verification password to start using the application
 type AuthorizationStateWaitPassword struct {
 	meta
 	// Hint for the password; may be empty
@@ -2622,7 +2658,7 @@ type PasswordState struct {
 	HasPassportData bool `json:"has_passport_data"`
 	// Information about the recovery email address to which the confirmation email was sent; may be null
 	RecoveryEmailAddressCodeInfo *EmailAddressAuthenticationCodeInfo `json:"recovery_email_address_code_info"`
-	// If not 0, point in time (Unix timestamp) after which the password can be reset immediately using resetPassword
+	// If not 0, point in time (Unix timestamp) after which the 2-step verification password can be reset immediately using resetPassword
 	PendingResetDate int32 `json:"pending_reset_date"`
 }
 
@@ -3339,85 +3375,108 @@ func (maskPosition *MaskPosition) UnmarshalJSON(data []byte) error {
 }
 
 // The sticker is an image in WEBP format
-type StickerTypeStatic struct {
+type StickerFormatWebp struct {
 	meta
 }
 
-func (entity *StickerTypeStatic) MarshalJSON() ([]byte, error) {
+func (entity *StickerFormatWebp) MarshalJSON() ([]byte, error) {
 	entity.meta.Type = entity.GetType()
 
-	type stub StickerTypeStatic
+	type stub StickerFormatWebp
 
 	return json.Marshal((*stub)(entity))
 }
 
-func (*StickerTypeStatic) GetClass() string {
-	return ClassStickerType
+func (*StickerFormatWebp) GetClass() string {
+	return ClassStickerFormat
 }
 
-func (*StickerTypeStatic) GetType() string {
-	return TypeStickerTypeStatic
+func (*StickerFormatWebp) GetType() string {
+	return TypeStickerFormatWebp
 }
 
-func (*StickerTypeStatic) StickerTypeType() string {
-	return TypeStickerTypeStatic
+func (*StickerFormatWebp) StickerFormatType() string {
+	return TypeStickerFormatWebp
 }
 
 // The sticker is an animation in TGS format
-type StickerTypeAnimated struct {
+type StickerFormatTgs struct {
 	meta
 }
 
-func (entity *StickerTypeAnimated) MarshalJSON() ([]byte, error) {
+func (entity *StickerFormatTgs) MarshalJSON() ([]byte, error) {
 	entity.meta.Type = entity.GetType()
 
-	type stub StickerTypeAnimated
+	type stub StickerFormatTgs
 
 	return json.Marshal((*stub)(entity))
 }
 
-func (*StickerTypeAnimated) GetClass() string {
-	return ClassStickerType
+func (*StickerFormatTgs) GetClass() string {
+	return ClassStickerFormat
 }
 
-func (*StickerTypeAnimated) GetType() string {
-	return TypeStickerTypeAnimated
+func (*StickerFormatTgs) GetType() string {
+	return TypeStickerFormatTgs
 }
 
-func (*StickerTypeAnimated) StickerTypeType() string {
-	return TypeStickerTypeAnimated
+func (*StickerFormatTgs) StickerFormatType() string {
+	return TypeStickerFormatTgs
 }
 
 // The sticker is a video in WEBM format
-type StickerTypeVideo struct {
+type StickerFormatWebm struct {
 	meta
 }
 
-func (entity *StickerTypeVideo) MarshalJSON() ([]byte, error) {
+func (entity *StickerFormatWebm) MarshalJSON() ([]byte, error) {
 	entity.meta.Type = entity.GetType()
 
-	type stub StickerTypeVideo
+	type stub StickerFormatWebm
 
 	return json.Marshal((*stub)(entity))
 }
 
-func (*StickerTypeVideo) GetClass() string {
+func (*StickerFormatWebm) GetClass() string {
+	return ClassStickerFormat
+}
+
+func (*StickerFormatWebm) GetType() string {
+	return TypeStickerFormatWebm
+}
+
+func (*StickerFormatWebm) StickerFormatType() string {
+	return TypeStickerFormatWebm
+}
+
+// The sticker is a regular sticker
+type StickerTypeRegular struct {
+	meta
+}
+
+func (entity *StickerTypeRegular) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub StickerTypeRegular
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*StickerTypeRegular) GetClass() string {
 	return ClassStickerType
 }
 
-func (*StickerTypeVideo) GetType() string {
-	return TypeStickerTypeVideo
+func (*StickerTypeRegular) GetType() string {
+	return TypeStickerTypeRegular
 }
 
-func (*StickerTypeVideo) StickerTypeType() string {
-	return TypeStickerTypeVideo
+func (*StickerTypeRegular) StickerTypeType() string {
+	return TypeStickerTypeRegular
 }
 
 // The sticker is a mask in WEBP format to be placed on photos or videos
 type StickerTypeMask struct {
 	meta
-	// Position where the mask is placed; may be null
-	MaskPosition *MaskPosition `json:"mask_position"`
 }
 
 func (entity *StickerTypeMask) MarshalJSON() ([]byte, error) {
@@ -3438,6 +3497,31 @@ func (*StickerTypeMask) GetType() string {
 
 func (*StickerTypeMask) StickerTypeType() string {
 	return TypeStickerTypeMask
+}
+
+// The sticker is a custom emoji to be used inside message text and caption
+type StickerTypeCustomEmoji struct {
+	meta
+}
+
+func (entity *StickerTypeCustomEmoji) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub StickerTypeCustomEmoji
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*StickerTypeCustomEmoji) GetClass() string {
+	return ClassStickerType
+}
+
+func (*StickerTypeCustomEmoji) GetType() string {
+	return TypeStickerTypeCustomEmoji
+}
+
+func (*StickerTypeCustomEmoji) StickerTypeType() string {
+	return TypeStickerTypeCustomEmoji
 }
 
 // Represents a closed vector path. The path begins at the end point of the last command
@@ -3620,8 +3704,10 @@ type Audio struct {
 	MimeType string `json:"mime_type"`
 	// The minithumbnail of the album cover; may be null
 	AlbumCoverMinithumbnail *Minithumbnail `json:"album_cover_minithumbnail"`
-	// The thumbnail of the album cover in JPEG format; as defined by the sender. The full size thumbnail is supposed to be extracted from the downloaded file; may be null
+	// The thumbnail of the album cover in JPEG format; as defined by the sender. The full size thumbnail is supposed to be extracted from the downloaded audio file; may be null
 	AlbumCoverThumbnail *Thumbnail `json:"album_cover_thumbnail"`
+	// Album cover variants to use if the downloaded audio file contains no album cover. Provided thumbnail dimensions are approximate
+	ExternalAlbumCovers []*Thumbnail `json:"external_album_covers"`
 	// File containing the audio
 	Audio *File `json:"audio"`
 }
@@ -3711,13 +3797,21 @@ type Sticker struct {
 	Height int32 `json:"height"`
 	// Emoji corresponding to the sticker
 	Emoji string `json:"emoji"`
+	// Sticker format
+	Format StickerFormat `json:"format"`
 	// Sticker type
 	Type StickerType `json:"type"`
+	// Position where the mask is placed; may be null even the sticker is a mask
+	MaskPosition *MaskPosition `json:"mask_position"`
+	// Identifier of the emoji if the sticker is a custom emoji
+	CustomEmojiId JsonInt64 `json:"custom_emoji_id"`
 	// Sticker's outline represented as a list of closed vector paths; may be empty. The coordinate system origin is in the upper-left corner
 	Outline []*ClosedVectorPath `json:"outline"`
 	// Sticker thumbnail in WEBP or JPEG format; may be null
 	Thumbnail *Thumbnail `json:"thumbnail"`
-	// Premium animation of the sticker; may be null. If present, only Premium users can send the sticker
+	// True, if only Premium users can use the sticker
+	IsPremium bool `json:"is_premium"`
+	// Premium animation of the sticker; may be null
 	PremiumAnimation *File `json:"premium_animation"`
 	// File containing the sticker
 	Sticker *File `json:"sticker"`
@@ -3745,9 +3839,13 @@ func (sticker *Sticker) UnmarshalJSON(data []byte) error {
 		Width            int32               `json:"width"`
 		Height           int32               `json:"height"`
 		Emoji            string              `json:"emoji"`
+		Format           json.RawMessage     `json:"format"`
 		Type             json.RawMessage     `json:"type"`
+		MaskPosition     *MaskPosition       `json:"mask_position"`
+		CustomEmojiId    JsonInt64           `json:"custom_emoji_id"`
 		Outline          []*ClosedVectorPath `json:"outline"`
 		Thumbnail        *Thumbnail          `json:"thumbnail"`
+		IsPremium        bool                `json:"is_premium"`
 		PremiumAnimation *File               `json:"premium_animation"`
 		Sticker          *File               `json:"sticker"`
 	}
@@ -3761,10 +3859,16 @@ func (sticker *Sticker) UnmarshalJSON(data []byte) error {
 	sticker.Width = tmp.Width
 	sticker.Height = tmp.Height
 	sticker.Emoji = tmp.Emoji
+	sticker.MaskPosition = tmp.MaskPosition
+	sticker.CustomEmojiId = tmp.CustomEmojiId
 	sticker.Outline = tmp.Outline
 	sticker.Thumbnail = tmp.Thumbnail
+	sticker.IsPremium = tmp.IsPremium
 	sticker.PremiumAnimation = tmp.PremiumAnimation
 	sticker.Sticker = tmp.Sticker
+
+	fieldFormat, _ := UnmarshalStickerFormat(tmp.Format)
+	sticker.Format = fieldFormat
 
 	fieldType, _ := UnmarshalStickerType(tmp.Type)
 	sticker.Type = fieldType
@@ -3853,10 +3957,8 @@ type VoiceNote struct {
 	Waveform []byte `json:"waveform"`
 	// MIME type of the file; as defined by the sender
 	MimeType string `json:"mime_type"`
-	// True, if speech recognition is completed; Premium users only
-	IsRecognized bool `json:"is_recognized"`
-	// Recognized text of the voice note; Premium users only. Call recognizeSpeech to get recognized text of the voice note
-	RecognizedText string `json:"recognized_text"`
+	// Result of speech recognition in the voice note; may be null
+	SpeechRecognitionResult SpeechRecognitionResult `json:"speech_recognition_result"`
 	// File containing the voice note
 	Voice *File `json:"voice"`
 }
@@ -3877,14 +3979,39 @@ func (*VoiceNote) GetType() string {
 	return TypeVoiceNote
 }
 
-// Describes an animated representation of an emoji
+func (voiceNote *VoiceNote) UnmarshalJSON(data []byte) error {
+	var tmp struct {
+		Duration                int32           `json:"duration"`
+		Waveform                []byte          `json:"waveform"`
+		MimeType                string          `json:"mime_type"`
+		SpeechRecognitionResult json.RawMessage `json:"speech_recognition_result"`
+		Voice                   *File           `json:"voice"`
+	}
+
+	err := json.Unmarshal(data, &tmp)
+	if err != nil {
+		return err
+	}
+
+	voiceNote.Duration = tmp.Duration
+	voiceNote.Waveform = tmp.Waveform
+	voiceNote.MimeType = tmp.MimeType
+	voiceNote.Voice = tmp.Voice
+
+	fieldSpeechRecognitionResult, _ := UnmarshalSpeechRecognitionResult(tmp.SpeechRecognitionResult)
+	voiceNote.SpeechRecognitionResult = fieldSpeechRecognitionResult
+
+	return nil
+}
+
+// Describes an animated or custom representation of an emoji
 type AnimatedEmoji struct {
 	meta
-	// Animated sticker for the emoji
+	// Sticker for the emoji; may be null if yet unknown for a custom emoji. If the sticker is a custom emoji, it can have arbitrary format different from stickerFormatTgs
 	Sticker *Sticker `json:"sticker"`
 	// Emoji modifier fitzpatrick type; 0-6; 0 if none
 	FitzpatrickType int32 `json:"fitzpatrick_type"`
-	// File containing the sound to be played when the animated emoji is clicked; may be null. The sound is encoded with the Opus codec, and stored inside an OGG container
+	// File containing the sound to be played when the sticker is clicked; may be null. The sound is encoded with the Opus codec, and stored inside an OGG container
 	Sound *File `json:"sound"`
 }
 
@@ -4661,6 +4788,66 @@ func (*ChatAdministratorRights) GetType() string {
 	return TypeChatAdministratorRights
 }
 
+// Describes an option for gifting Telegram Premium to a user
+type PremiumGiftOption struct {
+	meta
+	// ISO 4217 currency code for Telegram Premium subscription payment
+	Currency string `json:"currency"`
+	// The amount to pay, in the smallest units of the currency
+	Amount int64 `json:"amount"`
+	// The discount associated with this gift option, as a percentage
+	DiscountPercentage int32 `json:"discount_percentage"`
+	// Number of month the Telegram Premium subscription will be active
+	MonthCount int32 `json:"month_count"`
+	// Identifier of the store product associated with the option
+	StoreProductId string `json:"store_product_id"`
+	// An internal link to be opened for gifting Telegram Premium to the user if store payment isn't possible; may be null if direct payment isn't available
+	PaymentLink InternalLinkType `json:"payment_link"`
+}
+
+func (entity *PremiumGiftOption) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub PremiumGiftOption
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*PremiumGiftOption) GetClass() string {
+	return ClassPremiumGiftOption
+}
+
+func (*PremiumGiftOption) GetType() string {
+	return TypePremiumGiftOption
+}
+
+func (premiumGiftOption *PremiumGiftOption) UnmarshalJSON(data []byte) error {
+	var tmp struct {
+		Currency           string          `json:"currency"`
+		Amount             int64           `json:"amount"`
+		DiscountPercentage int32           `json:"discount_percentage"`
+		MonthCount         int32           `json:"month_count"`
+		StoreProductId     string          `json:"store_product_id"`
+		PaymentLink        json.RawMessage `json:"payment_link"`
+	}
+
+	err := json.Unmarshal(data, &tmp)
+	if err != nil {
+		return err
+	}
+
+	premiumGiftOption.Currency = tmp.Currency
+	premiumGiftOption.Amount = tmp.Amount
+	premiumGiftOption.DiscountPercentage = tmp.DiscountPercentage
+	premiumGiftOption.MonthCount = tmp.MonthCount
+	premiumGiftOption.StoreProductId = tmp.StoreProductId
+
+	fieldPaymentLink, _ := UnmarshalInternalLinkType(tmp.PaymentLink)
+	premiumGiftOption.PaymentLink = fieldPaymentLink
+
+	return nil
+}
+
 // Represents a user
 type User struct {
 	meta
@@ -4827,10 +5014,14 @@ type UserFullInfo struct {
 	HasPrivateCalls bool `json:"has_private_calls"`
 	// True, if the user can't be linked in forwarded messages due to their privacy settings
 	HasPrivateForwards bool `json:"has_private_forwards"`
+	// True, if voice and video notes can't be sent or forwarded to the user
+	HasRestrictedVoiceAndVideoNoteMessages bool `json:"has_restricted_voice_and_video_note_messages"`
 	// True, if the current user needs to explicitly allow to share their phone number with the user when the method addContact is used
 	NeedPhoneNumberPrivacyException bool `json:"need_phone_number_privacy_exception"`
 	// A short user bio; may be null for bots
 	Bio *FormattedText `json:"bio"`
+	// The list of available options for gifting Telegram Premium to the user
+	PremiumGiftOptions []*PremiumGiftOption `json:"premium_gift_options"`
 	// Number of group chats where both the other user and the current user are a member; 0 for the current user
 	GroupInCommonCount int32 `json:"group_in_common_count"`
 	// For bots, information about the bot; may be null
@@ -6235,7 +6426,7 @@ type SecretChat struct {
 	IsOutbound bool `json:"is_outbound"`
 	// Hash of the currently used key for comparison with the hash of the chat partner's key. This is a string of 36 little-endian bytes, which must be split into groups of 2 bits, each denoting a pixel of one of 4 colors FFFFFF, D5E6F3, 2D5775, and 2F99C9. The pixels must be used to make a 12x12 square image filled from left to right, top to bottom. Alternatively, the first 32 bytes of the hash can be converted to the hexadecimal format and printed as 32 2-digit hex numbers
 	KeyHash []byte `json:"key_hash"`
-	// Secret chat layer; determines features supported by the chat partner's application. Nested text entities and underline and strikethrough entities are supported if the layer >= 101, files bigger than 2000MB are supported if the layer >= 143
+	// Secret chat layer; determines features supported by the chat partner's application. Nested text entities and underline and strikethrough entities are supported if the layer >= 101, files bigger than 2000MB are supported if the layer >= 143, spoiler and custom emoji text entities are supported if the layer >= 144
 	Layer int32 `json:"layer"`
 }
 
@@ -6853,7 +7044,7 @@ type Message struct {
 	CanGetAddedReactions bool `json:"can_get_added_reactions"`
 	// True, if the message statistics are available through getMessageStatistics
 	CanGetStatistics bool `json:"can_get_statistics"`
-	// True, if information about the message thread is available through getMessageThread
+	// True, if information about the message thread is available through getMessageThread and getMessageThreadHistory
 	CanGetMessageThread bool `json:"can_get_message_thread"`
 	// True, if chat members already viewed the message can be received through getMessageViewers
 	CanGetViewers bool `json:"can_get_viewers"`
@@ -8775,7 +8966,7 @@ func (*InlineKeyboardButtonTypeCallback) InlineKeyboardButtonTypeType() string {
 	return TypeInlineKeyboardButtonTypeCallback
 }
 
-// A button that asks for password of the current user and then sends a callback query to a bot
+// A button that asks for the 2-step verification password of the current user and then sends a callback query to a bot
 type InlineKeyboardButtonTypeCallbackWithPassword struct {
 	meta
 	// Data to be sent to the bot via a callback query
@@ -11897,7 +12088,7 @@ func (*ShippingOption) GetType() string {
 	return TypeShippingOption
 }
 
-// Contains information about saved card credentials
+// Contains information about saved payment credentials
 type SavedCredentials struct {
 	meta
 	// Unique identifier of the saved credentials
@@ -12119,6 +12310,31 @@ func (*PaymentProviderOther) PaymentProviderType() string {
 	return TypePaymentProviderOther
 }
 
+// Describes an additional payment option
+type PaymentOption struct {
+	meta
+	// Title for the payment option
+	Title string `json:"title"`
+	// Payment form URL to be opened in a web view
+	Url string `json:"url"`
+}
+
+func (entity *PaymentOption) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub PaymentOption
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*PaymentOption) GetClass() string {
+	return ClassPaymentOption
+}
+
+func (*PaymentOption) GetType() string {
+	return TypePaymentOption
+}
+
 // Contains information about an invoice payment form
 type PaymentForm struct {
 	meta
@@ -12132,13 +12348,15 @@ type PaymentForm struct {
 	PaymentProviderUserId int64 `json:"payment_provider_user_id"`
 	// Information about the payment provider
 	PaymentProvider PaymentProvider `json:"payment_provider"`
+	// The list of additional payment options
+	AdditionalPaymentOptions []*PaymentOption `json:"additional_payment_options"`
 	// Saved server-side order information; may be null
 	SavedOrderInfo *OrderInfo `json:"saved_order_info"`
-	// Information about saved card credentials; may be null
-	SavedCredentials *SavedCredentials `json:"saved_credentials"`
+	// The list of saved payment credentials
+	SavedCredentials []*SavedCredentials `json:"saved_credentials"`
 	// True, if the user can choose to save credentials
 	CanSaveCredentials bool `json:"can_save_credentials"`
-	// True, if the user will be able to save credentials protected by a password they set up
+	// True, if the user will be able to save credentials, if sets up a 2-step verification password
 	NeedPassword bool `json:"need_password"`
 	// Product title
 	ProductTitle string `json:"product_title"`
@@ -12166,18 +12384,19 @@ func (*PaymentForm) GetType() string {
 
 func (paymentForm *PaymentForm) UnmarshalJSON(data []byte) error {
 	var tmp struct {
-		Id                    JsonInt64         `json:"id"`
-		Invoice               *Invoice          `json:"invoice"`
-		SellerBotUserId       int64             `json:"seller_bot_user_id"`
-		PaymentProviderUserId int64             `json:"payment_provider_user_id"`
-		PaymentProvider       json.RawMessage   `json:"payment_provider"`
-		SavedOrderInfo        *OrderInfo        `json:"saved_order_info"`
-		SavedCredentials      *SavedCredentials `json:"saved_credentials"`
-		CanSaveCredentials    bool              `json:"can_save_credentials"`
-		NeedPassword          bool              `json:"need_password"`
-		ProductTitle          string            `json:"product_title"`
-		ProductDescription    *FormattedText    `json:"product_description"`
-		ProductPhoto          *Photo            `json:"product_photo"`
+		Id                       JsonInt64           `json:"id"`
+		Invoice                  *Invoice            `json:"invoice"`
+		SellerBotUserId          int64               `json:"seller_bot_user_id"`
+		PaymentProviderUserId    int64               `json:"payment_provider_user_id"`
+		PaymentProvider          json.RawMessage     `json:"payment_provider"`
+		AdditionalPaymentOptions []*PaymentOption    `json:"additional_payment_options"`
+		SavedOrderInfo           *OrderInfo          `json:"saved_order_info"`
+		SavedCredentials         []*SavedCredentials `json:"saved_credentials"`
+		CanSaveCredentials       bool                `json:"can_save_credentials"`
+		NeedPassword             bool                `json:"need_password"`
+		ProductTitle             string              `json:"product_title"`
+		ProductDescription       *FormattedText      `json:"product_description"`
+		ProductPhoto             *Photo              `json:"product_photo"`
 	}
 
 	err := json.Unmarshal(data, &tmp)
@@ -12189,6 +12408,7 @@ func (paymentForm *PaymentForm) UnmarshalJSON(data []byte) error {
 	paymentForm.Invoice = tmp.Invoice
 	paymentForm.SellerBotUserId = tmp.SellerBotUserId
 	paymentForm.PaymentProviderUserId = tmp.PaymentProviderUserId
+	paymentForm.AdditionalPaymentOptions = tmp.AdditionalPaymentOptions
 	paymentForm.SavedOrderInfo = tmp.SavedOrderInfo
 	paymentForm.SavedCredentials = tmp.SavedCredentials
 	paymentForm.CanSaveCredentials = tmp.CanSaveCredentials
@@ -15804,6 +16024,39 @@ func (*MessagePaymentSuccessfulBot) MessageContentType() string {
 	return TypeMessagePaymentSuccessfulBot
 }
 
+// Telegram Premium was gifted to the user
+type MessageGiftedPremium struct {
+	meta
+	// Currency for the paid amount
+	Currency string `json:"currency"`
+	// The paid amount, in the smallest units of the currency
+	Amount int64 `json:"amount"`
+	// Number of month the Telegram Premium subscription will be active
+	MonthCount int32 `json:"month_count"`
+	// A sticker to be shown in the message; may be null if unknown
+	Sticker *Sticker `json:"sticker"`
+}
+
+func (entity *MessageGiftedPremium) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub MessageGiftedPremium
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*MessageGiftedPremium) GetClass() string {
+	return ClassMessageContent
+}
+
+func (*MessageGiftedPremium) GetType() string {
+	return TypeMessageGiftedPremium
+}
+
+func (*MessageGiftedPremium) MessageContentType() string {
+	return TypeMessageGiftedPremium
+}
+
 // A contact has registered with Telegram
 type MessageContactRegistered struct {
 	meta
@@ -16363,7 +16616,7 @@ func (*TextEntityTypeStrikethrough) TextEntityTypeType() string {
 	return TypeTextEntityTypeStrikethrough
 }
 
-// A spoiler text. Not supported in secret chats
+// A spoiler text
 type TextEntityTypeSpoiler struct {
 	meta
 }
@@ -16517,6 +16770,33 @@ func (*TextEntityTypeMentionName) GetType() string {
 
 func (*TextEntityTypeMentionName) TextEntityTypeType() string {
 	return TypeTextEntityTypeMentionName
+}
+
+// A custom emoji. The text behind a custom emoji must be an emoji. Only premium users can use premium custom emoji
+type TextEntityTypeCustomEmoji struct {
+	meta
+	// Unique identifier of the custom emoji
+	CustomEmojiId JsonInt64 `json:"custom_emoji_id"`
+}
+
+func (entity *TextEntityTypeCustomEmoji) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub TextEntityTypeCustomEmoji
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*TextEntityTypeCustomEmoji) GetClass() string {
+	return ClassTextEntityType
+}
+
+func (*TextEntityTypeCustomEmoji) GetType() string {
+	return TypeTextEntityTypeCustomEmoji
+}
+
+func (*TextEntityTypeCustomEmoji) TextEntityTypeType() string {
+	return TypeTextEntityTypeCustomEmoji
 }
 
 // A media timestamp
@@ -16728,7 +17008,7 @@ func (*MessageCopyOptions) GetType() string {
 // A text message
 type InputMessageText struct {
 	meta
-	// Formatted text to be sent; 1-GetOption("message_text_length_max") characters. Only Bold, Italic, Underline, Strikethrough, Spoiler, Code, Pre, PreCode, TextUrl and MentionName entities are allowed to be specified manually
+	// Formatted text to be sent; 1-GetOption("message_text_length_max") characters. Only Bold, Italic, Underline, Strikethrough, Spoiler, CustomEmoji, Code, Pre, PreCode, TextUrl and MentionName entities are allowed to be specified manually
 	Text *FormattedText `json:"text"`
 	// True, if rich web page previews for URLs in the message text must be disabled
 	DisableWebPagePreview bool `json:"disable_web_page_preview"`
@@ -18584,6 +18864,8 @@ type StickerSet struct {
 	IsArchived bool `json:"is_archived"`
 	// True, if the sticker set is official
 	IsOfficial bool `json:"is_official"`
+	// Format of the stickers in the set
+	StickerFormat StickerFormat `json:"sticker_format"`
 	// Type of the stickers in the set
 	StickerType StickerType `json:"sticker_type"`
 	// True for already viewed trending sticker sets
@@ -18620,6 +18902,7 @@ func (stickerSet *StickerSet) UnmarshalJSON(data []byte) error {
 		IsInstalled      bool                `json:"is_installed"`
 		IsArchived       bool                `json:"is_archived"`
 		IsOfficial       bool                `json:"is_official"`
+		StickerFormat    json.RawMessage     `json:"sticker_format"`
 		StickerType      json.RawMessage     `json:"sticker_type"`
 		IsViewed         bool                `json:"is_viewed"`
 		Stickers         []*Sticker          `json:"stickers"`
@@ -18642,6 +18925,9 @@ func (stickerSet *StickerSet) UnmarshalJSON(data []byte) error {
 	stickerSet.IsViewed = tmp.IsViewed
 	stickerSet.Stickers = tmp.Stickers
 	stickerSet.Emojis = tmp.Emojis
+
+	fieldStickerFormat, _ := UnmarshalStickerFormat(tmp.StickerFormat)
+	stickerSet.StickerFormat = fieldStickerFormat
 
 	fieldStickerType, _ := UnmarshalStickerType(tmp.StickerType)
 	stickerSet.StickerType = fieldStickerType
@@ -18668,6 +18954,8 @@ type StickerSetInfo struct {
 	IsArchived bool `json:"is_archived"`
 	// True, if the sticker set is official
 	IsOfficial bool `json:"is_official"`
+	// Format of the stickers in the set
+	StickerFormat StickerFormat `json:"sticker_format"`
 	// Type of the stickers in the set
 	StickerType StickerType `json:"sticker_type"`
 	// True for already viewed trending sticker sets
@@ -18704,6 +18992,7 @@ func (stickerSetInfo *StickerSetInfo) UnmarshalJSON(data []byte) error {
 		IsInstalled      bool                `json:"is_installed"`
 		IsArchived       bool                `json:"is_archived"`
 		IsOfficial       bool                `json:"is_official"`
+		StickerFormat    json.RawMessage     `json:"sticker_format"`
 		StickerType      json.RawMessage     `json:"sticker_type"`
 		IsViewed         bool                `json:"is_viewed"`
 		Size             int32               `json:"size"`
@@ -18726,6 +19015,9 @@ func (stickerSetInfo *StickerSetInfo) UnmarshalJSON(data []byte) error {
 	stickerSetInfo.IsViewed = tmp.IsViewed
 	stickerSetInfo.Size = tmp.Size
 	stickerSetInfo.Covers = tmp.Covers
+
+	fieldStickerFormat, _ := UnmarshalStickerFormat(tmp.StickerFormat)
+	stickerSetInfo.StickerFormat = fieldStickerFormat
 
 	fieldStickerType, _ := UnmarshalStickerType(tmp.StickerType)
 	stickerSetInfo.StickerType = fieldStickerType
@@ -20305,6 +20597,87 @@ func (*ImportedContacts) GetType() string {
 	return TypeImportedContacts
 }
 
+// The speech recognition is ongoing
+type SpeechRecognitionResultPending struct {
+	meta
+	// Partially recognized text
+	PartialText string `json:"partial_text"`
+}
+
+func (entity *SpeechRecognitionResultPending) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub SpeechRecognitionResultPending
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*SpeechRecognitionResultPending) GetClass() string {
+	return ClassSpeechRecognitionResult
+}
+
+func (*SpeechRecognitionResultPending) GetType() string {
+	return TypeSpeechRecognitionResultPending
+}
+
+func (*SpeechRecognitionResultPending) SpeechRecognitionResultType() string {
+	return TypeSpeechRecognitionResultPending
+}
+
+// The speech recognition successfully finished
+type SpeechRecognitionResultText struct {
+	meta
+	// Recognized text
+	Text string `json:"text"`
+}
+
+func (entity *SpeechRecognitionResultText) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub SpeechRecognitionResultText
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*SpeechRecognitionResultText) GetClass() string {
+	return ClassSpeechRecognitionResult
+}
+
+func (*SpeechRecognitionResultText) GetType() string {
+	return TypeSpeechRecognitionResultText
+}
+
+func (*SpeechRecognitionResultText) SpeechRecognitionResultType() string {
+	return TypeSpeechRecognitionResultText
+}
+
+// The speech recognition failed
+type SpeechRecognitionResultError struct {
+	meta
+	// Received error
+	Error *Error `json:"error"`
+}
+
+func (entity *SpeechRecognitionResultError) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub SpeechRecognitionResultError
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*SpeechRecognitionResultError) GetClass() string {
+	return ClassSpeechRecognitionResult
+}
+
+func (*SpeechRecognitionResultError) GetType() string {
+	return TypeSpeechRecognitionResultError
+}
+
+func (*SpeechRecognitionResultError) SpeechRecognitionResultType() string {
+	return TypeSpeechRecognitionResultError
+}
+
 // Describes a color to highlight a bot added to attachment menu
 type AttachmentMenuBotColor struct {
 	meta
@@ -21785,7 +22158,7 @@ func (*CallbackQueryPayloadData) CallbackQueryPayloadType() string {
 // The payload for a callback button requiring password
 type CallbackQueryPayloadDataWithPassword struct {
 	meta
-	// The password for the current user
+	// The 2-step verification password for the current user
 	Password string `json:"password"`
 	// Data that was attached to the callback button
 	Data []byte `json:"data"`
@@ -23798,6 +24171,31 @@ func (*PremiumFeatureUniqueStickers) PremiumFeatureType() string {
 	return TypePremiumFeatureUniqueStickers
 }
 
+// Allowed to use custom emoji stickers in message texts and captions
+type PremiumFeatureCustomEmoji struct {
+	meta
+}
+
+func (entity *PremiumFeatureCustomEmoji) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub PremiumFeatureCustomEmoji
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*PremiumFeatureCustomEmoji) GetClass() string {
+	return ClassPremiumFeature
+}
+
+func (*PremiumFeatureCustomEmoji) GetType() string {
+	return TypePremiumFeatureCustomEmoji
+}
+
+func (*PremiumFeatureCustomEmoji) PremiumFeatureType() string {
+	return TypePremiumFeatureCustomEmoji
+}
+
 // Ability to change position of the main chat list, archive and mute all new chats from non-contacts, and completely disable notifications about the user's contacts joined Telegram
 type PremiumFeatureAdvancedChatManagement struct {
 	meta
@@ -23953,7 +24351,7 @@ type PremiumFeatures struct {
 	Features []PremiumFeature `json:"features"`
 	// The list of limits, increased for Premium users
 	Limits []*PremiumLimit `json:"limits"`
-	// An internal link to be opened to pay for Telegram Premium if store payment isn't possible; may be null if direct payment isn't available. If the link has type internalLinkTypeBotStart, then sendBotStartMessage must be called automatically
+	// An internal link to be opened to pay for Telegram Premium if store payment isn't possible; may be null if direct payment isn't available
 	PaymentLink InternalLinkType `json:"payment_link"`
 }
 
@@ -24205,6 +24603,64 @@ func (*PremiumState) GetClass() string {
 
 func (*PremiumState) GetType() string {
 	return TypePremiumState
+}
+
+// The user subscribed to Telegram Premium
+type StorePaymentPurposePremiumSubscription struct {
+	meta
+	// Pass true if this is a restore of a Telegram Premium purchase; only for App Store
+	IsRestore bool `json:"is_restore"`
+}
+
+func (entity *StorePaymentPurposePremiumSubscription) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub StorePaymentPurposePremiumSubscription
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*StorePaymentPurposePremiumSubscription) GetClass() string {
+	return ClassStorePaymentPurpose
+}
+
+func (*StorePaymentPurposePremiumSubscription) GetType() string {
+	return TypeStorePaymentPurposePremiumSubscription
+}
+
+func (*StorePaymentPurposePremiumSubscription) StorePaymentPurposeType() string {
+	return TypeStorePaymentPurposePremiumSubscription
+}
+
+// The user gifted Telegram Premium to another user
+type StorePaymentPurposeGiftedPremium struct {
+	meta
+	// Identifier of the user for which Premium was gifted
+	UserId int64 `json:"user_id"`
+	// ISO 4217 currency code of the payment currency
+	Currency string `json:"currency"`
+	// Paid amount, in the smallest units of the currency
+	Amount int64 `json:"amount"`
+}
+
+func (entity *StorePaymentPurposeGiftedPremium) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub StorePaymentPurposeGiftedPremium
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*StorePaymentPurposeGiftedPremium) GetClass() string {
+	return ClassStorePaymentPurpose
+}
+
+func (*StorePaymentPurposeGiftedPremium) GetType() string {
+	return TypeStorePaymentPurposeGiftedPremium
+}
+
+func (*StorePaymentPurposeGiftedPremium) StorePaymentPurposeType() string {
+	return TypeStorePaymentPurposeGiftedPremium
 }
 
 // A token for Firebase Cloud Messaging
@@ -27486,6 +27942,31 @@ func (*UserPrivacySettingAllowFindingByPhoneNumber) UserPrivacySettingType() str
 	return TypeUserPrivacySettingAllowFindingByPhoneNumber
 }
 
+// A privacy setting for managing whether the user can receive voice and video messages in private chats
+type UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages struct {
+	meta
+}
+
+func (entity *UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages) GetClass() string {
+	return ClassUserPrivacySetting
+}
+
+func (*UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages) GetType() string {
+	return TypeUserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages
+}
+
+func (*UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages) UserPrivacySettingType() string {
+	return TypeUserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages
+}
+
 // Contains information about the period of inactivity after which the current user's account will automatically be deleted
 type AccountTtl struct {
 	meta
@@ -27941,7 +28422,7 @@ type Session struct {
 	Id JsonInt64 `json:"id"`
 	// True, if this session is the current session
 	IsCurrent bool `json:"is_current"`
-	// True, if a password is needed to complete authorization of the session
+	// True, if a 2-step verification password is needed to complete authorization of the session
 	IsPasswordPending bool `json:"is_password_pending"`
 	// True, if incoming secret chats can be accepted by the session
 	CanAcceptSecretChats bool `json:"can_accept_secret_chats"`
@@ -28618,6 +29099,8 @@ type InternalLinkTypeBotStart struct {
 	BotUsername string `json:"bot_username"`
 	// The parameter to be passed to sendBotStartMessage
 	StartParameter string `json:"start_parameter"`
+	// True, if sendBotStartMessage must be called automatically without showing the START button
+	Autostart bool `json:"autostart"`
 }
 
 func (entity *InternalLinkTypeBotStart) MarshalJSON() ([]byte, error) {
@@ -29159,6 +29642,31 @@ func (*InternalLinkTypeQrCodeAuthentication) GetType() string {
 
 func (*InternalLinkTypeQrCodeAuthentication) InternalLinkTypeType() string {
 	return TypeInternalLinkTypeQrCodeAuthentication
+}
+
+// The link forces restore of App Store purchases when opened. For official iOS application only
+type InternalLinkTypeRestorePurchases struct {
+	meta
+}
+
+func (entity *InternalLinkTypeRestorePurchases) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub InternalLinkTypeRestorePurchases
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*InternalLinkTypeRestorePurchases) GetClass() string {
+	return ClassInternalLinkType
+}
+
+func (*InternalLinkTypeRestorePurchases) GetType() string {
+	return TypeInternalLinkTypeRestorePurchases
+}
+
+func (*InternalLinkTypeRestorePurchases) InternalLinkTypeType() string {
+	return TypeInternalLinkTypeRestorePurchases
 }
 
 // The link is a link to application settings
@@ -31361,8 +31869,10 @@ type InputSticker struct {
 	Sticker InputFile `json:"sticker"`
 	// Emojis corresponding to the sticker
 	Emojis string `json:"emojis"`
-	// Sticker type
-	Type StickerType `json:"type"`
+	// Sticker format
+	Format StickerFormat `json:"format"`
+	// Position where the mask is placed; pass null if not specified
+	MaskPosition *MaskPosition `json:"mask_position"`
 }
 
 func (entity *InputSticker) MarshalJSON() ([]byte, error) {
@@ -31383,9 +31893,10 @@ func (*InputSticker) GetType() string {
 
 func (inputSticker *InputSticker) UnmarshalJSON(data []byte) error {
 	var tmp struct {
-		Sticker json.RawMessage `json:"sticker"`
-		Emojis  string          `json:"emojis"`
-		Type    json.RawMessage `json:"type"`
+		Sticker      json.RawMessage `json:"sticker"`
+		Emojis       string          `json:"emojis"`
+		Format       json.RawMessage `json:"format"`
+		MaskPosition *MaskPosition   `json:"mask_position"`
 	}
 
 	err := json.Unmarshal(data, &tmp)
@@ -31394,12 +31905,13 @@ func (inputSticker *InputSticker) UnmarshalJSON(data []byte) error {
 	}
 
 	inputSticker.Emojis = tmp.Emojis
+	inputSticker.MaskPosition = tmp.MaskPosition
 
 	fieldSticker, _ := UnmarshalInputFile(tmp.Sticker)
 	inputSticker.Sticker = fieldSticker
 
-	fieldType, _ := UnmarshalStickerType(tmp.Type)
-	inputSticker.Type = fieldType
+	fieldFormat, _ := UnmarshalStickerFormat(tmp.Format)
+	inputSticker.Format = fieldFormat
 
 	return nil
 }
@@ -34614,8 +35126,8 @@ func (*UpdateStickerSet) UpdateType() string {
 // The list of installed sticker sets was updated
 type UpdateInstalledStickerSets struct {
 	meta
-	// True, if the list of installed mask sticker sets was updated
-	IsMasks bool `json:"is_masks"`
+	// Type of the affected stickers
+	StickerType StickerType `json:"sticker_type"`
 	// The new list of installed ordinary sticker sets
 	StickerSetIds []JsonInt64 `json:"sticker_set_ids"`
 }
@@ -34640,9 +35152,30 @@ func (*UpdateInstalledStickerSets) UpdateType() string {
 	return TypeUpdateInstalledStickerSets
 }
 
+func (updateInstalledStickerSets *UpdateInstalledStickerSets) UnmarshalJSON(data []byte) error {
+	var tmp struct {
+		StickerType   json.RawMessage `json:"sticker_type"`
+		StickerSetIds []JsonInt64     `json:"sticker_set_ids"`
+	}
+
+	err := json.Unmarshal(data, &tmp)
+	if err != nil {
+		return err
+	}
+
+	updateInstalledStickerSets.StickerSetIds = tmp.StickerSetIds
+
+	fieldStickerType, _ := UnmarshalStickerType(tmp.StickerType)
+	updateInstalledStickerSets.StickerType = fieldStickerType
+
+	return nil
+}
+
 // The list of trending sticker sets was updated or some of them were viewed
 type UpdateTrendingStickerSets struct {
 	meta
+	// Type of the affected stickers
+	StickerType StickerType `json:"sticker_type"`
 	// The prefix of the list of trending sticker sets with the newest trending sticker sets
 	StickerSets *TrendingStickerSets `json:"sticker_sets"`
 }
@@ -34665,6 +35198,25 @@ func (*UpdateTrendingStickerSets) GetType() string {
 
 func (*UpdateTrendingStickerSets) UpdateType() string {
 	return TypeUpdateTrendingStickerSets
+}
+
+func (updateTrendingStickerSets *UpdateTrendingStickerSets) UnmarshalJSON(data []byte) error {
+	var tmp struct {
+		StickerType json.RawMessage      `json:"sticker_type"`
+		StickerSets *TrendingStickerSets `json:"sticker_sets"`
+	}
+
+	err := json.Unmarshal(data, &tmp)
+	if err != nil {
+		return err
+	}
+
+	updateTrendingStickerSets.StickerSets = tmp.StickerSets
+
+	fieldStickerType, _ := UnmarshalStickerType(tmp.StickerType)
+	updateTrendingStickerSets.StickerType = fieldStickerType
+
+	return nil
 }
 
 // The list of recently used stickers was updated
@@ -35823,6 +36375,33 @@ func (*LogTags) GetClass() string {
 
 func (*LogTags) GetType() string {
 	return TypeLogTags
+}
+
+// Contains custom information about the user
+type UserSupportInfo struct {
+	meta
+	// Information message
+	Message *FormattedText `json:"message"`
+	// Information author
+	Author string `json:"author"`
+	// Information change date
+	Date int32 `json:"date"`
+}
+
+func (entity *UserSupportInfo) MarshalJSON() ([]byte, error) {
+	entity.meta.Type = entity.GetType()
+
+	type stub UserSupportInfo
+
+	return json.Marshal((*stub)(entity))
+}
+
+func (*UserSupportInfo) GetClass() string {
+	return ClassUserSupportInfo
+}
+
+func (*UserSupportInfo) GetType() string {
+	return TypeUserSupportInfo
 }
 
 // A simple object containing a number; for testing only

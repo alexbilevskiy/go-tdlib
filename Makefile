@@ -1,4 +1,4 @@
-TAG := 08e60886f7bab8d1a8356960a63f319f8a860bb4
+TAG := 96fc91e239f25a123df2e0405f58e24bc963cab7
 
 schema-update:
 	curl https://raw.githubusercontent.com/tdlib/td/${TAG}/td/generate/scheme/td_api.tl 2>/dev/null > ./data/td_api.tl

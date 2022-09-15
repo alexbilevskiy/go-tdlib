@@ -403,7 +403,7 @@
         },
         {
             "name": "authorizationStateWaitPassword",
-            "description": "The user has been authorized, but needs to enter a password to start using the application",
+            "description": "The user has been authorized, but needs to enter a 2-step verification password to start using the application",
             "class": "AuthorizationState",
             "properties": [
                 {
@@ -480,7 +480,7 @@
                 {
                     "name": "pending_reset_date",
                     "type": "int32",
-                    "description": "If not 0, point in time (Unix timestamp) after which the password can be reset immediately using resetPassword"
+                    "description": "If not 0, point in time (Unix timestamp) after which the 2-step verification password can be reset immediately using resetPassword"
                 }
             ]
         },
@@ -857,20 +857,26 @@
             ]
         },
         {
-            "name": "stickerTypeStatic",
+            "name": "stickerFormatWebp",
             "description": "The sticker is an image in WEBP format",
-            "class": "StickerType",
+            "class": "StickerFormat",
             "properties": []
         },
         {
-            "name": "stickerTypeAnimated",
+            "name": "stickerFormatTgs",
             "description": "The sticker is an animation in TGS format",
-            "class": "StickerType",
+            "class": "StickerFormat",
             "properties": []
         },
         {
-            "name": "stickerTypeVideo",
+            "name": "stickerFormatWebm",
             "description": "The sticker is a video in WEBM format",
+            "class": "StickerFormat",
+            "properties": []
+        },
+        {
+            "name": "stickerTypeRegular",
+            "description": "The sticker is a regular sticker",
             "class": "StickerType",
             "properties": []
         },
@@ -878,13 +884,13 @@
             "name": "stickerTypeMask",
             "description": "The sticker is a mask in WEBP format to be placed on photos or videos",
             "class": "StickerType",
-            "properties": [
-                {
-                    "name": "mask_position",
-                    "type": "maskPosition",
-                    "description": "Position where the mask is placed; may be null"
-                }
-            ]
+            "properties": []
+        },
+        {
+            "name": "stickerTypeCustomEmoji",
+            "description": "The sticker is a custom emoji to be used inside message text and caption",
+            "class": "StickerType",
+            "properties": []
         },
         {
             "name": "closedVectorPath",
@@ -1049,7 +1055,12 @@
                 {
                     "name": "album_cover_thumbnail",
                     "type": "thumbnail",
-                    "description": "The thumbnail of the album cover in JPEG format; as defined by the sender. The full size thumbnail is supposed to be extracted from the downloaded file; may be null"
+                    "description": "The thumbnail of the album cover in JPEG format; as defined by the sender. The full size thumbnail is supposed to be extracted from the downloaded audio file; may be null"
+                },
+                {
+                    "name": "external_album_covers",
+                    "type": "vector\u003cthumbnail\u003e",
+                    "description": "Album cover variants to use if the downloaded audio file contains no album cover. Provided thumbnail dimensions are approximate"
                 },
                 {
                     "name": "audio",
@@ -1138,9 +1149,24 @@
                     "description": "Emoji corresponding to the sticker"
                 },
                 {
+                    "name": "format",
+                    "type": "StickerFormat",
+                    "description": "Sticker format"
+                },
+                {
                     "name": "type",
                     "type": "StickerType",
                     "description": "Sticker type"
+                },
+                {
+                    "name": "mask_position",
+                    "type": "maskPosition",
+                    "description": "Position where the mask is placed; may be null even the sticker is a mask"
+                },
+                {
+                    "name": "custom_emoji_id",
+                    "type": "int64",
+                    "description": "Identifier of the emoji if the sticker is a custom emoji"
                 },
                 {
                     "name": "outline",
@@ -1153,9 +1179,14 @@
                     "description": "Sticker thumbnail in WEBP or JPEG format; may be null"
                 },
                 {
+                    "name": "is_premium",
+                    "type": "Bool",
+                    "description": "True, if only Premium users can use the sticker"
+                },
+                {
                     "name": "premium_animation",
                     "type": "file",
-                    "description": "Premium animation of the sticker; may be null. If present, only Premium users can send the sticker"
+                    "description": "Premium animation of the sticker; may be null"
                 },
                 {
                     "name": "sticker",
@@ -1274,14 +1305,9 @@
                     "description": "MIME type of the file; as defined by the sender"
                 },
                 {
-                    "name": "is_recognized",
-                    "type": "Bool",
-                    "description": "True, if speech recognition is completed; Premium users only"
-                },
-                {
-                    "name": "recognized_text",
-                    "type": "string",
-                    "description": "Recognized text of the voice note; Premium users only. Call recognizeSpeech to get recognized text of the voice note"
+                    "name": "speech_recognition_result",
+                    "type": "SpeechRecognitionResult",
+                    "description": "Result of speech recognition in the voice note; may be null"
                 },
                 {
                     "name": "voice",
@@ -1292,13 +1318,13 @@
         },
         {
             "name": "animatedEmoji",
-            "description": "Describes an animated representation of an emoji",
+            "description": "Describes an animated or custom representation of an emoji",
             "class": "AnimatedEmoji",
             "properties": [
                 {
                     "name": "sticker",
                     "type": "sticker",
-                    "description": "Animated sticker for the emoji"
+                    "description": "Sticker for the emoji; may be null if yet unknown for a custom emoji. If the sticker is a custom emoji, it can have arbitrary format different from stickerFormatTgs"
                 },
                 {
                     "name": "fitzpatrick_type",
@@ -1308,7 +1334,7 @@
                 {
                     "name": "sound",
                     "type": "file",
-                    "description": "File containing the sound to be played when the animated emoji is clicked; may be null. The sound is encoded with the Opus codec, and stored inside an OGG container"
+                    "description": "File containing the sound to be played when the sticker is clicked; may be null. The sound is encoded with the Opus codec, and stored inside an OGG container"
                 }
             ]
         },
@@ -1911,6 +1937,43 @@
             ]
         },
         {
+            "name": "premiumGiftOption",
+            "description": "Describes an option for gifting Telegram Premium to a user",
+            "class": "PremiumGiftOption",
+            "properties": [
+                {
+                    "name": "currency",
+                    "type": "string",
+                    "description": "ISO 4217 currency code for Telegram Premium subscription payment"
+                },
+                {
+                    "name": "amount",
+                    "type": "int53",
+                    "description": "The amount to pay, in the smallest units of the currency"
+                },
+                {
+                    "name": "discount_percentage",
+                    "type": "int32",
+                    "description": "The discount associated with this gift option, as a percentage"
+                },
+                {
+                    "name": "month_count",
+                    "type": "int32",
+                    "description": "Number of month the Telegram Premium subscription will be active"
+                },
+                {
+                    "name": "store_product_id",
+                    "type": "string",
+                    "description": "Identifier of the store product associated with the option"
+                },
+                {
+                    "name": "payment_link",
+                    "type": "InternalLinkType",
+                    "description": "An internal link to be opened for gifting Telegram Premium to the user if store payment isn't possible; may be null if direct payment isn't available"
+                }
+            ]
+        },
+        {
             "name": "user",
             "description": "Represents a user",
             "class": "User",
@@ -2095,6 +2158,11 @@
                     "description": "True, if the user can't be linked in forwarded messages due to their privacy settings"
                 },
                 {
+                    "name": "has_restricted_voice_and_video_note_messages",
+                    "type": "Bool",
+                    "description": "True, if voice and video notes can't be sent or forwarded to the user"
+                },
+                {
                     "name": "need_phone_number_privacy_exception",
                     "type": "Bool",
                     "description": "True, if the current user needs to explicitly allow to share their phone number with the user when the method addContact is used"
@@ -2103,6 +2171,11 @@
                     "name": "bio",
                     "type": "formattedText",
                     "description": "A short user bio; may be null for bots"
+                },
+                {
+                    "name": "premium_gift_options",
+                    "type": "vector\u003cpremiumGiftOption\u003e",
+                    "description": "The list of available options for gifting Telegram Premium to the user"
                 },
                 {
                     "name": "group_in_common_count",
@@ -3026,7 +3099,7 @@
                 {
                     "name": "layer",
                     "type": "int32",
-                    "description": "Secret chat layer; determines features supported by the chat partner's application. Nested text entities and underline and strikethrough entities are supported if the layer \u003e= 101, files bigger than 2000MB are supported if the layer \u003e= 143"
+                    "description": "Secret chat layer; determines features supported by the chat partner's application. Nested text entities and underline and strikethrough entities are supported if the layer \u003e= 101, files bigger than 2000MB are supported if the layer \u003e= 143, spoiler and custom emoji text entities are supported if the layer \u003e= 144"
                 }
             ]
         },
@@ -3402,7 +3475,7 @@
                 {
                     "name": "can_get_message_thread",
                     "type": "Bool",
-                    "description": "True, if information about the message thread is available through getMessageThread"
+                    "description": "True, if information about the message thread is available through getMessageThread and getMessageThreadHistory"
                 },
                 {
                     "name": "can_get_viewers",
@@ -4578,7 +4651,7 @@
         },
         {
             "name": "inlineKeyboardButtonTypeCallbackWithPassword",
-            "description": "A button that asks for password of the current user and then sends a callback query to a bot",
+            "description": "A button that asks for the 2-step verification password of the current user and then sends a callback query to a bot",
             "class": "InlineKeyboardButtonType",
             "properties": [
                 {
@@ -6220,7 +6293,7 @@
         },
         {
             "name": "savedCredentials",
-            "description": "Contains information about saved card credentials",
+            "description": "Contains information about saved payment credentials",
             "class": "SavedCredentials",
             "properties": [
                 {
@@ -6340,6 +6413,23 @@
             ]
         },
         {
+            "name": "paymentOption",
+            "description": "Describes an additional payment option",
+            "class": "PaymentOption",
+            "properties": [
+                {
+                    "name": "title",
+                    "type": "string",
+                    "description": "Title for the payment option"
+                },
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "Payment form URL to be opened in a web view"
+                }
+            ]
+        },
+        {
             "name": "paymentForm",
             "description": "Contains information about an invoice payment form",
             "class": "PaymentForm",
@@ -6370,14 +6460,19 @@
                     "description": "Information about the payment provider"
                 },
                 {
+                    "name": "additional_payment_options",
+                    "type": "vector\u003cpaymentOption\u003e",
+                    "description": "The list of additional payment options"
+                },
+                {
                     "name": "saved_order_info",
                     "type": "orderInfo",
                     "description": "Saved server-side order information; may be null"
                 },
                 {
                     "name": "saved_credentials",
-                    "type": "savedCredentials",
-                    "description": "Information about saved card credentials; may be null"
+                    "type": "vector\u003csavedCredentials\u003e",
+                    "description": "The list of saved payment credentials"
                 },
                 {
                     "name": "can_save_credentials",
@@ -6387,7 +6482,7 @@
                 {
                     "name": "need_password",
                     "type": "Bool",
-                    "description": "True, if the user will be able to save credentials protected by a password they set up"
+                    "description": "True, if the user will be able to save credentials, if sets up a 2-step verification password"
                 },
                 {
                     "name": "product_title",
@@ -8264,6 +8359,33 @@
             ]
         },
         {
+            "name": "messageGiftedPremium",
+            "description": "Telegram Premium was gifted to the user",
+            "class": "MessageContent",
+            "properties": [
+                {
+                    "name": "currency",
+                    "type": "string",
+                    "description": "Currency for the paid amount"
+                },
+                {
+                    "name": "amount",
+                    "type": "int53",
+                    "description": "The paid amount, in the smallest units of the currency"
+                },
+                {
+                    "name": "month_count",
+                    "type": "int32",
+                    "description": "Number of month the Telegram Premium subscription will be active"
+                },
+                {
+                    "name": "sticker",
+                    "type": "sticker",
+                    "description": "A sticker to be shown in the message; may be null if unknown"
+                }
+            ]
+        },
+        {
             "name": "messageContactRegistered",
             "description": "A contact has registered with Telegram",
             "class": "MessageContent",
@@ -8441,7 +8563,7 @@
         },
         {
             "name": "textEntityTypeSpoiler",
-            "description": "A spoiler text. Not supported in secret chats",
+            "description": "A spoiler text",
             "class": "TextEntityType",
             "properties": []
         },
@@ -8490,6 +8612,18 @@
                     "name": "user_id",
                     "type": "int53",
                     "description": "Identifier of the mentioned user"
+                }
+            ]
+        },
+        {
+            "name": "textEntityTypeCustomEmoji",
+            "description": "A custom emoji. The text behind a custom emoji must be an emoji. Only premium users can use premium custom emoji",
+            "class": "TextEntityType",
+            "properties": [
+                {
+                    "name": "custom_emoji_id",
+                    "type": "int64",
+                    "description": "Unique identifier of the custom emoji"
                 }
             ]
         },
@@ -8602,7 +8736,7 @@
                 {
                     "name": "text",
                     "type": "formattedText",
-                    "description": "Formatted text to be sent; 1-GetOption(\"message_text_length_max\") characters. Only Bold, Italic, Underline, Strikethrough, Spoiler, Code, Pre, PreCode, TextUrl and MentionName entities are allowed to be specified manually"
+                    "description": "Formatted text to be sent; 1-GetOption(\"message_text_length_max\") characters. Only Bold, Italic, Underline, Strikethrough, Spoiler, CustomEmoji, Code, Pre, PreCode, TextUrl and MentionName entities are allowed to be specified manually"
                 },
                 {
                     "name": "disable_web_page_preview",
@@ -9464,6 +9598,11 @@
                     "description": "True, if the sticker set is official"
                 },
                 {
+                    "name": "sticker_format",
+                    "type": "StickerFormat",
+                    "description": "Format of the stickers in the set"
+                },
+                {
                     "name": "sticker_type",
                     "type": "StickerType",
                     "description": "Type of the stickers in the set"
@@ -9529,6 +9668,11 @@
                     "name": "is_official",
                     "type": "Bool",
                     "description": "True, if the sticker set is official"
+                },
+                {
+                    "name": "sticker_format",
+                    "type": "StickerFormat",
+                    "description": "Format of the stickers in the set"
                 },
                 {
                     "name": "sticker_type",
@@ -10510,6 +10654,42 @@
                     "name": "importer_count",
                     "type": "vector\u003cint32\u003e",
                     "description": "The number of users that imported the corresponding contact; 0 for already registered users or if unavailable"
+                }
+            ]
+        },
+        {
+            "name": "speechRecognitionResultPending",
+            "description": "The speech recognition is ongoing",
+            "class": "SpeechRecognitionResult",
+            "properties": [
+                {
+                    "name": "partial_text",
+                    "type": "string",
+                    "description": "Partially recognized text"
+                }
+            ]
+        },
+        {
+            "name": "speechRecognitionResultText",
+            "description": "The speech recognition successfully finished",
+            "class": "SpeechRecognitionResult",
+            "properties": [
+                {
+                    "name": "text",
+                    "type": "string",
+                    "description": "Recognized text"
+                }
+            ]
+        },
+        {
+            "name": "speechRecognitionResultError",
+            "description": "The speech recognition failed",
+            "class": "SpeechRecognitionResult",
+            "properties": [
+                {
+                    "name": "error",
+                    "type": "error",
+                    "description": "Received error"
                 }
             ]
         },
@@ -11546,7 +11726,7 @@
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "The password for the current user"
+                    "description": "The 2-step verification password for the current user"
                 },
                 {
                     "name": "data",
@@ -12525,6 +12705,12 @@
             "properties": []
         },
         {
+            "name": "premiumFeatureCustomEmoji",
+            "description": "Allowed to use custom emoji stickers in message texts and captions",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
             "name": "premiumFeatureAdvancedChatManagement",
             "description": "Ability to change position of the main chat list, archive and mute all new chats from non-contacts, and completely disable notifications about the user's contacts joined Telegram",
             "class": "PremiumFeature",
@@ -12588,7 +12774,7 @@
                 {
                     "name": "payment_link",
                     "type": "InternalLinkType",
-                    "description": "An internal link to be opened to pay for Telegram Premium if store payment isn't possible; may be null if direct payment isn't available. If the link has type internalLinkTypeBotStart, then sendBotStartMessage must be called automatically"
+                    "description": "An internal link to be opened to pay for Telegram Premium if store payment isn't possible; may be null if direct payment isn't available"
                 }
             ]
         },
@@ -12675,6 +12861,40 @@
                     "name": "animations",
                     "type": "vector\u003cpremiumFeaturePromotionAnimation\u003e",
                     "description": "The list of available promotion animations for Premium features"
+                }
+            ]
+        },
+        {
+            "name": "storePaymentPurposePremiumSubscription",
+            "description": "The user subscribed to Telegram Premium",
+            "class": "StorePaymentPurpose",
+            "properties": [
+                {
+                    "name": "is_restore",
+                    "type": "Bool",
+                    "description": "Pass true if this is a restore of a Telegram Premium purchase; only for App Store"
+                }
+            ]
+        },
+        {
+            "name": "storePaymentPurposeGiftedPremium",
+            "description": "The user gifted Telegram Premium to another user",
+            "class": "StorePaymentPurpose",
+            "properties": [
+                {
+                    "name": "user_id",
+                    "type": "int53",
+                    "description": "Identifier of the user for which Premium was gifted"
+                },
+                {
+                    "name": "currency",
+                    "type": "string",
+                    "description": "ISO 4217 currency code of the payment currency"
+                },
+                {
+                    "name": "amount",
+                    "type": "int53",
+                    "description": "Paid amount, in the smallest units of the currency"
                 }
             ]
         },
@@ -14161,6 +14381,12 @@
             "properties": []
         },
         {
+            "name": "userPrivacySettingAllowPrivateVoiceAndVideoNoteMessages",
+            "description": "A privacy setting for managing whether the user can receive voice and video messages in private chats",
+            "class": "UserPrivacySetting",
+            "properties": []
+        },
+        {
             "name": "accountTtl",
             "description": "Contains information about the period of inactivity after which the current user's account will automatically be deleted",
             "class": "AccountTtl",
@@ -14292,7 +14518,7 @@
                 {
                     "name": "is_password_pending",
                     "type": "Bool",
-                    "description": "True, if a password is needed to complete authorization of the session"
+                    "description": "True, if a 2-step verification password is needed to complete authorization of the session"
                 },
                 {
                     "name": "can_accept_secret_chats",
@@ -14623,6 +14849,11 @@
                     "name": "start_parameter",
                     "type": "string",
                     "description": "The parameter to be passed to sendBotStartMessage"
+                },
+                {
+                    "name": "autostart",
+                    "type": "Bool",
+                    "description": "True, if sendBotStartMessage must be called automatically without showing the START button"
                 }
             ]
         },
@@ -14869,6 +15100,12 @@
         {
             "name": "internalLinkTypeQrCodeAuthentication",
             "description": "The link can be used to login the current user on another device, but it must be scanned from QR-code using in-app camera. An alert similar to \"This code can be used to allow someone to log in to your Telegram account. To confirm Telegram login, please go to Settings \u003e Devices \u003e Scan QR and scan the code\" needs to be shown",
+            "class": "InternalLinkType",
+            "properties": []
+        },
+        {
+            "name": "internalLinkTypeRestorePurchases",
+            "description": "The link forces restore of App Store purchases when opened. For official iOS application only",
             "class": "InternalLinkType",
             "properties": []
         },
@@ -15809,9 +16046,14 @@
                     "description": "Emojis corresponding to the sticker"
                 },
                 {
-                    "name": "type",
-                    "type": "StickerType",
-                    "description": "Sticker type"
+                    "name": "format",
+                    "type": "StickerFormat",
+                    "description": "Sticker format"
+                },
+                {
+                    "name": "mask_position",
+                    "type": "maskPosition",
+                    "description": "Position where the mask is placed; pass null if not specified"
                 }
             ]
         },
@@ -17610,9 +17852,9 @@
             "class": "Update",
             "properties": [
                 {
-                    "name": "is_masks",
-                    "type": "Bool",
-                    "description": "True, if the list of installed mask sticker sets was updated"
+                    "name": "sticker_type",
+                    "type": "StickerType",
+                    "description": "Type of the affected stickers"
                 },
                 {
                     "name": "sticker_set_ids",
@@ -17626,6 +17868,11 @@
             "description": "The list of trending sticker sets was updated or some of them were viewed",
             "class": "Update",
             "properties": [
+                {
+                    "name": "sticker_type",
+                    "type": "StickerType",
+                    "description": "Type of the affected stickers"
+                },
                 {
                     "name": "sticker_sets",
                     "type": "trendingStickerSets",
@@ -18287,6 +18534,28 @@
             ]
         },
         {
+            "name": "userSupportInfo",
+            "description": "Contains custom information about the user",
+            "class": "UserSupportInfo",
+            "properties": [
+                {
+                    "name": "message",
+                    "type": "formattedText",
+                    "description": "Information message"
+                },
+                {
+                    "name": "author",
+                    "type": "string",
+                    "description": "Information author"
+                },
+                {
+                    "name": "date",
+                    "type": "int32",
+                    "description": "Information change date"
+                }
+            ]
+        },
+        {
             "name": "testInt",
             "description": "A simple object containing a number; for testing only",
             "class": "TestInt",
@@ -18391,6 +18660,10 @@
         {
             "name": "MaskPoint",
             "description": "Part of the face, relative to which a mask is placed"
+        },
+        {
+            "name": "StickerFormat",
+            "description": "Describes format of a sticker"
         },
         {
             "name": "StickerType",
@@ -18577,6 +18850,10 @@
             "description": "Contains animated stickers which must be used for dice animation rendering"
         },
         {
+            "name": "SpeechRecognitionResult",
+            "description": "Describes result of speech recognition in a voice note"
+        },
+        {
             "name": "InputInlineQueryResult",
             "description": "Represents a single result of an inline query; for bots only"
         },
@@ -18607,6 +18884,10 @@
         {
             "name": "PremiumSource",
             "description": "Describes a source from which the Premium features screen is opened"
+        },
+        {
+            "name": "StorePaymentPurpose",
+            "description": "Describes a purpose of an in-store payment"
         },
         {
             "name": "DeviceToken",
@@ -18862,13 +19143,13 @@
         },
         {
             "name": "checkAuthenticationPassword",
-            "description": "Checks the authentication password for correctness. Works only when the current authorization state is authorizationStateWaitPassword",
+            "description": "Checks the 2-step verification password for correctness. Works only when the current authorization state is authorizationStateWaitPassword",
             "class": "Ok",
             "properties": [
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "The password to check"
+                    "description": "The 2-step verification password to check"
                 }
             ],
             "is_synchronous": false,
@@ -18876,7 +19157,7 @@
         },
         {
             "name": "requestAuthenticationPasswordRecovery",
-            "description": "Requests to send a password recovery code to an email address that was previously set up. Works only when the current authorization state is authorizationStateWaitPassword",
+            "description": "Requests to send a 2-step verification password recovery code to an email address that was previously set up. Works only when the current authorization state is authorizationStateWaitPassword",
             "class": "Ok",
             "properties": [],
             "is_synchronous": false,
@@ -18884,7 +19165,7 @@
         },
         {
             "name": "checkAuthenticationPasswordRecoveryCode",
-            "description": "Checks whether a password recovery code sent to an email address is valid. Works only when the current authorization state is authorizationStateWaitPassword",
+            "description": "Checks whether a 2-step verification password recovery code sent to an email address is valid. Works only when the current authorization state is authorizationStateWaitPassword",
             "class": "Ok",
             "properties": [
                 {
@@ -18898,7 +19179,7 @@
         },
         {
             "name": "recoverAuthenticationPassword",
-            "description": "Recovers the password with a password recovery code sent to an email address that was previously set up. Works only when the current authorization state is authorizationStateWaitPassword",
+            "description": "Recovers the 2-step verification password with a password recovery code sent to an email address that was previously set up. Works only when the current authorization state is authorizationStateWaitPassword",
             "class": "Ok",
             "properties": [
                 {
@@ -18909,7 +19190,7 @@
                 {
                     "name": "new_password",
                     "type": "string",
-                    "description": "New password of the user; may be empty to remove the password"
+                    "description": "New 2-step verification password of the user; may be empty to remove the password"
                 },
                 {
                     "name": "new_hint",
@@ -19004,18 +19285,18 @@
         },
         {
             "name": "setPassword",
-            "description": "Changes the password for the current user. If a new recovery email address is specified, then the change will not be applied until the new recovery email address is confirmed",
+            "description": "Changes the 2-step verification password for the current user. If a new recovery email address is specified, then the change will not be applied until the new recovery email address is confirmed",
             "class": "PasswordState",
             "properties": [
                 {
                     "name": "old_password",
                     "type": "string",
-                    "description": "Previous password of the user"
+                    "description": "Previous 2-step verification password of the user"
                 },
                 {
                     "name": "new_password",
                     "type": "string",
-                    "description": "New password of the user; may be empty to remove the password"
+                    "description": "New 2-step verification password of the user; may be empty to remove the password"
                 },
                 {
                     "name": "new_hint",
@@ -19044,7 +19325,7 @@
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "The password for the current user"
+                    "description": "The 2-step verification password for the current user"
                 }
             ],
             "is_synchronous": false,
@@ -19058,7 +19339,7 @@
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "Password of the current user"
+                    "description": "The 2-step verification password of the current user"
                 },
                 {
                     "name": "new_recovery_email_address",
@@ -19126,7 +19407,7 @@
                 {
                     "name": "new_password",
                     "type": "string",
-                    "description": "New password of the user; may be empty to remove the password"
+                    "description": "New 2-step verification password of the user; may be empty to remove the password"
                 },
                 {
                     "name": "new_hint",
@@ -19161,7 +19442,7 @@
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "Persistent user password"
+                    "description": "The 2-step verification password of the current user"
                 },
                 {
                     "name": "valid_for",
@@ -20023,7 +20304,7 @@
         },
         {
             "name": "searchCallMessages",
-            "description": "Searches for call messages. Returns the results in reverse chronological order (i. e., in order of decreasing message_id). For optimal performance, the number of returned messages is chosen by TDLib",
+            "description": "Searches for call messages. Returns the results in reverse chronological order (i.e., in order of decreasing message_id). For optimal performance, the number of returned messages is chosen by TDLib",
             "class": "Messages",
             "properties": [
                 {
@@ -21098,7 +21379,7 @@
         },
         {
             "name": "getMessageAvailableReactions",
-            "description": "Returns reactions, which can be added to a message. The list can change after updateReactions, updateChatAvailableReactions for the chat, or updateMessageInteractionInfo for the message. The method will return Premium reactions, even the current user has no Premium subscription",
+            "description": "Returns reactions, which can be added to a message. The list can change after updateReactions, updateChatAvailableReactions for the chat, or updateMessageInteractionInfo for the message",
             "class": "AvailableReactions",
             "properties": [
                 {
@@ -21194,7 +21475,7 @@
         },
         {
             "name": "parseTextEntities",
-            "description": "Parses Bold, Italic, Underline, Strikethrough, Spoiler, Code, Pre, PreCode, TextUrl and MentionName entities contained in the text. Can be called synchronously",
+            "description": "Parses Bold, Italic, Underline, Strikethrough, Spoiler, CustomEmoji, Code, Pre, PreCode, TextUrl and MentionName entities contained in the text. Can be called synchronously",
             "class": "FormattedText",
             "properties": [
                 {
@@ -22543,7 +22824,7 @@
                 {
                     "name": "notification_settings",
                     "type": "chatNotificationSettings",
-                    "description": "New notification settings for the chat. If the chat is muted for more than 1 week, it is considered to be muted forever"
+                    "description": "New notification settings for the chat. If the chat is muted for more than 366 days, it is considered to be muted forever"
                 }
             ],
             "is_synchronous": false,
@@ -22932,7 +23213,7 @@
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "The password of the current user"
+                    "description": "The 2-step verification password of the current user"
                 }
             ],
             "is_synchronous": false,
@@ -23292,8 +23573,8 @@
             "type": 1
         },
         {
-            "name": "uploadFile",
-            "description": "Asynchronously uploads a file to the cloud without sending it in a message. updateFile will be used to notify about upload progress and successful completion of the upload. The file will not have a persistent remote identifier until it will be sent in a message",
+            "name": "preliminaryUploadFile",
+            "description": "Preliminary uploads a file to the cloud before sending it in a message, which can be useful for uploading of being recorded voice and video notes. Updates updateFile will be used to notify about upload progress and successful completion of the upload. The file will not have a persistent remote identifier until it will be sent in a message",
             "class": "File",
             "properties": [
                 {
@@ -23309,15 +23590,15 @@
                 {
                     "name": "priority",
                     "type": "int32",
-                    "description": "Priority of the upload (1-32). The higher the priority, the earlier the file will be uploaded. If the priorities of two files are equal, then the first one for which uploadFile was called will be uploaded first"
+                    "description": "Priority of the upload (1-32). The higher the priority, the earlier the file will be uploaded. If the priorities of two files are equal, then the first one for which preliminaryUploadFile was called will be uploaded first"
                 }
             ],
             "is_synchronous": false,
             "type": 1
         },
         {
-            "name": "cancelUploadFile",
-            "description": "Stops the uploading of a file. Supported only for files uploaded by using uploadFile. For other files the behavior is undefined",
+            "name": "cancelPreliminaryUploadFile",
+            "description": "Stops the preliminary uploading of a file. Supported only for files uploaded by using preliminaryUploadFile. For other files the behavior is undefined",
             "class": "Ok",
             "properties": [
                 {
@@ -24968,9 +25249,14 @@
         },
         {
             "name": "getStickers",
-            "description": "Returns stickers from the installed sticker sets that correspond to a given emoji. If the emoji is non-empty, favorite and recently used stickers may also be returned",
+            "description": "Returns stickers from the installed sticker sets that correspond to a given emoji. If the emoji is non-empty, then favorite, recently used or trending stickers may also be returned",
             "class": "Stickers",
             "properties": [
+                {
+                    "name": "sticker_type",
+                    "type": "StickerType",
+                    "description": "Type of the sticker sets to return"
+                },
                 {
                     "name": "emoji",
                     "type": "string",
@@ -24980,6 +25266,11 @@
                     "name": "limit",
                     "type": "int32",
                     "description": "The maximum number of stickers to be returned"
+                },
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier for which to return stickers. Available custom emoji may be different for different chats"
                 }
             ],
             "is_synchronous": false,
@@ -24998,7 +25289,21 @@
                 {
                     "name": "limit",
                     "type": "int32",
-                    "description": "The maximum number of stickers to be returned"
+                    "description": "The maximum number of stickers to be returned; 0-100"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getPremiumStickers",
+            "description": "Returns premium stickers from regular sticker sets",
+            "class": "Stickers",
+            "properties": [
+                {
+                    "name": "limit",
+                    "type": "int32",
+                    "description": "The maximum number of stickers to be returned; 0-100"
                 }
             ],
             "is_synchronous": false,
@@ -25010,9 +25315,9 @@
             "class": "StickerSets",
             "properties": [
                 {
-                    "name": "is_masks",
-                    "type": "Bool",
-                    "description": "Pass true to return mask sticker sets; pass false to return ordinary sticker sets"
+                    "name": "sticker_type",
+                    "type": "StickerType",
+                    "description": "Type of the sticker sets to return"
                 }
             ],
             "is_synchronous": false,
@@ -25024,9 +25329,9 @@
             "class": "StickerSets",
             "properties": [
                 {
-                    "name": "is_masks",
-                    "type": "Bool",
-                    "description": "Pass true to return mask stickers sets; pass false to return ordinary sticker sets"
+                    "name": "sticker_type",
+                    "type": "StickerType",
+                    "description": "Type of the sticker sets to return"
                 },
                 {
                     "name": "offset_sticker_set_id",
@@ -25047,6 +25352,11 @@
             "description": "Returns a list of trending sticker sets. For optimal performance, the number of returned sticker sets is chosen by TDLib",
             "class": "TrendingStickerSets",
             "properties": [
+                {
+                    "name": "sticker_type",
+                    "type": "StickerType",
+                    "description": "Type of the sticker sets to return"
+                },
                 {
                     "name": "offset",
                     "type": "int32",
@@ -25109,9 +25419,9 @@
             "class": "StickerSets",
             "properties": [
                 {
-                    "name": "is_masks",
-                    "type": "Bool",
-                    "description": "Pass true to return mask sticker sets; pass false to return ordinary sticker sets"
+                    "name": "sticker_type",
+                    "type": "StickerType",
+                    "description": "Type of the sticker sets to search for"
                 },
                 {
                     "name": "query",
@@ -25185,9 +25495,9 @@
             "class": "Ok",
             "properties": [
                 {
-                    "name": "is_masks",
-                    "type": "Bool",
-                    "description": "Pass true to change the order of mask sticker sets; pass false to change the order of ordinary sticker sets"
+                    "name": "sticker_type",
+                    "type": "StickerType",
+                    "description": "Type of the sticker sets to reorder"
                 },
                 {
                     "name": "sticker_set_ids",
@@ -25214,7 +25524,7 @@
         },
         {
             "name": "addRecentSticker",
-            "description": "Manually adds a new sticker to the list of recently used stickers. The new sticker is added to the top of the list. If the sticker was already in the list, it is removed from the list first. Only stickers belonging to a sticker set can be added to this list",
+            "description": "Manually adds a new sticker to the list of recently used stickers. The new sticker is added to the top of the list. If the sticker was already in the list, it is removed from the list first. Only stickers belonging to a sticker set can be added to this list. Emoji stickers can't be added to recent stickers",
             "class": "Stickers",
             "properties": [
                 {
@@ -25274,7 +25584,7 @@
         },
         {
             "name": "addFavoriteSticker",
-            "description": "Adds a new sticker to the list of favorite stickers. The new sticker is added to the top of the list. If the sticker was already in the list, it is removed from the list first. Only stickers belonging to a sticker set can be added to this list",
+            "description": "Adds a new sticker to the list of favorite stickers. The new sticker is added to the top of the list. If the sticker was already in the list, it is removed from the list first. Only stickers belonging to a sticker set can be added to this list. Emoji stickers can't be added to favorite stickers",
             "class": "Ok",
             "properties": [
                 {
@@ -25353,14 +25663,6 @@
             "type": 2
         },
         {
-            "name": "getAllAnimatedEmojis",
-            "description": "Returns all emojis, which has a corresponding animated emoji",
-            "class": "Emojis",
-            "properties": [],
-            "is_synchronous": false,
-            "type": 2
-        },
-        {
             "name": "getEmojiSuggestionsUrl",
             "description": "Returns an HTTP URL which can be used to automatically log in to the translation platform and suggest new emoji replacements. The URL will be valid for 30 seconds after generation",
             "class": "HttpUrl",
@@ -25373,6 +25675,20 @@
             ],
             "is_synchronous": false,
             "type": 2
+        },
+        {
+            "name": "getCustomEmojiStickers",
+            "description": "Returns list of custom emoji stickers by their identifiers. Stickers are returned in arbitrary order. Only found stickers are returned",
+            "class": "Stickers",
+            "properties": [
+                {
+                    "name": "custom_emoji_ids",
+                    "type": "vector\u003cint64\u003e",
+                    "description": "Identifiers of custom emoji stickers. At most 200 custom emoji stickers can be received simultaneously"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
         },
         {
             "name": "getSavedAnimations",
@@ -26041,7 +26357,7 @@
         },
         {
             "name": "getChatEventLog",
-            "description": "Returns a list of service actions taken by chat members and administrators in the last 48 hours. Available only for supergroups and channels. Requires administrator rights. Returns results in reverse chronological order (i. e., in order of decreasing event_id)",
+            "description": "Returns a list of service actions taken by chat members and administrators in the last 48 hours. Available only for supergroups and channels. Requires administrator rights. Returns results in reverse chronological order (i.e., in order of decreasing event_id)",
             "class": "ChatEvents",
             "properties": [
                 {
@@ -26555,7 +26871,7 @@
         },
         {
             "name": "getOption",
-            "description": "Returns the value of an option by its name. (Check the list of available options on https://core.telegram.org/tdlib/options.) Can be called before authorization",
+            "description": "Returns the value of an option by its name. (Check the list of available options on https://core.telegram.org/tdlib/options.) Can be called before authorization. Can be called synchronously for options \"version\" and \"commit_hash\"",
             "class": "OptionValue",
             "properties": [
                 {
@@ -26564,7 +26880,7 @@
                     "description": "The name of the option"
                 }
             ],
-            "is_synchronous": false,
+            "is_synchronous": true,
             "type": 1
         },
         {
@@ -26617,6 +26933,11 @@
                     "name": "reason",
                     "type": "string",
                     "description": "The reason why the account was deleted; optional"
+                },
+                {
+                    "name": "password",
+                    "type": "string",
+                    "description": "The 2-step verification password of the current user. If not specified, account deletion can be canceled within one week"
                 }
             ],
             "is_synchronous": false,
@@ -26781,7 +27102,7 @@
             "class": "StorageStatisticsFast",
             "properties": [],
             "is_synchronous": false,
-            "type": 1
+            "type": 2
         },
         {
             "name": "getDatabaseStatistics",
@@ -26949,7 +27270,7 @@
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "Password of the current user"
+                    "description": "The 2-step verification password of the current user"
                 }
             ],
             "is_synchronous": false,
@@ -26963,7 +27284,7 @@
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "Password of the current user"
+                    "description": "The 2-step verification password of the current user"
                 }
             ],
             "is_synchronous": false,
@@ -26982,7 +27303,7 @@
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "Password of the current user"
+                    "description": "The 2-step verification password of the current user"
                 }
             ],
             "is_synchronous": false,
@@ -27154,7 +27475,7 @@
                 {
                     "name": "password",
                     "type": "string",
-                    "description": "Password of the current user"
+                    "description": "The 2-step verification password of the current user"
                 }
             ],
             "is_synchronous": false,
@@ -27310,6 +27631,11 @@
                     "name": "name",
                     "type": "string",
                     "description": "Sticker set name. Can contain only English letters, digits and underscores. Must end with *\"_by_\u003cbot username\u003e\"* (*\u003cbot_username\u003e* is case insensitive) for bots; 1-64 characters"
+                },
+                {
+                    "name": "sticker_type",
+                    "type": "StickerType",
+                    "description": "Type of the stickers in the set"
                 },
                 {
                     "name": "stickers",
@@ -27474,7 +27800,7 @@
             "type": 2
         },
         {
-            "name": "getPremiumStickers",
+            "name": "getPremiumStickerExamples",
             "description": "Returns examples of premium stickers for demonstration purposes",
             "class": "Stickers",
             "properties": [],
@@ -27515,13 +27841,19 @@
             "name": "canPurchasePremium",
             "description": "Checks whether Telegram Premium purchase is possible. Must be called before in-store Premium purchase",
             "class": "Ok",
-            "properties": [],
+            "properties": [
+                {
+                    "name": "purpose",
+                    "type": "StorePaymentPurpose",
+                    "description": "Transaction purpose"
+                }
+            ],
             "is_synchronous": false,
             "type": 2
         },
         {
             "name": "assignAppStoreTransaction",
-            "description": "Informs server about a Telegram Premium purchase through App Store. For official applications only",
+            "description": "Informs server about a purchase through App Store. For official applications only",
             "class": "Ok",
             "properties": [
                 {
@@ -27530,9 +27862,9 @@
                     "description": "App Store receipt"
                 },
                 {
-                    "name": "is_restore",
-                    "type": "Bool",
-                    "description": "True, if this is restore of Premium purchase"
+                    "name": "purpose",
+                    "type": "StorePaymentPurpose",
+                    "description": "Transaction purpose"
                 }
             ],
             "is_synchronous": false,
@@ -27540,13 +27872,28 @@
         },
         {
             "name": "assignGooglePlayTransaction",
-            "description": "Informs server about a Telegram Premium purchase through Google Play. For official applications only",
+            "description": "Informs server about a purchase through Google Play. For official applications only",
             "class": "Ok",
             "properties": [
+                {
+                    "name": "package_name",
+                    "type": "string",
+                    "description": "Application package name"
+                },
+                {
+                    "name": "store_product_id",
+                    "type": "string",
+                    "description": "Identifier of the purchased store product"
+                },
                 {
                     "name": "purchase_token",
                     "type": "string",
                     "description": "Google Play purchase token"
+                },
+                {
+                    "name": "purpose",
+                    "type": "StorePaymentPurpose",
+                    "description": "Transaction purpose"
                 }
             ],
             "is_synchronous": false,
@@ -27959,6 +28306,39 @@
             ],
             "is_synchronous": true,
             "type": 1
+        },
+        {
+            "name": "getUserSupportInfo",
+            "description": "Returns support information for the given user; for Telegram support only",
+            "class": "UserSupportInfo",
+            "properties": [
+                {
+                    "name": "user_id",
+                    "type": "int53",
+                    "description": "User identifier"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "setUserSupportInfo",
+            "description": "Sets support information for the given user; for Telegram support only",
+            "class": "UserSupportInfo",
+            "properties": [
+                {
+                    "name": "user_id",
+                    "type": "int53",
+                    "description": "User identifier"
+                },
+                {
+                    "name": "message",
+                    "type": "formattedText",
+                    "description": "New information message"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
         },
         {
             "name": "testCallEmpty",
