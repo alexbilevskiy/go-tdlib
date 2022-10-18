@@ -78,88 +78,6 @@
             "properties": []
         },
         {
-            "name": "tdlibParameters",
-            "description": "Contains parameters for TDLib initialization",
-            "class": "TdlibParameters",
-            "properties": [
-                {
-                    "name": "use_test_dc",
-                    "type": "Bool",
-                    "description": "If set to true, the Telegram test environment will be used instead of the production environment"
-                },
-                {
-                    "name": "database_directory",
-                    "type": "string",
-                    "description": "The path to the directory for the persistent database; if empty, the current working directory will be used"
-                },
-                {
-                    "name": "files_directory",
-                    "type": "string",
-                    "description": "The path to the directory for storing files; if empty, database_directory will be used"
-                },
-                {
-                    "name": "use_file_database",
-                    "type": "Bool",
-                    "description": "If set to true, information about downloaded and uploaded files will be saved between application restarts"
-                },
-                {
-                    "name": "use_chat_info_database",
-                    "type": "Bool",
-                    "description": "If set to true, the library will maintain a cache of users, basic groups, supergroups, channels and secret chats. Implies use_file_database"
-                },
-                {
-                    "name": "use_message_database",
-                    "type": "Bool",
-                    "description": "If set to true, the library will maintain a cache of chats and messages. Implies use_chat_info_database"
-                },
-                {
-                    "name": "use_secret_chats",
-                    "type": "Bool",
-                    "description": "If set to true, support for secret chats will be enabled"
-                },
-                {
-                    "name": "api_id",
-                    "type": "int32",
-                    "description": "Application identifier for Telegram API access, which can be obtained at https://my.telegram.org"
-                },
-                {
-                    "name": "api_hash",
-                    "type": "string",
-                    "description": "Application identifier hash for Telegram API access, which can be obtained at https://my.telegram.org"
-                },
-                {
-                    "name": "system_language_code",
-                    "type": "string",
-                    "description": "IETF language tag of the user's operating system language; must be non-empty"
-                },
-                {
-                    "name": "device_model",
-                    "type": "string",
-                    "description": "Model of the device the application is being run on; must be non-empty"
-                },
-                {
-                    "name": "system_version",
-                    "type": "string",
-                    "description": "Version of the operating system the application is being run on. If empty, the version is automatically detected by TDLib"
-                },
-                {
-                    "name": "application_version",
-                    "type": "string",
-                    "description": "Application version; must be non-empty"
-                },
-                {
-                    "name": "enable_storage_optimizer",
-                    "type": "Bool",
-                    "description": "If set to true, old files will automatically be deleted"
-                },
-                {
-                    "name": "ignore_file_names",
-                    "type": "Bool",
-                    "description": "If set to true, original file names will be ignored. Otherwise, downloaded files will be saved under names as close as possible to the original name"
-                }
-            ]
-        },
-        {
             "name": "authenticationCodeTypeTelegramMessage",
             "description": "An authentication code is delivered via a private Telegram message, which can be viewed from another active session",
             "class": "AuthenticationCodeType",
@@ -269,6 +187,42 @@
             ]
         },
         {
+            "name": "emailAddressAuthenticationCode",
+            "description": "An authentication code delivered to a user's email address",
+            "class": "EmailAddressAuthentication",
+            "properties": [
+                {
+                    "name": "code",
+                    "type": "string",
+                    "description": "The code"
+                }
+            ]
+        },
+        {
+            "name": "emailAddressAuthenticationAppleId",
+            "description": "An authentication token received through Apple ID",
+            "class": "EmailAddressAuthentication",
+            "properties": [
+                {
+                    "name": "token",
+                    "type": "string",
+                    "description": "The token"
+                }
+            ]
+        },
+        {
+            "name": "emailAddressAuthenticationGoogleId",
+            "description": "An authentication token received through Google ID",
+            "class": "EmailAddressAuthentication",
+            "properties": [
+                {
+                    "name": "token",
+                    "type": "string",
+                    "description": "The token"
+                }
+            ]
+        },
+        {
             "name": "textEntity",
             "description": "Represents a part of the text that needs to be formatted in some unusual way",
             "class": "TextEntity",
@@ -343,27 +297,59 @@
         },
         {
             "name": "authorizationStateWaitTdlibParameters",
-            "description": "TDLib needs TdlibParameters for initialization",
+            "description": "Initializetion parameters are needed. Call `setTdlibParameters` to provide them",
             "class": "AuthorizationState",
             "properties": []
-        },
-        {
-            "name": "authorizationStateWaitEncryptionKey",
-            "description": "TDLib needs an encryption key to decrypt the local database",
-            "class": "AuthorizationState",
-            "properties": [
-                {
-                    "name": "is_encrypted",
-                    "type": "Bool",
-                    "description": "True, if the database is currently encrypted"
-                }
-            ]
         },
         {
             "name": "authorizationStateWaitPhoneNumber",
             "description": "TDLib needs the user's phone number to authorize. Call `setAuthenticationPhoneNumber` to provide the phone number, or use `requestQrCodeAuthentication`, or `checkAuthenticationBotToken` for other authentication options",
             "class": "AuthorizationState",
             "properties": []
+        },
+        {
+            "name": "authorizationStateWaitEmailAddress",
+            "description": "TDLib needs the user's email address to authorize. Call `setAuthenticationEmailAddress` to provide the email address, or directly call `checkAuthenticationEmailCode` with Apple ID/Google ID token if allowed",
+            "class": "AuthorizationState",
+            "properties": [
+                {
+                    "name": "allow_apple_id",
+                    "type": "Bool",
+                    "description": "True, if authorization through Apple ID is allowed"
+                },
+                {
+                    "name": "allow_google_id",
+                    "type": "Bool",
+                    "description": "True, if authorization through Google ID is allowed"
+                }
+            ]
+        },
+        {
+            "name": "authorizationStateWaitEmailCode",
+            "description": "TDLib needs the user's authentication code sent to an email address to authorize. Call `checkAuthenticationEmailCode` to provide the code",
+            "class": "AuthorizationState",
+            "properties": [
+                {
+                    "name": "allow_apple_id",
+                    "type": "Bool",
+                    "description": "True, if authorization through Apple ID is allowed"
+                },
+                {
+                    "name": "allow_google_id",
+                    "type": "Bool",
+                    "description": "True, if authorization through Google ID is allowed"
+                },
+                {
+                    "name": "code_info",
+                    "type": "emailAddressAuthenticationCodeInfo",
+                    "description": "Information about the sent authentication code"
+                },
+                {
+                    "name": "next_phone_number_authorization_date",
+                    "type": "int32",
+                    "description": "Point in time (Unix timestamp) when the user will be able to authorize with a code sent to the user's phone number; 0 if unknown"
+                }
+            ]
         },
         {
             "name": "authorizationStateWaitCode",
@@ -476,6 +462,11 @@
                     "name": "recovery_email_address_code_info",
                     "type": "emailAddressAuthenticationCodeInfo",
                     "description": "Information about the recovery email address to which the confirmation email was sent; may be null"
+                },
+                {
+                    "name": "login_email_address_pattern",
+                    "type": "string",
+                    "description": "Pattern of the email address set up for logging in"
                 },
                 {
                     "name": "pending_reset_date",
@@ -1327,6 +1318,16 @@
                     "description": "Sticker for the emoji; may be null if yet unknown for a custom emoji. If the sticker is a custom emoji, it can have arbitrary format different from stickerFormatTgs"
                 },
                 {
+                    "name": "sticker_width",
+                    "type": "int32",
+                    "description": "Expected width of the sticker, which can be used if the sticker is null"
+                },
+                {
+                    "name": "sticker_height",
+                    "type": "int32",
+                    "description": "Expected height of the sticker, which can be used if the sticker is null"
+                },
+                {
                     "name": "fitzpatrick_type",
                     "type": "int32",
                     "description": "Emoji modifier fitzpatrick type; 0-6; 0 if none"
@@ -1937,9 +1938,9 @@
             ]
         },
         {
-            "name": "premiumGiftOption",
-            "description": "Describes an option for gifting Telegram Premium to a user",
-            "class": "PremiumGiftOption",
+            "name": "premiumPaymentOption",
+            "description": "Describes an option for buying Telegram Premium to a user",
+            "class": "PremiumPaymentOption",
             "properties": [
                 {
                     "name": "currency",
@@ -1954,7 +1955,7 @@
                 {
                     "name": "discount_percentage",
                     "type": "int32",
-                    "description": "The discount associated with this gift option, as a percentage"
+                    "description": "The discount associated with this option, as a percentage"
                 },
                 {
                     "name": "month_count",
@@ -1969,7 +1970,31 @@
                 {
                     "name": "payment_link",
                     "type": "InternalLinkType",
-                    "description": "An internal link to be opened for gifting Telegram Premium to the user if store payment isn't possible; may be null if direct payment isn't available"
+                    "description": "An internal link to be opened for buying Telegram Premium to the user if store payment isn't possible; may be null if direct payment isn't available"
+                }
+            ]
+        },
+        {
+            "name": "emojiStatus",
+            "description": "Describes a custom emoji to be shown instead of the Telegram Premium badge",
+            "class": "EmojiStatus",
+            "properties": [
+                {
+                    "name": "custom_emoji_id",
+                    "type": "int64",
+                    "description": "Identifier of the custom emoji in stickerFormatTgs format. If the custom emoji belongs to the sticker set GetOption(\"themed_emoji_statuses_sticker_set_id\"), then it's color must be changed to the color of the Telegram Premium badge"
+                }
+            ]
+        },
+        {
+            "name": "emojiStatuses",
+            "description": "Contains a list of emoji statuses",
+            "class": "EmojiStatuses",
+            "properties": [
+                {
+                    "name": "emoji_statuses",
+                    "type": "vector\u003cemojiStatus\u003e",
+                    "description": "The list of emoji statuses"
                 }
             ]
         },
@@ -2012,6 +2037,11 @@
                     "name": "profile_photo",
                     "type": "profilePhoto",
                     "description": "Profile photo of the user; may be null"
+                },
+                {
+                    "name": "emoji_status",
+                    "type": "emojiStatus",
+                    "description": "Emoji status to be shown instead of the default Telegram Premium badge; may be null. For Telegram Premium users only"
                 },
                 {
                     "name": "is_contact",
@@ -2174,7 +2204,7 @@
                 },
                 {
                     "name": "premium_gift_options",
-                    "type": "vector\u003cpremiumGiftOption\u003e",
+                    "type": "vector\u003cpremiumPaymentOption\u003e",
                     "description": "The list of available options for gifting Telegram Premium to the user"
                 },
                 {
@@ -2867,7 +2897,7 @@
                 {
                     "name": "status",
                     "type": "ChatMemberStatus",
-                    "description": "Status of the current user in the supergroup or channel; custom title will be always empty"
+                    "description": "Status of the current user in the supergroup or channel; custom title will always be empty"
                 },
                 {
                     "name": "member_count",
@@ -3145,6 +3175,35 @@
             ]
         },
         {
+            "name": "chatMessageSender",
+            "description": "Represents a message sender, which can be used to send messages in a chat",
+            "class": "ChatMessageSender",
+            "properties": [
+                {
+                    "name": "sender",
+                    "type": "MessageSender",
+                    "description": "Available message senders"
+                },
+                {
+                    "name": "needs_premium",
+                    "type": "Bool",
+                    "description": "True, if Telegram Premium is needed to use the message sender"
+                }
+            ]
+        },
+        {
+            "name": "chatMessageSenders",
+            "description": "Represents a list of message senders, which can be used to send messages in a chat",
+            "class": "ChatMessageSenders",
+            "properties": [
+                {
+                    "name": "senders",
+                    "type": "vector\u003cchatMessageSender\u003e",
+                    "description": "List of available message senders"
+                }
+            ]
+        },
+        {
             "name": "messageForwardOriginUser",
             "description": "The message was originally sent by a known user",
             "class": "MessageForwardOrigin",
@@ -3220,6 +3279,30 @@
             ]
         },
         {
+            "name": "reactionTypeEmoji",
+            "description": "A reaction with an emoji",
+            "class": "ReactionType",
+            "properties": [
+                {
+                    "name": "emoji",
+                    "type": "string",
+                    "description": "Text representation of the reaction"
+                }
+            ]
+        },
+        {
+            "name": "reactionTypeCustomEmoji",
+            "description": "A reaction with a custom emoji",
+            "class": "ReactionType",
+            "properties": [
+                {
+                    "name": "custom_emoji_id",
+                    "type": "int64",
+                    "description": "Unique identifier of the custom emoji"
+                }
+            ]
+        },
+        {
             "name": "messageForwardInfo",
             "description": "Contains information about a forwarded message",
             "class": "MessageForwardInfo",
@@ -3289,9 +3372,9 @@
             "class": "MessageReaction",
             "properties": [
                 {
-                    "name": "reaction",
-                    "type": "string",
-                    "description": "Text representation of the reaction"
+                    "name": "type",
+                    "type": "ReactionType",
+                    "description": "Type of the reaction"
                 },
                 {
                     "name": "total_count",
@@ -3343,9 +3426,9 @@
             "class": "UnreadReaction",
             "properties": [
                 {
-                    "name": "reaction",
-                    "type": "string",
-                    "description": "Text representation of the reaction"
+                    "name": "type",
+                    "type": "ReactionType",
+                    "description": "Type of the reaction"
                 },
                 {
                     "name": "sender_id",
@@ -3486,6 +3569,11 @@
                     "name": "can_get_media_timestamp_links",
                     "type": "Bool",
                     "description": "True, if media timestamp links can be generated for media timestamp entities in the message text, caption or web page description through getMessageLink"
+                },
+                {
+                    "name": "can_report_reactions",
+                    "type": "Bool",
+                    "description": "True, if reactions on the message can be reported through reportMessageReactions"
                 },
                 {
                     "name": "has_timestamped_media",
@@ -4206,6 +4294,24 @@
             ]
         },
         {
+            "name": "chatAvailableReactionsAll",
+            "description": "All reactions are available in the chat",
+            "class": "ChatAvailableReactions",
+            "properties": []
+        },
+        {
+            "name": "chatAvailableReactionsSome",
+            "description": "Only specific reactions are available in the chat",
+            "class": "ChatAvailableReactions",
+            "properties": [
+                {
+                    "name": "reactions",
+                    "type": "vector\u003cReactionType\u003e",
+                    "description": "The list of reactions"
+                }
+            ]
+        },
+        {
             "name": "videoChat",
             "description": "Describes a video chat",
             "class": "VideoChat",
@@ -4344,8 +4450,8 @@
                 },
                 {
                     "name": "available_reactions",
-                    "type": "vector\u003cstring\u003e",
-                    "description": "List of reactions, available in the chat"
+                    "type": "ChatAvailableReactions",
+                    "description": "Types of reaction, available in the chat"
                 },
                 {
                     "name": "message_ttl",
@@ -6627,6 +6733,84 @@
             ]
         },
         {
+            "name": "messageExtendedMediaPreview",
+            "description": "The media is hidden until the invoice is paid",
+            "class": "MessageExtendedMedia",
+            "properties": [
+                {
+                    "name": "width",
+                    "type": "int32",
+                    "description": "Media width; 0 if unknown"
+                },
+                {
+                    "name": "height",
+                    "type": "int32",
+                    "description": "Media height; 0 if unknown"
+                },
+                {
+                    "name": "duration",
+                    "type": "int32",
+                    "description": "Media duration; 0 if unknown"
+                },
+                {
+                    "name": "minithumbnail",
+                    "type": "minithumbnail",
+                    "description": "Media minithumbnail; may be null"
+                },
+                {
+                    "name": "caption",
+                    "type": "formattedText",
+                    "description": "Media caption"
+                }
+            ]
+        },
+        {
+            "name": "messageExtendedMediaPhoto",
+            "description": "The media is a photo",
+            "class": "MessageExtendedMedia",
+            "properties": [
+                {
+                    "name": "photo",
+                    "type": "photo",
+                    "description": "The photo"
+                },
+                {
+                    "name": "caption",
+                    "type": "formattedText",
+                    "description": "Photo caption"
+                }
+            ]
+        },
+        {
+            "name": "messageExtendedMediaVideo",
+            "description": "The media is a video",
+            "class": "MessageExtendedMedia",
+            "properties": [
+                {
+                    "name": "video",
+                    "type": "video",
+                    "description": "The video"
+                },
+                {
+                    "name": "caption",
+                    "type": "formattedText",
+                    "description": "Photo caption"
+                }
+            ]
+        },
+        {
+            "name": "messageExtendedMediaUnsupported",
+            "description": "The media is unuspported",
+            "class": "MessageExtendedMedia",
+            "properties": [
+                {
+                    "name": "caption",
+                    "type": "formattedText",
+                    "description": "Media caption"
+                }
+            ]
+        },
+        {
             "name": "datedFile",
             "description": "File with the date it was uploaded",
             "class": "DatedFile",
@@ -7981,6 +8165,11 @@
                     "name": "receipt_message_id",
                     "type": "int53",
                     "description": "The identifier of the message with the receipt, after the product has been purchased"
+                },
+                {
+                    "name": "extended_media",
+                    "type": "MessageExtendedMedia",
+                    "description": "Extended media attached to the invoice; may be null"
                 }
             ]
         },
@@ -8700,6 +8889,11 @@
                     "description": "Pass true if the content of the message must be protected from forwarding and saving; for bots only"
                 },
                 {
+                    "name": "update_order_of_installed_sticker_sets",
+                    "type": "Bool",
+                    "description": "Pass true if the user explicitly chosen a sticker or a custom emoji from an installed sticker set; applicable only to sendMessage and sendMessageAlbum"
+                },
+                {
                     "name": "scheduling_state",
                     "type": "MessageSchedulingState",
                     "description": "Message scheduling state; pass null to send message immediately. Messages sent to a secret chat, live location messages and self-destructing messages can't be scheduled"
@@ -8847,7 +9041,7 @@
                 {
                     "name": "disable_content_type_detection",
                     "type": "Bool",
-                    "description": "If true, automatic file type detection will be disabled and the document will be always sent as file. Always true for files sent to secret chats"
+                    "description": "If true, automatic file type detection will be disabled and the document will always be sent as file. Always true for files sent to secret chats"
                 },
                 {
                     "name": "caption",
@@ -9180,6 +9374,11 @@
                     "name": "start_parameter",
                     "type": "string",
                     "description": "Unique invoice bot deep link parameter for the generation of this invoice. If empty, it would be possible to pay directly from forwards of the invoice message"
+                },
+                {
+                    "name": "extended_media_content",
+                    "type": "InputMessageContent",
+                    "description": "The content of extended media attached to the invoice. The content of the message to be sent. Must be one of the following types: inputMessagePhoto, inputMessageVideo"
                 }
             ]
         },
@@ -10460,9 +10659,9 @@
             "class": "AddedReaction",
             "properties": [
                 {
-                    "name": "reaction",
-                    "type": "string",
-                    "description": "Text representation of the reaction"
+                    "name": "type",
+                    "type": "ReactionType",
+                    "description": "Type of the reaction"
                 },
                 {
                     "name": "sender_id",
@@ -10499,9 +10698,9 @@
             "class": "AvailableReaction",
             "properties": [
                 {
-                    "name": "reaction",
-                    "type": "string",
-                    "description": "Text representation of the reaction"
+                    "name": "type",
+                    "type": "ReactionType",
+                    "description": "Type of the reaction"
                 },
                 {
                     "name": "needs_premium",
@@ -10512,23 +10711,38 @@
         },
         {
             "name": "availableReactions",
-            "description": "Represents a list of available reactions",
+            "description": "Represents a list of reactions that can be added to a message",
             "class": "AvailableReactions",
             "properties": [
                 {
-                    "name": "reactions",
+                    "name": "top_reactions",
                     "type": "vector\u003cavailableReaction\u003e",
-                    "description": "List of reactions"
+                    "description": "List of reactions to be shown at the top"
+                },
+                {
+                    "name": "recent_reactions",
+                    "type": "vector\u003cavailableReaction\u003e",
+                    "description": "List of recently used reactions"
+                },
+                {
+                    "name": "popular_reactions",
+                    "type": "vector\u003cavailableReaction\u003e",
+                    "description": "List of popular reactions"
+                },
+                {
+                    "name": "allow_custom_emoji",
+                    "type": "Bool",
+                    "description": "True, if custom emoji reactions could be added by Telegram Premium subscribers"
                 }
             ]
         },
         {
-            "name": "reaction",
-            "description": "Contains stickers which must be used for reaction animation rendering",
-            "class": "Reaction",
+            "name": "emojiReaction",
+            "description": "Contains information about a emoji reaction",
+            "class": "EmojiReaction",
             "properties": [
                 {
-                    "name": "reaction",
+                    "name": "emoji",
                     "type": "string",
                     "description": "Text representation of the reaction"
                 },
@@ -10541,11 +10755,6 @@
                     "name": "is_active",
                     "type": "Bool",
                     "description": "True, if the reaction can be added to new messages and enabled in chats"
-                },
-                {
-                    "name": "is_premium",
-                    "type": "Bool",
-                    "description": "True, if the reaction is available only for Premium users"
                 },
                 {
                     "name": "static_icon",
@@ -11989,12 +12198,12 @@
             "properties": [
                 {
                     "name": "old_available_reactions",
-                    "type": "vector\u003cstring\u003e",
+                    "type": "ChatAvailableReactions",
                     "description": "Previous chat available reactions"
                 },
                 {
                     "name": "new_available_reactions",
-                    "type": "vector\u003cstring\u003e",
+                    "type": "ChatAvailableReactions",
                     "description": "New chat available reactions"
                 }
             ]
@@ -12723,6 +12932,12 @@
             "properties": []
         },
         {
+            "name": "premiumFeatureEmojiStatus",
+            "description": "A emoji status shown along with the user's name",
+            "class": "PremiumFeature",
+            "properties": []
+        },
+        {
             "name": "premiumFeatureAnimatedProfilePhoto",
             "description": "Profile photo animation on message and chat screens",
             "class": "PremiumFeature",
@@ -12848,14 +13063,9 @@
                     "description": "Text description of the state of the current Premium subscription; may be empty if the current user has no Telegram Premium subscription"
                 },
                 {
-                    "name": "currency",
-                    "type": "string",
-                    "description": "ISO 4217 currency code for Telegram Premium subscription payment"
-                },
-                {
-                    "name": "monthly_amount",
-                    "type": "int53",
-                    "description": "Monthly subscription payment for Telegram Premium subscription, in the smallest units of the currency"
+                    "name": "payment_options",
+                    "type": "vector\u003cpremiumPaymentOption\u003e",
+                    "description": "The list of available options for buying Telegram Premium"
                 },
                 {
                     "name": "animations",
@@ -13102,7 +13312,7 @@
                 {
                     "name": "rotation_angle",
                     "type": "int32",
-                    "description": "Clockwise rotation angle of the gradient, in degrees; 0-359. Must be always divisible by 45"
+                    "description": "Clockwise rotation angle of the gradient, in degrees; 0-359. Must always be divisible by 45"
                 }
             ]
         },
@@ -14934,6 +15144,23 @@
                     "name": "game_short_name",
                     "type": "string",
                     "description": "Short name of the game"
+                }
+            ]
+        },
+        {
+            "name": "internalLinkTypeInstantView",
+            "description": "The link must be opened in an Instant View. Call getWebPageInstantView with the given URL to process the link",
+            "class": "InternalLinkType",
+            "properties": [
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "URL to be passed to getWebPageInstantView"
+                },
+                {
+                    "name": "fallback_url",
+                    "type": "string",
+                    "description": "An URL to open if getWebPageInstantView fails"
                 }
             ]
         },
@@ -16953,8 +17180,8 @@
                 },
                 {
                     "name": "available_reactions",
-                    "type": "vector\u003cstring\u003e",
-                    "description": "The new list of reactions, available in the chat"
+                    "type": "ChatAvailableReactions",
+                    "description": "The new reactions, available in the chat"
                 }
             ]
         },
@@ -18050,14 +18277,26 @@
             ]
         },
         {
-            "name": "updateReactions",
-            "description": "The list of supported reactions has changed",
+            "name": "updateActiveEmojiReactions",
+            "description": "The list of active emoji reactions has changed",
             "class": "Update",
             "properties": [
                 {
-                    "name": "reactions",
-                    "type": "vector\u003creaction\u003e",
-                    "description": "The new list of supported reactions"
+                    "name": "emojis",
+                    "type": "vector\u003cstring\u003e",
+                    "description": "The new list of active emoji reactions"
+                }
+            ]
+        },
+        {
+            "name": "updateDefaultReactionType",
+            "description": "The type of default reaction has changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "reaction_type",
+                    "type": "ReactionType",
+                    "description": "The new type of the default reaction"
                 }
             ]
         },
@@ -18646,6 +18885,10 @@
             "description": "Provides information about the method by which an authentication code is delivered to the user"
         },
         {
+            "name": "EmailAddressAuthentication",
+            "description": "Contains authentication data for a email address"
+        },
+        {
             "name": "AuthorizationState",
             "description": "Represents the current authorization state of the TDLib client"
         },
@@ -18706,6 +18949,10 @@
             "description": "Contains information about the origin of a forwarded message"
         },
         {
+            "name": "ReactionType",
+            "description": "Describes type of message reaction"
+        },
+        {
             "name": "MessageSendingState",
             "description": "Contains information about the sending state of the message"
         },
@@ -18724,6 +18971,10 @@
         {
             "name": "ChatSource",
             "description": "Describes a reason why an external chat is shown in a chat list"
+        },
+        {
+            "name": "ChatAvailableReactions",
+            "description": "Describes reactions available in the chat"
         },
         {
             "name": "PublicChatType",
@@ -18775,7 +19026,11 @@
         },
         {
             "name": "InputInvoice",
-            "description": "Describe an invoice to process"
+            "description": "Describes an invoice to process"
+        },
+        {
+            "name": "MessageExtendedMedia",
+            "description": "Describes a media, which is attached to an invoice"
         },
         {
             "name": "PassportElementType",
@@ -19045,23 +19300,84 @@
             "class": "Ok",
             "properties": [
                 {
-                    "name": "parameters",
-                    "type": "tdlibParameters",
-                    "description": "Parameters for TDLib initialization"
-                }
-            ],
-            "is_synchronous": false,
-            "type": 1
-        },
-        {
-            "name": "checkDatabaseEncryptionKey",
-            "description": "Checks the database encryption key for correctness. Works only when the current authorization state is authorizationStateWaitEncryptionKey",
-            "class": "Ok",
-            "properties": [
+                    "name": "use_test_dc",
+                    "type": "Bool",
+                    "description": "Pass true to use Telegram test environment instead of the production environment"
+                },
                 {
-                    "name": "encryption_key",
+                    "name": "database_directory",
+                    "type": "string",
+                    "description": "The path to the directory for the persistent database; if empty, the current working directory will be used"
+                },
+                {
+                    "name": "files_directory",
+                    "type": "string",
+                    "description": "The path to the directory for storing files; if empty, database_directory will be used"
+                },
+                {
+                    "name": "database_encryption_key",
                     "type": "bytes",
-                    "description": "Encryption key to check or set up"
+                    "description": "Encryption key for the database"
+                },
+                {
+                    "name": "use_file_database",
+                    "type": "Bool",
+                    "description": "Pass true to keep information about downloaded and uploaded files between application restarts"
+                },
+                {
+                    "name": "use_chat_info_database",
+                    "type": "Bool",
+                    "description": "Pass true to keep cache of users, basic groups, supergroups, channels and secret chats between restarts. Implies use_file_database"
+                },
+                {
+                    "name": "use_message_database",
+                    "type": "Bool",
+                    "description": "Pass true to keep cache of chats and messages between restarts. Implies use_chat_info_database"
+                },
+                {
+                    "name": "use_secret_chats",
+                    "type": "Bool",
+                    "description": "Pass true to enable support for secret chats"
+                },
+                {
+                    "name": "api_id",
+                    "type": "int32",
+                    "description": "Application identifier for Telegram API access, which can be obtained at https://my.telegram.org"
+                },
+                {
+                    "name": "api_hash",
+                    "type": "string",
+                    "description": "Application identifier hash for Telegram API access, which can be obtained at https://my.telegram.org"
+                },
+                {
+                    "name": "system_language_code",
+                    "type": "string",
+                    "description": "IETF language tag of the user's operating system language; must be non-empty"
+                },
+                {
+                    "name": "device_model",
+                    "type": "string",
+                    "description": "Model of the device the application is being run on; must be non-empty"
+                },
+                {
+                    "name": "system_version",
+                    "type": "string",
+                    "description": "Version of the operating system the application is being run on. If empty, the version is automatically detected by TDLib"
+                },
+                {
+                    "name": "application_version",
+                    "type": "string",
+                    "description": "Application version; must be non-empty"
+                },
+                {
+                    "name": "enable_storage_optimizer",
+                    "type": "Bool",
+                    "description": "Pass true to automatically delete old files in background"
+                },
+                {
+                    "name": "ignore_file_names",
+                    "type": "Bool",
+                    "description": "Pass true to ignore original file names for downloaded files. Otherwise, downloaded files are saved under names as close as possible to the original name"
                 }
             ],
             "is_synchronous": false,
@@ -19087,10 +19403,38 @@
             "type": 1
         },
         {
+            "name": "setAuthenticationEmailAddress",
+            "description": "Sets the email address of the user and sends an authentication code to the email address. Works only when the current authorization state is authorizationStateWaitEmailAddress",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "email_address",
+                    "type": "string",
+                    "description": "The email address of the user"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
             "name": "resendAuthenticationCode",
-            "description": "Re-sends an authentication code to the user. Works only when the current authorization state is authorizationStateWaitCode, the next_code_type of the result is not null and the server-specified timeout has passed",
+            "description": "Resends an authentication code to the user. Works only when the current authorization state is authorizationStateWaitCode, the next_code_type of the result is not null and the server-specified timeout has passed, or when the current authorization state is authorizationStateWaitEmailCode",
             "class": "Ok",
             "properties": [],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
+            "name": "checkAuthenticationEmailCode",
+            "description": "Checks the authentication of a email address. Works only when the current authorization state is authorizationStateWaitEmailCode",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "code",
+                    "type": "EmailAddressAuthentication",
+                    "description": "Email address authentication to check"
+                }
+            ],
             "is_synchronous": false,
             "type": 1
         },
@@ -19312,6 +19656,42 @@
                     "name": "new_recovery_email_address",
                     "type": "string",
                     "description": "New recovery email address; may be empty"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "setLoginEmailAddress",
+            "description": "Changes the login email address of the user. The change will not be applied until the new login email address is confirmed with `checkLoginEmailAddressCode`. To use Apple ID/Google ID instead of a email address, call `checkLoginEmailAddressCode` directly",
+            "class": "EmailAddressAuthenticationCodeInfo",
+            "properties": [
+                {
+                    "name": "new_login_email_address",
+                    "type": "string",
+                    "description": "New login email address"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "resendLoginEmailAddressCode",
+            "description": "Resends the login email address verification code",
+            "class": "EmailAddressAuthenticationCodeInfo",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "checkLoginEmailAddressCode",
+            "description": "Checks the login email address authentication",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "code",
+                    "type": "EmailAddressAuthentication",
+                    "description": "Email address authentication to check"
                 }
             ],
             "is_synchronous": false,
@@ -20483,6 +20863,35 @@
             "type": 2
         },
         {
+            "name": "getChatMessagePosition",
+            "description": "Returns approximate 1-based position of a message among messages, which can be found by the specified filter in the chat. Cannot be used in secret chats",
+            "class": "Count",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat in which to find message position"
+                },
+                {
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "Message identifier"
+                },
+                {
+                    "name": "filter",
+                    "type": "SearchMessagesFilter",
+                    "description": "Filter for message content; searchMessagesFilterEmpty, searchMessagesFilterUnreadMention, searchMessagesFilterUnreadReaction, and searchMessagesFilterFailedToSend are unsupported in this function"
+                },
+                {
+                    "name": "message_thread_id",
+                    "type": "int53",
+                    "description": "If not 0, only messages in the specified thread will be considered; supergroups only"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "getChatScheduledMessages",
             "description": "Returns all scheduled messages in a chat. The messages are returned in a reverse chronological order (i.e., in order of decreasing message_id)",
             "class": "Messages",
@@ -20719,7 +21128,7 @@
         {
             "name": "getChatAvailableMessageSenders",
             "description": "Returns list of message sender identifiers, which can be used to send messages in a chat",
-            "class": "MessageSenders",
+            "class": "ChatMessageSenders",
             "properties": [
                 {
                     "name": "chat_id",
@@ -21378,8 +21787,30 @@
             "type": 2
         },
         {
+            "name": "getEmojiReaction",
+            "description": "Returns information about a emoji reaction. Returns a 404 error if the reaction is not found",
+            "class": "EmojiReaction",
+            "properties": [
+                {
+                    "name": "emoji",
+                    "type": "string",
+                    "description": "Text representation of the reaction"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getCustomEmojiReactionAnimations",
+            "description": "Returns TGS stickers with generic animations for custom emoji reactions",
+            "class": "Stickers",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "getMessageAvailableReactions",
-            "description": "Returns reactions, which can be added to a message. The list can change after updateReactions, updateChatAvailableReactions for the chat, or updateMessageInteractionInfo for the message",
+            "description": "Returns reactions, which can be added to a message. The list can change after updateActiveEmojiReactions, updateChatAvailableReactions for the chat, or updateMessageInteractionInfo for the message",
             "class": "AvailableReactions",
             "properties": [
                 {
@@ -21391,14 +21822,27 @@
                     "name": "message_id",
                     "type": "int53",
                     "description": "Identifier of the message"
+                },
+                {
+                    "name": "row_size",
+                    "type": "int32",
+                    "description": "Number of reaction per row, 5-25"
                 }
             ],
             "is_synchronous": false,
             "type": 2
         },
         {
-            "name": "setMessageReaction",
-            "description": "Changes chosen reaction for a message",
+            "name": "clearRecentReactions",
+            "description": "Clears the list of recently used reactions",
+            "class": "Ok",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "addMessageReaction",
+            "description": "Adds a reaction to a message. Use getMessageAvailableReactions to receive the list of available reactions for the message",
             "class": "Ok",
             "properties": [
                 {
@@ -21412,14 +21856,43 @@
                     "description": "Identifier of the message"
                 },
                 {
-                    "name": "reaction",
-                    "type": "string",
-                    "description": "Text representation of the new chosen reaction. Can be an empty string or the currently chosen non-big reaction to remove the reaction"
+                    "name": "reaction_type",
+                    "type": "ReactionType",
+                    "description": "Type of the reaction to add"
                 },
                 {
                     "name": "is_big",
                     "type": "Bool",
                     "description": "Pass true if the reaction is added with a big animation"
+                },
+                {
+                    "name": "update_recent_reactions",
+                    "type": "Bool",
+                    "description": "Pass true if the reaction needs to be added to recent reactions"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "removeMessageReaction",
+            "description": "Removes a reaction from a message. A chosen reaction can always be removed",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat to which the message belongs"
+                },
+                {
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "Identifier of the message"
+                },
+                {
+                    "name": "reaction_type",
+                    "type": "ReactionType",
+                    "description": "Type of the reaction to remove"
                 }
             ],
             "is_synchronous": false,
@@ -21441,9 +21914,9 @@
                     "description": "Identifier of the message"
                 },
                 {
-                    "name": "reaction",
-                    "type": "string",
-                    "description": "If non-empty, only added reactions with the specified text representation will be returned"
+                    "name": "reaction_type",
+                    "type": "ReactionType",
+                    "description": "Type of the reactions to return; pass null to return all added reactions"
                 },
                 {
                     "name": "offset",
@@ -21454,6 +21927,20 @@
                     "name": "limit",
                     "type": "int32",
                     "description": "The maximum number of reactions to be returned; must be positive and can't be greater than 100"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "setDefaultReactionType",
+            "description": "Changes type of default reaction for the current user",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "reaction_type",
+                    "type": "ReactionType",
+                    "description": "New type of the default reaction"
                 }
             ],
             "is_synchronous": false,
@@ -21879,6 +22366,11 @@
                     "name": "theme",
                     "type": "themeParameters",
                     "description": "Preferred Web App theme; pass null to use the default theme"
+                },
+                {
+                    "name": "application_name",
+                    "type": "string",
+                    "description": "Short name of the application; 0-64 English letters, digits, and underscores"
                 }
             ],
             "is_synchronous": false,
@@ -21932,6 +22424,11 @@
                     "name": "theme",
                     "type": "themeParameters",
                     "description": "Preferred Web App theme; pass null to use the default theme"
+                },
+                {
+                    "name": "application_name",
+                    "type": "string",
+                    "description": "Short name of the application; 0-64 English letters, digits, and underscores"
                 },
                 {
                     "name": "reply_to_message_id",
@@ -22899,8 +23396,8 @@
                 },
                 {
                     "name": "available_reactions",
-                    "type": "vector\u003cstring\u003e",
-                    "description": "New list of reactions, available in the chat. All reactions must be active"
+                    "type": "ChatAvailableReactions",
+                    "description": "Reactions available in the chat. All emoji reactions must be active"
                 }
             ],
             "is_synchronous": false,
@@ -23478,6 +23975,38 @@
                     "description": "Pass true to add the bot to attachment menu; pass false to remove the bot from attachment menu"
                 }
             ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getThemedEmojiStatuses",
+            "description": "Returns up to 8 themed emoji statuses, which color must be changed to the color of the Telegram Premium badge",
+            "class": "EmojiStatuses",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getRecentEmojiStatuses",
+            "description": "Returns recent emoji statuses",
+            "class": "EmojiStatuses",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getDefaultEmojiStatuses",
+            "description": "Returns default emoji statuses",
+            "class": "EmojiStatuses",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "clearRecentEmojiStatuses",
+            "description": "Clears the list of recently used emoji statuses",
+            "class": "Ok",
+            "properties": [],
             "is_synchronous": false,
             "type": 2
         },
@@ -25249,18 +25778,18 @@
         },
         {
             "name": "getStickers",
-            "description": "Returns stickers from the installed sticker sets that correspond to a given emoji. If the emoji is non-empty, then favorite, recently used or trending stickers may also be returned",
+            "description": "Returns stickers from the installed sticker sets that correspond to a given emoji or can be found by sticker-specific keywords. If the query is non-empty, then favorite, recently used or trending stickers may also be returned",
             "class": "Stickers",
             "properties": [
                 {
                     "name": "sticker_type",
                     "type": "StickerType",
-                    "description": "Type of the sticker sets to return"
+                    "description": "Type of the stickers to return"
                 },
                 {
-                    "name": "emoji",
+                    "name": "query",
                     "type": "string",
-                    "description": "String representation of emoji. If empty, returns all known installed stickers"
+                    "description": "Search query; an emoji or a keyword prefix. If empty, returns all known installed stickers"
                 },
                 {
                     "name": "limit",
@@ -25270,7 +25799,7 @@
                 {
                     "name": "chat_id",
                     "type": "int53",
-                    "description": "Chat identifier for which to return stickers. Available custom emoji may be different for different chats"
+                    "description": "Chat identifier for which to return stickers. Available custom emoji stickers may be different for different chats"
                 }
             ],
             "is_synchronous": false,
@@ -25876,6 +26405,25 @@
             "type": 2
         },
         {
+            "name": "setEmojiStatus",
+            "description": "Changes the emoji status of the current user; for Telegram Premium users only",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "emoji_status",
+                    "type": "emojiStatus",
+                    "description": "New emoji status; pass null to switch to the default badge"
+                },
+                {
+                    "name": "duration",
+                    "type": "int32",
+                    "description": "Duration of the status, in seconds; pass 0 to keep the status active until it will be changed manually"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "setLocation",
             "description": "Changes the location of the current user. Needs to be called if GetOption(\"is_location_visible\") is true and location changes for more than 1 kilometer",
             "class": "Ok",
@@ -25910,7 +26458,7 @@
         },
         {
             "name": "resendChangePhoneNumberCode",
-            "description": "Re-sends the authentication code sent to confirm a new phone number for the current user. Works only if the previously received authenticationCodeInfo next_code_type was not null and the server-specified timeout has passed",
+            "description": "Resends the authentication code sent to confirm a new phone number for the current user. Works only if the previously received authenticationCodeInfo next_code_type was not null and the server-specified timeout has passed",
             "class": "AuthenticationCodeInfo",
             "properties": [],
             "is_synchronous": false,
@@ -27016,6 +27564,30 @@
             "type": 2
         },
         {
+            "name": "reportMessageReactions",
+            "description": "Reports reactions set on a message to the Telegram moderators. Reactions on a message can be reported only if message.can_report_reactions",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "Message identifier"
+                },
+                {
+                    "name": "sender_id",
+                    "type": "MessageSender",
+                    "description": "Identifier of the sender, which added the reaction"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "getChatStatistics",
             "description": "Returns detailed statistics about a chat. Currently, this method can be used only for supergroups and channels. Can be used only if supergroupFullInfo.can_get_statistics == true",
             "class": "ChatStatistics",
@@ -27377,7 +27949,7 @@
         },
         {
             "name": "resendPhoneNumberVerificationCode",
-            "description": "Re-sends the code to verify a phone number to be added to a user's Telegram Passport",
+            "description": "Resends the code to verify a phone number to be added to a user's Telegram Passport",
             "class": "AuthenticationCodeInfo",
             "properties": [],
             "is_synchronous": false,
@@ -27413,7 +27985,7 @@
         },
         {
             "name": "resendEmailAddressVerificationCode",
-            "description": "Re-sends the code to verify an email address to be added to a user's Telegram Passport",
+            "description": "Resends the code to verify an email address to be added to a user's Telegram Passport",
             "class": "EmailAddressAuthenticationCodeInfo",
             "properties": [],
             "is_synchronous": false,
