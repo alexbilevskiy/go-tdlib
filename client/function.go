@@ -3963,6 +3963,7 @@ type GetTextEntitiesRequest struct {
 	Text string `json:"text"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns all entities (mentions, hashtags, cashtags, bot commands, bank card numbers, URLs, and email addresses) contained in the text. Can be called synchronously
 func GetTextEntities(req *GetTextEntitiesRequest) (*TextEntities, error) {
 	result, err := Execute(Request{
@@ -3984,10 +3985,26 @@ func GetTextEntities(req *GetTextEntitiesRequest) (*TextEntities, error) {
 	return UnmarshalTextEntities(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns all entities (mentions, hashtags, cashtags, bot commands, bank card numbers, URLs, and email addresses) contained in the text. Can be called synchronously
 func (client *Client) GetTextEntities(req *GetTextEntitiesRequest) (*TextEntities, error) {
-	return GetTextEntities(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getTextEntities",
+		},
+		Data: map[string]interface{}{
+			"text": req.Text,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalTextEntities(result.Data)
 }
 
 type ParseTextEntitiesRequest struct {
@@ -3997,6 +4014,7 @@ type ParseTextEntitiesRequest struct {
 	ParseMode TextParseMode `json:"parse_mode"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Parses Bold, Italic, Underline, Strikethrough, Spoiler, CustomEmoji, Code, Pre, PreCode, TextUrl and MentionName entities contained in the text. Can be called synchronously
 func ParseTextEntities(req *ParseTextEntitiesRequest) (*FormattedText, error) {
 	result, err := Execute(Request{
@@ -4019,10 +4037,27 @@ func ParseTextEntities(req *ParseTextEntitiesRequest) (*FormattedText, error) {
 	return UnmarshalFormattedText(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Parses Bold, Italic, Underline, Strikethrough, Spoiler, CustomEmoji, Code, Pre, PreCode, TextUrl and MentionName entities contained in the text. Can be called synchronously
 func (client *Client) ParseTextEntities(req *ParseTextEntitiesRequest) (*FormattedText, error) {
-	return ParseTextEntities(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "parseTextEntities",
+		},
+		Data: map[string]interface{}{
+			"text":       req.Text,
+			"parse_mode": req.ParseMode,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalFormattedText(result.Data)
 }
 
 type ParseMarkdownRequest struct {
@@ -4030,6 +4065,7 @@ type ParseMarkdownRequest struct {
 	Text *FormattedText `json:"text"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Parses Markdown entities in a human-friendly format, ignoring markup errors. Can be called synchronously
 func ParseMarkdown(req *ParseMarkdownRequest) (*FormattedText, error) {
 	result, err := Execute(Request{
@@ -4051,10 +4087,26 @@ func ParseMarkdown(req *ParseMarkdownRequest) (*FormattedText, error) {
 	return UnmarshalFormattedText(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Parses Markdown entities in a human-friendly format, ignoring markup errors. Can be called synchronously
 func (client *Client) ParseMarkdown(req *ParseMarkdownRequest) (*FormattedText, error) {
-	return ParseMarkdown(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "parseMarkdown",
+		},
+		Data: map[string]interface{}{
+			"text": req.Text,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalFormattedText(result.Data)
 }
 
 type GetMarkdownTextRequest struct {
@@ -4062,6 +4114,7 @@ type GetMarkdownTextRequest struct {
 	Text *FormattedText `json:"text"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Replaces text entities with Markdown formatting in a human-friendly format. Entities that can't be represented in Markdown unambiguously are kept as is. Can be called synchronously
 func GetMarkdownText(req *GetMarkdownTextRequest) (*FormattedText, error) {
 	result, err := Execute(Request{
@@ -4083,10 +4136,26 @@ func GetMarkdownText(req *GetMarkdownTextRequest) (*FormattedText, error) {
 	return UnmarshalFormattedText(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Replaces text entities with Markdown formatting in a human-friendly format. Entities that can't be represented in Markdown unambiguously are kept as is. Can be called synchronously
 func (client *Client) GetMarkdownText(req *GetMarkdownTextRequest) (*FormattedText, error) {
-	return GetMarkdownText(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getMarkdownText",
+		},
+		Data: map[string]interface{}{
+			"text": req.Text,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalFormattedText(result.Data)
 }
 
 type GetFileMimeTypeRequest struct {
@@ -4094,6 +4163,7 @@ type GetFileMimeTypeRequest struct {
 	FileName string `json:"file_name"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns the MIME type of a file, guessed by its extension. Returns an empty string on failure. Can be called synchronously
 func GetFileMimeType(req *GetFileMimeTypeRequest) (*Text, error) {
 	result, err := Execute(Request{
@@ -4115,10 +4185,26 @@ func GetFileMimeType(req *GetFileMimeTypeRequest) (*Text, error) {
 	return UnmarshalText(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns the MIME type of a file, guessed by its extension. Returns an empty string on failure. Can be called synchronously
 func (client *Client) GetFileMimeType(req *GetFileMimeTypeRequest) (*Text, error) {
-	return GetFileMimeType(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getFileMimeType",
+		},
+		Data: map[string]interface{}{
+			"file_name": req.FileName,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalText(result.Data)
 }
 
 type GetFileExtensionRequest struct {
@@ -4126,6 +4212,7 @@ type GetFileExtensionRequest struct {
 	MimeType string `json:"mime_type"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns the extension of a file, guessed by its MIME type. Returns an empty string on failure. Can be called synchronously
 func GetFileExtension(req *GetFileExtensionRequest) (*Text, error) {
 	result, err := Execute(Request{
@@ -4147,10 +4234,26 @@ func GetFileExtension(req *GetFileExtensionRequest) (*Text, error) {
 	return UnmarshalText(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns the extension of a file, guessed by its MIME type. Returns an empty string on failure. Can be called synchronously
 func (client *Client) GetFileExtension(req *GetFileExtensionRequest) (*Text, error) {
-	return GetFileExtension(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getFileExtension",
+		},
+		Data: map[string]interface{}{
+			"mime_type": req.MimeType,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalText(result.Data)
 }
 
 type CleanFileNameRequest struct {
@@ -4158,6 +4261,7 @@ type CleanFileNameRequest struct {
 	FileName string `json:"file_name"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Removes potentially dangerous characters from the name of a file. The encoding of the file name is supposed to be UTF-8. Returns an empty string on failure. Can be called synchronously
 func CleanFileName(req *CleanFileNameRequest) (*Text, error) {
 	result, err := Execute(Request{
@@ -4179,10 +4283,26 @@ func CleanFileName(req *CleanFileNameRequest) (*Text, error) {
 	return UnmarshalText(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Removes potentially dangerous characters from the name of a file. The encoding of the file name is supposed to be UTF-8. Returns an empty string on failure. Can be called synchronously
 func (client *Client) CleanFileName(req *CleanFileNameRequest) (*Text, error) {
-	return CleanFileName(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "cleanFileName",
+		},
+		Data: map[string]interface{}{
+			"file_name": req.FileName,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalText(result.Data)
 }
 
 type GetLanguagePackStringRequest struct {
@@ -4196,6 +4316,7 @@ type GetLanguagePackStringRequest struct {
 	Key string `json:"key"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns a string stored in the local database from the specified localization target and language pack by its key. Returns a 404 error if the string is not found. Can be called synchronously
 func GetLanguagePackString(req *GetLanguagePackStringRequest) (LanguagePackStringValue, error) {
 	result, err := Execute(Request{
@@ -4232,10 +4353,41 @@ func GetLanguagePackString(req *GetLanguagePackStringRequest) (LanguagePackStrin
 	}
 }
 
-// deprecated
+// this function was synchronous
 // Returns a string stored in the local database from the specified localization target and language pack by its key. Returns a 404 error if the string is not found. Can be called synchronously
 func (client *Client) GetLanguagePackString(req *GetLanguagePackStringRequest) (LanguagePackStringValue, error) {
-	return GetLanguagePackString(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getLanguagePackString",
+		},
+		Data: map[string]interface{}{
+			"language_pack_database_path": req.LanguagePackDatabasePath,
+			"localization_target":         req.LocalizationTarget,
+			"language_pack_id":            req.LanguagePackId,
+			"key":                         req.Key,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	switch result.Type {
+	case TypeLanguagePackStringValueOrdinary:
+		return UnmarshalLanguagePackStringValueOrdinary(result.Data)
+
+	case TypeLanguagePackStringValuePluralized:
+		return UnmarshalLanguagePackStringValuePluralized(result.Data)
+
+	case TypeLanguagePackStringValueDeleted:
+		return UnmarshalLanguagePackStringValueDeleted(result.Data)
+
+	default:
+		return nil, errors.New("invalid type")
+	}
 }
 
 type GetJsonValueRequest struct {
@@ -4243,6 +4395,7 @@ type GetJsonValueRequest struct {
 	Json string `json:"json"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Converts a JSON-serialized string to corresponding JsonValue object. Can be called synchronously
 func GetJsonValue(req *GetJsonValueRequest) (JsonValue, error) {
 	result, err := Execute(Request{
@@ -4285,10 +4438,47 @@ func GetJsonValue(req *GetJsonValueRequest) (JsonValue, error) {
 	}
 }
 
-// deprecated
+// this function was synchronous
 // Converts a JSON-serialized string to corresponding JsonValue object. Can be called synchronously
 func (client *Client) GetJsonValue(req *GetJsonValueRequest) (JsonValue, error) {
-	return GetJsonValue(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getJsonValue",
+		},
+		Data: map[string]interface{}{
+			"json": req.Json,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	switch result.Type {
+	case TypeJsonValueNull:
+		return UnmarshalJsonValueNull(result.Data)
+
+	case TypeJsonValueBoolean:
+		return UnmarshalJsonValueBoolean(result.Data)
+
+	case TypeJsonValueNumber:
+		return UnmarshalJsonValueNumber(result.Data)
+
+	case TypeJsonValueString:
+		return UnmarshalJsonValueString(result.Data)
+
+	case TypeJsonValueArray:
+		return UnmarshalJsonValueArray(result.Data)
+
+	case TypeJsonValueObject:
+		return UnmarshalJsonValueObject(result.Data)
+
+	default:
+		return nil, errors.New("invalid type")
+	}
 }
 
 type GetJsonStringRequest struct {
@@ -4296,6 +4486,7 @@ type GetJsonStringRequest struct {
 	JsonValue JsonValue `json:"json_value"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Converts a JsonValue object to corresponding JSON-serialized string. Can be called synchronously
 func GetJsonString(req *GetJsonStringRequest) (*Text, error) {
 	result, err := Execute(Request{
@@ -4317,10 +4508,26 @@ func GetJsonString(req *GetJsonStringRequest) (*Text, error) {
 	return UnmarshalText(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Converts a JsonValue object to corresponding JSON-serialized string. Can be called synchronously
 func (client *Client) GetJsonString(req *GetJsonStringRequest) (*Text, error) {
-	return GetJsonString(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getJsonString",
+		},
+		Data: map[string]interface{}{
+			"json_value": req.JsonValue,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalText(result.Data)
 }
 
 type GetThemeParametersJsonStringRequest struct {
@@ -4328,6 +4535,7 @@ type GetThemeParametersJsonStringRequest struct {
 	Theme *ThemeParameters `json:"theme"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Converts a themeParameters object to corresponding JSON-serialized string. Can be called synchronously
 func GetThemeParametersJsonString(req *GetThemeParametersJsonStringRequest) (*Text, error) {
 	result, err := Execute(Request{
@@ -4349,10 +4557,26 @@ func GetThemeParametersJsonString(req *GetThemeParametersJsonStringRequest) (*Te
 	return UnmarshalText(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Converts a themeParameters object to corresponding JSON-serialized string. Can be called synchronously
 func (client *Client) GetThemeParametersJsonString(req *GetThemeParametersJsonStringRequest) (*Text, error) {
-	return GetThemeParametersJsonString(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getThemeParametersJsonString",
+		},
+		Data: map[string]interface{}{
+			"theme": req.Theme,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalText(result.Data)
 }
 
 type SetPollAnswerRequest struct {
@@ -5972,6 +6196,7 @@ type GetChatFilterDefaultIconNameRequest struct {
 	Filter *ChatFilter `json:"filter"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns default icon name for a filter. Can be called synchronously
 func GetChatFilterDefaultIconName(req *GetChatFilterDefaultIconNameRequest) (*Text, error) {
 	result, err := Execute(Request{
@@ -5993,10 +6218,26 @@ func GetChatFilterDefaultIconName(req *GetChatFilterDefaultIconNameRequest) (*Te
 	return UnmarshalText(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns default icon name for a filter. Can be called synchronously
 func (client *Client) GetChatFilterDefaultIconName(req *GetChatFilterDefaultIconNameRequest) (*Text, error) {
-	return GetChatFilterDefaultIconName(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getChatFilterDefaultIconName",
+		},
+		Data: map[string]interface{}{
+			"filter": req.Filter,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalText(result.Data)
 }
 
 type SetChatTitleRequest struct {
@@ -12501,6 +12742,7 @@ type GetPushReceiverIdRequest struct {
 	Payload string `json:"payload"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns a globally unique push notification subscription identifier for identification of an account, which has received a push notification. Can be called synchronously
 func GetPushReceiverId(req *GetPushReceiverIdRequest) (*PushReceiverId, error) {
 	result, err := Execute(Request{
@@ -12522,10 +12764,26 @@ func GetPushReceiverId(req *GetPushReceiverIdRequest) (*PushReceiverId, error) {
 	return UnmarshalPushReceiverId(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns a globally unique push notification subscription identifier for identification of an account, which has received a push notification. Can be called synchronously
 func (client *Client) GetPushReceiverId(req *GetPushReceiverIdRequest) (*PushReceiverId, error) {
-	return GetPushReceiverId(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getPushReceiverId",
+		},
+		Data: map[string]interface{}{
+			"payload": req.Payload,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalPushReceiverId(result.Data)
 }
 
 type GetRecentlyVisitedTMeUrlsRequest struct {
@@ -12614,6 +12872,7 @@ type GetOptionRequest struct {
 	Name string `json:"name"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns the value of an option by its name. (Check the list of available options on https://core.telegram.org/tdlib/options.) Can be called before authorization. Can be called synchronously for options "version" and "commit_hash"
 func GetOption(req *GetOptionRequest) (OptionValue, error) {
 	result, err := Execute(Request{
@@ -12650,10 +12909,41 @@ func GetOption(req *GetOptionRequest) (OptionValue, error) {
 	}
 }
 
-// deprecated
+// this function was synchronous
 // Returns the value of an option by its name. (Check the list of available options on https://core.telegram.org/tdlib/options.) Can be called before authorization. Can be called synchronously for options "version" and "commit_hash"
 func (client *Client) GetOption(req *GetOptionRequest) (OptionValue, error) {
-	return GetOption(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getOption",
+		},
+		Data: map[string]interface{}{
+			"name": req.Name,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	switch result.Type {
+	case TypeOptionValueBoolean:
+		return UnmarshalOptionValueBoolean(result.Data)
+
+	case TypeOptionValueEmpty:
+		return UnmarshalOptionValueEmpty(result.Data)
+
+	case TypeOptionValueInteger:
+		return UnmarshalOptionValueInteger(result.Data)
+
+	case TypeOptionValueString:
+		return UnmarshalOptionValueString(result.Data)
+
+	default:
+		return nil, errors.New("invalid type")
+	}
 }
 
 type SetOptionRequest struct {
@@ -14579,6 +14869,7 @@ type GetPhoneNumberInfoSyncRequest struct {
 	PhoneNumberPrefix string `json:"phone_number_prefix"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns information about a phone number by its prefix synchronously. getCountries must be called at least once after changing localization to the specified language if properly localized country information is expected. Can be called synchronously
 func GetPhoneNumberInfoSync(req *GetPhoneNumberInfoSyncRequest) (*PhoneNumberInfo, error) {
 	result, err := Execute(Request{
@@ -14601,10 +14892,27 @@ func GetPhoneNumberInfoSync(req *GetPhoneNumberInfoSyncRequest) (*PhoneNumberInf
 	return UnmarshalPhoneNumberInfo(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns information about a phone number by its prefix synchronously. getCountries must be called at least once after changing localization to the specified language if properly localized country information is expected. Can be called synchronously
 func (client *Client) GetPhoneNumberInfoSync(req *GetPhoneNumberInfoSyncRequest) (*PhoneNumberInfo, error) {
-	return GetPhoneNumberInfoSync(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getPhoneNumberInfoSync",
+		},
+		Data: map[string]interface{}{
+			"language_code":       req.LanguageCode,
+			"phone_number_prefix": req.PhoneNumberPrefix,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalPhoneNumberInfo(result.Data)
 }
 
 // Returns the link for downloading official Telegram application to be used when the current user invites friends to Telegram
@@ -14944,6 +15252,7 @@ type SetLogStreamRequest struct {
 	LogStream LogStream `json:"log_stream"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Sets new log stream for internal logging of TDLib. Can be called synchronously
 func SetLogStream(req *SetLogStreamRequest) (*Ok, error) {
 	result, err := Execute(Request{
@@ -14965,12 +15274,29 @@ func SetLogStream(req *SetLogStreamRequest) (*Ok, error) {
 	return UnmarshalOk(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Sets new log stream for internal logging of TDLib. Can be called synchronously
 func (client *Client) SetLogStream(req *SetLogStreamRequest) (*Ok, error) {
-	return SetLogStream(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "setLogStream",
+		},
+		Data: map[string]interface{}{
+			"log_stream": req.LogStream,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalOk(result.Data)
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns information about currently used log stream for internal logging of TDLib. Can be called synchronously
 func GetLogStream() (LogStream, error) {
 	result, err := Execute(Request{
@@ -15002,10 +15328,36 @@ func GetLogStream() (LogStream, error) {
 	}
 }
 
-// deprecated
+// this function was synchronous
 // Returns information about currently used log stream for internal logging of TDLib. Can be called synchronously
 func (client *Client) GetLogStream() (LogStream, error) {
-	return GetLogStream()
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getLogStream",
+		},
+		Data: map[string]interface{}{},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	switch result.Type {
+	case TypeLogStreamDefault:
+		return UnmarshalLogStreamDefault(result.Data)
+
+	case TypeLogStreamFile:
+		return UnmarshalLogStreamFile(result.Data)
+
+	case TypeLogStreamEmpty:
+		return UnmarshalLogStreamEmpty(result.Data)
+
+	default:
+		return nil, errors.New("invalid type")
+	}
 }
 
 type SetLogVerbosityLevelRequest struct {
@@ -15013,6 +15365,7 @@ type SetLogVerbosityLevelRequest struct {
 	NewVerbosityLevel int32 `json:"new_verbosity_level"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Sets the verbosity level of the internal logging of TDLib. Can be called synchronously
 func SetLogVerbosityLevel(req *SetLogVerbosityLevelRequest) (*Ok, error) {
 	result, err := Execute(Request{
@@ -15034,12 +15387,29 @@ func SetLogVerbosityLevel(req *SetLogVerbosityLevelRequest) (*Ok, error) {
 	return UnmarshalOk(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Sets the verbosity level of the internal logging of TDLib. Can be called synchronously
 func (client *Client) SetLogVerbosityLevel(req *SetLogVerbosityLevelRequest) (*Ok, error) {
-	return SetLogVerbosityLevel(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "setLogVerbosityLevel",
+		},
+		Data: map[string]interface{}{
+			"new_verbosity_level": req.NewVerbosityLevel,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalOk(result.Data)
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns current verbosity level of the internal logging of TDLib. Can be called synchronously
 func GetLogVerbosityLevel() (*LogVerbosityLevel, error) {
 	result, err := Execute(Request{
@@ -15059,12 +15429,27 @@ func GetLogVerbosityLevel() (*LogVerbosityLevel, error) {
 	return UnmarshalLogVerbosityLevel(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns current verbosity level of the internal logging of TDLib. Can be called synchronously
 func (client *Client) GetLogVerbosityLevel() (*LogVerbosityLevel, error) {
-	return GetLogVerbosityLevel()
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getLogVerbosityLevel",
+		},
+		Data: map[string]interface{}{},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalLogVerbosityLevel(result.Data)
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns list of available TDLib internal log tags, for example, ["actor", "binlog", "connections", "notifications", "proxy"]. Can be called synchronously
 func GetLogTags() (*LogTags, error) {
 	result, err := Execute(Request{
@@ -15084,10 +15469,24 @@ func GetLogTags() (*LogTags, error) {
 	return UnmarshalLogTags(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns list of available TDLib internal log tags, for example, ["actor", "binlog", "connections", "notifications", "proxy"]. Can be called synchronously
 func (client *Client) GetLogTags() (*LogTags, error) {
-	return GetLogTags()
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getLogTags",
+		},
+		Data: map[string]interface{}{},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalLogTags(result.Data)
 }
 
 type SetLogTagVerbosityLevelRequest struct {
@@ -15097,6 +15496,7 @@ type SetLogTagVerbosityLevelRequest struct {
 	NewVerbosityLevel int32 `json:"new_verbosity_level"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Sets the verbosity level for a specified TDLib internal log tag. Can be called synchronously
 func SetLogTagVerbosityLevel(req *SetLogTagVerbosityLevelRequest) (*Ok, error) {
 	result, err := Execute(Request{
@@ -15119,10 +15519,27 @@ func SetLogTagVerbosityLevel(req *SetLogTagVerbosityLevelRequest) (*Ok, error) {
 	return UnmarshalOk(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Sets the verbosity level for a specified TDLib internal log tag. Can be called synchronously
 func (client *Client) SetLogTagVerbosityLevel(req *SetLogTagVerbosityLevelRequest) (*Ok, error) {
-	return SetLogTagVerbosityLevel(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "setLogTagVerbosityLevel",
+		},
+		Data: map[string]interface{}{
+			"tag":                 req.Tag,
+			"new_verbosity_level": req.NewVerbosityLevel,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalOk(result.Data)
 }
 
 type GetLogTagVerbosityLevelRequest struct {
@@ -15130,6 +15547,7 @@ type GetLogTagVerbosityLevelRequest struct {
 	Tag string `json:"tag"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns current verbosity level for a specified TDLib internal log tag. Can be called synchronously
 func GetLogTagVerbosityLevel(req *GetLogTagVerbosityLevelRequest) (*LogVerbosityLevel, error) {
 	result, err := Execute(Request{
@@ -15151,10 +15569,26 @@ func GetLogTagVerbosityLevel(req *GetLogTagVerbosityLevelRequest) (*LogVerbosity
 	return UnmarshalLogVerbosityLevel(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns current verbosity level for a specified TDLib internal log tag. Can be called synchronously
 func (client *Client) GetLogTagVerbosityLevel(req *GetLogTagVerbosityLevelRequest) (*LogVerbosityLevel, error) {
-	return GetLogTagVerbosityLevel(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getLogTagVerbosityLevel",
+		},
+		Data: map[string]interface{}{
+			"tag": req.Tag,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalLogVerbosityLevel(result.Data)
 }
 
 type AddLogMessageRequest struct {
@@ -15164,6 +15598,7 @@ type AddLogMessageRequest struct {
 	Text string `json:"text"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Adds a message to TDLib internal log. Can be called synchronously
 func AddLogMessage(req *AddLogMessageRequest) (*Ok, error) {
 	result, err := Execute(Request{
@@ -15186,10 +15621,27 @@ func AddLogMessage(req *AddLogMessageRequest) (*Ok, error) {
 	return UnmarshalOk(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Adds a message to TDLib internal log. Can be called synchronously
 func (client *Client) AddLogMessage(req *AddLogMessageRequest) (*Ok, error) {
-	return AddLogMessage(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "addLogMessage",
+		},
+		Data: map[string]interface{}{
+			"verbosity_level": req.VerbosityLevel,
+			"text":            req.Text,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalOk(result.Data)
 }
 
 type GetUserSupportInfoRequest struct {
@@ -15863,6 +16315,7 @@ type TestReturnErrorRequest struct {
 	Error *Error `json:"error"`
 }
 
+// synchronous variant of function to be able to call it without client instance
 // Returns the specified error and ensures that the Error object is used; for testing only. Can be called synchronously
 func TestReturnError(req *TestReturnErrorRequest) (*Error, error) {
 	result, err := Execute(Request{
@@ -15884,8 +16337,24 @@ func TestReturnError(req *TestReturnErrorRequest) (*Error, error) {
 	return UnmarshalError(result.Data)
 }
 
-// deprecated
+// this function was synchronous
 // Returns the specified error and ensures that the Error object is used; for testing only. Can be called synchronously
 func (client *Client) TestReturnError(req *TestReturnErrorRequest) (*Error, error) {
-	return TestReturnError(req)
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "testReturnError",
+		},
+		Data: map[string]interface{}{
+			"error": req.Error,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalError(result.Data)
 }
