@@ -2087,6 +2087,15 @@ func UnmarshalMessageContent(data json.RawMessage) (MessageContent, error) {
 	case TypeMessageChatSetTtl:
 		return UnmarshalMessageChatSetTtl(data)
 
+	case TypeMessageForumTopicCreated:
+		return UnmarshalMessageForumTopicCreated(data)
+
+	case TypeMessageForumTopicEdited:
+		return UnmarshalMessageForumTopicEdited(data)
+
+	case TypeMessageForumTopicIsClosedToggled:
+		return UnmarshalMessageForumTopicIsClosedToggled(data)
+
 	case TypeMessageCustomServiceAction:
 		return UnmarshalMessageCustomServiceAction(data)
 
@@ -3073,6 +3082,9 @@ func UnmarshalChatEventAction(data json.RawMessage) (ChatEventAction, error) {
 	case TypeChatEventUsernameChanged:
 		return UnmarshalChatEventUsernameChanged(data)
 
+	case TypeChatEventActiveUsernamesChanged:
+		return UnmarshalChatEventActiveUsernamesChanged(data)
+
 	case TypeChatEventHasProtectedContentToggled:
 		return UnmarshalChatEventHasProtectedContentToggled(data)
 
@@ -3108,6 +3120,24 @@ func UnmarshalChatEventAction(data json.RawMessage) (ChatEventAction, error) {
 
 	case TypeChatEventVideoChatParticipantVolumeLevelChanged:
 		return UnmarshalChatEventVideoChatParticipantVolumeLevelChanged(data)
+
+	case TypeChatEventIsForumToggled:
+		return UnmarshalChatEventIsForumToggled(data)
+
+	case TypeChatEventForumTopicCreated:
+		return UnmarshalChatEventForumTopicCreated(data)
+
+	case TypeChatEventForumTopicEdited:
+		return UnmarshalChatEventForumTopicEdited(data)
+
+	case TypeChatEventForumTopicToggleIsClosed:
+		return UnmarshalChatEventForumTopicToggleIsClosed(data)
+
+	case TypeChatEventForumTopicDeleted:
+		return UnmarshalChatEventForumTopicDeleted(data)
+
+	case TypeChatEventForumTopicPinned:
+		return UnmarshalChatEventForumTopicPinned(data)
 
 	default:
 		return nil, fmt.Errorf("Error unmarshaling. Unknown type: " + meta.Type)
@@ -3267,6 +3297,9 @@ func UnmarshalPremiumFeature(data json.RawMessage) (PremiumFeature, error) {
 
 	case TypePremiumFeatureAnimatedProfilePhoto:
 		return UnmarshalPremiumFeatureAnimatedProfilePhoto(data)
+
+	case TypePremiumFeatureForumTopicIcon:
+		return UnmarshalPremiumFeatureForumTopicIcon(data)
 
 	case TypePremiumFeatureAppIcons:
 		return UnmarshalPremiumFeatureAppIcons(data)
@@ -5104,6 +5137,9 @@ func UnmarshalUpdate(data json.RawMessage) (Update, error) {
 	case TypeUpdateChatOnlineMemberCount:
 		return UnmarshalUpdateChatOnlineMemberCount(data)
 
+	case TypeUpdateForumTopicInfo:
+		return UnmarshalUpdateForumTopicInfo(data)
+
 	case TypeUpdateScopeNotificationSettings:
 		return UnmarshalUpdateScopeNotificationSettings(data)
 
@@ -6136,6 +6172,14 @@ func UnmarshalEmojiStatuses(data json.RawMessage) (*EmojiStatuses, error) {
 	return &resp, err
 }
 
+func UnmarshalUsernames(data json.RawMessage) (*Usernames, error) {
+	var resp Usernames
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
 func UnmarshalUser(data json.RawMessage) (*User, error) {
 	var resp User
 
@@ -6728,6 +6772,14 @@ func UnmarshalSponsoredMessage(data json.RawMessage) (*SponsoredMessage, error) 
 	return &resp, err
 }
 
+func UnmarshalSponsoredMessages(data json.RawMessage) (*SponsoredMessages, error) {
+	var resp SponsoredMessages
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
 func UnmarshalFileDownload(data json.RawMessage) (*FileDownload, error) {
 	var resp FileDownload
 
@@ -7234,6 +7286,30 @@ func UnmarshalWebAppInfo(data json.RawMessage) (*WebAppInfo, error) {
 
 func UnmarshalMessageThreadInfo(data json.RawMessage) (*MessageThreadInfo, error) {
 	var resp MessageThreadInfo
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalForumTopicIcon(data json.RawMessage) (*ForumTopicIcon, error) {
+	var resp ForumTopicIcon
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalForumTopicInfo(data json.RawMessage) (*ForumTopicInfo, error) {
+	var resp ForumTopicInfo
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalForumTopic(data json.RawMessage) (*ForumTopic, error) {
+	var resp ForumTopic
 
 	err := json.Unmarshal(data, &resp)
 
@@ -8834,6 +8910,30 @@ func UnmarshalMessageChatSetTheme(data json.RawMessage) (*MessageChatSetTheme, e
 
 func UnmarshalMessageChatSetTtl(data json.RawMessage) (*MessageChatSetTtl, error) {
 	var resp MessageChatSetTtl
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalMessageForumTopicCreated(data json.RawMessage) (*MessageForumTopicCreated, error) {
+	var resp MessageForumTopicCreated
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalMessageForumTopicEdited(data json.RawMessage) (*MessageForumTopicEdited, error) {
+	var resp MessageForumTopicEdited
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalMessageForumTopicIsClosedToggled(data json.RawMessage) (*MessageForumTopicIsClosedToggled, error) {
+	var resp MessageForumTopicIsClosedToggled
 
 	err := json.Unmarshal(data, &resp)
 
@@ -10512,6 +10612,14 @@ func UnmarshalChatEventUsernameChanged(data json.RawMessage) (*ChatEventUsername
 	return &resp, err
 }
 
+func UnmarshalChatEventActiveUsernamesChanged(data json.RawMessage) (*ChatEventActiveUsernamesChanged, error) {
+	var resp ChatEventActiveUsernamesChanged
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
 func UnmarshalChatEventHasProtectedContentToggled(data json.RawMessage) (*ChatEventHasProtectedContentToggled, error) {
 	var resp ChatEventHasProtectedContentToggled
 
@@ -10602,6 +10710,54 @@ func UnmarshalChatEventVideoChatParticipantIsMutedToggled(data json.RawMessage) 
 
 func UnmarshalChatEventVideoChatParticipantVolumeLevelChanged(data json.RawMessage) (*ChatEventVideoChatParticipantVolumeLevelChanged, error) {
 	var resp ChatEventVideoChatParticipantVolumeLevelChanged
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalChatEventIsForumToggled(data json.RawMessage) (*ChatEventIsForumToggled, error) {
+	var resp ChatEventIsForumToggled
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalChatEventForumTopicCreated(data json.RawMessage) (*ChatEventForumTopicCreated, error) {
+	var resp ChatEventForumTopicCreated
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalChatEventForumTopicEdited(data json.RawMessage) (*ChatEventForumTopicEdited, error) {
+	var resp ChatEventForumTopicEdited
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalChatEventForumTopicToggleIsClosed(data json.RawMessage) (*ChatEventForumTopicToggleIsClosed, error) {
+	var resp ChatEventForumTopicToggleIsClosed
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalChatEventForumTopicDeleted(data json.RawMessage) (*ChatEventForumTopicDeleted, error) {
+	var resp ChatEventForumTopicDeleted
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalChatEventForumTopicPinned(data json.RawMessage) (*ChatEventForumTopicPinned, error) {
+	var resp ChatEventForumTopicPinned
 
 	err := json.Unmarshal(data, &resp)
 
@@ -10858,6 +11014,14 @@ func UnmarshalPremiumFeatureEmojiStatus(data json.RawMessage) (*PremiumFeatureEm
 
 func UnmarshalPremiumFeatureAnimatedProfilePhoto(data json.RawMessage) (*PremiumFeatureAnimatedProfilePhoto, error) {
 	var resp PremiumFeatureAnimatedProfilePhoto
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
+func UnmarshalPremiumFeatureForumTopicIcon(data json.RawMessage) (*PremiumFeatureForumTopicIcon, error) {
+	var resp PremiumFeatureForumTopicIcon
 
 	err := json.Unmarshal(data, &resp)
 
@@ -13472,6 +13636,14 @@ func UnmarshalUpdateChatOnlineMemberCount(data json.RawMessage) (*UpdateChatOnli
 	return &resp, err
 }
 
+func UnmarshalUpdateForumTopicInfo(data json.RawMessage) (*UpdateForumTopicInfo, error) {
+	var resp UpdateForumTopicInfo
+
+	err := json.Unmarshal(data, &resp)
+
+	return &resp, err
+}
+
 func UnmarshalUpdateScopeNotificationSettings(data json.RawMessage) (*UpdateScopeNotificationSettings, error) {
 	var resp UpdateScopeNotificationSettings
 
@@ -14399,6 +14571,9 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 	case TypeEmojiStatuses:
 		return UnmarshalEmojiStatuses(data)
 
+	case TypeUsernames:
+		return UnmarshalUsernames(data)
+
 	case TypeUser:
 		return UnmarshalUser(data)
 
@@ -14621,6 +14796,9 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 	case TypeSponsoredMessage:
 		return UnmarshalSponsoredMessage(data)
 
+	case TypeSponsoredMessages:
+		return UnmarshalSponsoredMessages(data)
+
 	case TypeFileDownload:
 		return UnmarshalFileDownload(data)
 
@@ -14812,6 +14990,15 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 
 	case TypeMessageThreadInfo:
 		return UnmarshalMessageThreadInfo(data)
+
+	case TypeForumTopicIcon:
+		return UnmarshalForumTopicIcon(data)
+
+	case TypeForumTopicInfo:
+		return UnmarshalForumTopicInfo(data)
+
+	case TypeForumTopic:
+		return UnmarshalForumTopic(data)
 
 	case TypeRichTextPlain:
 		return UnmarshalRichTextPlain(data)
@@ -15412,6 +15599,15 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 
 	case TypeMessageChatSetTtl:
 		return UnmarshalMessageChatSetTtl(data)
+
+	case TypeMessageForumTopicCreated:
+		return UnmarshalMessageForumTopicCreated(data)
+
+	case TypeMessageForumTopicEdited:
+		return UnmarshalMessageForumTopicEdited(data)
+
+	case TypeMessageForumTopicIsClosedToggled:
+		return UnmarshalMessageForumTopicIsClosedToggled(data)
 
 	case TypeMessageCustomServiceAction:
 		return UnmarshalMessageCustomServiceAction(data)
@@ -16040,6 +16236,9 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 	case TypeChatEventUsernameChanged:
 		return UnmarshalChatEventUsernameChanged(data)
 
+	case TypeChatEventActiveUsernamesChanged:
+		return UnmarshalChatEventActiveUsernamesChanged(data)
+
 	case TypeChatEventHasProtectedContentToggled:
 		return UnmarshalChatEventHasProtectedContentToggled(data)
 
@@ -16075,6 +16274,24 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 
 	case TypeChatEventVideoChatParticipantVolumeLevelChanged:
 		return UnmarshalChatEventVideoChatParticipantVolumeLevelChanged(data)
+
+	case TypeChatEventIsForumToggled:
+		return UnmarshalChatEventIsForumToggled(data)
+
+	case TypeChatEventForumTopicCreated:
+		return UnmarshalChatEventForumTopicCreated(data)
+
+	case TypeChatEventForumTopicEdited:
+		return UnmarshalChatEventForumTopicEdited(data)
+
+	case TypeChatEventForumTopicToggleIsClosed:
+		return UnmarshalChatEventForumTopicToggleIsClosed(data)
+
+	case TypeChatEventForumTopicDeleted:
+		return UnmarshalChatEventForumTopicDeleted(data)
+
+	case TypeChatEventForumTopicPinned:
+		return UnmarshalChatEventForumTopicPinned(data)
 
 	case TypeChatEvent:
 		return UnmarshalChatEvent(data)
@@ -16171,6 +16388,9 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 
 	case TypePremiumFeatureAnimatedProfilePhoto:
 		return UnmarshalPremiumFeatureAnimatedProfilePhoto(data)
+
+	case TypePremiumFeatureForumTopicIcon:
+		return UnmarshalPremiumFeatureForumTopicIcon(data)
 
 	case TypePremiumFeatureAppIcons:
 		return UnmarshalPremiumFeatureAppIcons(data)
@@ -17149,6 +17369,9 @@ func UnmarshalType(data json.RawMessage) (Type, error) {
 
 	case TypeUpdateChatOnlineMemberCount:
 		return UnmarshalUpdateChatOnlineMemberCount(data)
+
+	case TypeUpdateForumTopicInfo:
+		return UnmarshalUpdateForumTopicInfo(data)
 
 	case TypeUpdateScopeNotificationSettings:
 		return UnmarshalUpdateScopeNotificationSettings(data)
