@@ -34,6 +34,9 @@ func Parse(reader io.Reader) (*Schema, error) {
 		case strings.Contains(line, "---functions---"):
 			hitFunctions = true
 
+		case strings.HasPrefix(line, "//-"):
+			//is comment, dunno how to append it to @description for now...
+
 		case line == "":
 
 		default:
