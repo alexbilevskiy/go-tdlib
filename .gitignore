@@ -1,3 +1,5 @@
 .idea
 /.tdlib
 /.cmd
+/data/td_api.tl
+/data/Td.cpp

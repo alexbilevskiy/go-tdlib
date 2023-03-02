@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"flag"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 
@@ -13,7 +12,6 @@ import (
 )
 
 type config struct {
-	version             string
 	outputDirPath       string
 	packageName         string
 	functionFileName    string
@@ -24,7 +22,6 @@ type config struct {
 func main() {
 	var config config
 
-	flag.StringVar(&config.version, "version", "", "TDLib version")
 	flag.StringVar(&config.outputDirPath, "outputDir", "./tdlib", "output directory")
 	flag.StringVar(&config.packageName, "package", "tdlib", "package name")
 	flag.StringVar(&config.functionFileName, "functionFile", "function.go", "functions filename")
@@ -33,14 +30,14 @@ func main() {
 
 	flag.Parse()
 
-	resp, err := http.Get("https://raw.githubusercontent.com/tdlib/td/" + config.version + "/td/generate/scheme/td_api.tl")
+	tlFile, err := os.Open("data/td_api.tl")
 	if err != nil {
-		log.Fatalf("http.Get error: %s", err)
+		log.Fatalf("open td_api.tl error: %s", err)
 		return
 	}
-	defer resp.Body.Close()
+	defer tlFile.Close()
 
-	schema, err := tlparser.Parse(resp.Body)
+	schema, err := tlparser.Parse(bufio.NewReader(tlFile))
 	if err != nil {
 		log.Fatalf("schema parse error: %s", err)
 		return
