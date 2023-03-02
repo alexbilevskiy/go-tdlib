@@ -34,9 +34,6 @@ func Parse(reader io.Reader) (*Schema, error) {
 		case strings.Contains(line, "---functions---"):
 			hitFunctions = true
 
-		case strings.HasPrefix(line, "//-"):
-			//is comment, dunno how to append it to @description for now...
-
 		case line == "":
 
 		default:
@@ -103,6 +100,19 @@ func parseClass(firstLine string, scanner *bufio.Scanner) *Class {
 
 	_, class.Name = parseProperty(classLineParts[1])
 	_, class.Description = parseProperty(classLineParts[2])
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		switch {
+		case strings.HasPrefix(line, "//-"):
+			class.Description += " " + strings.TrimLeft(line, "//-")
+
+		default:
+
+			return class
+		}
+	}
 
 	return class
 }
