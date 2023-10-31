@@ -91,7 +91,7 @@
         },
         {
             "name": "authenticationCodeTypeSms",
-            "description": "An authentication code is delivered via an SMS message to the specified phone number",
+            "description": "An authentication code is delivered via an SMS message to the specified phone number; applications may not receive this type of code",
             "class": "AuthenticationCodeType",
             "properties": [
                 {
@@ -184,7 +184,7 @@
                 {
                     "name": "receipt",
                     "type": "string",
-                    "description": "Receipt of successful applikation token validation to compare with receipt from push notification"
+                    "description": "Receipt of successful application token validation to compare with receipt from push notification"
                 },
                 {
                     "name": "push_timeout",
@@ -279,6 +279,30 @@
             ]
         },
         {
+            "name": "emailAddressResetStateAvailable",
+            "description": "Email address can be reset after the given period. Call resetAuthenticationEmailAddress to reset it and allow the user to authorize with a code sent to the user's phone number",
+            "class": "EmailAddressResetState",
+            "properties": [
+                {
+                    "name": "wait_period",
+                    "type": "int32",
+                    "description": "Time required to wait before the email address can be reset; 0 if the user is subscribed to Telegram Premium"
+                }
+            ]
+        },
+        {
+            "name": "emailAddressResetStatePending",
+            "description": "Email address reset has already been requested. Call resetAuthenticationEmailAddress to check whether immediate reset is possible",
+            "class": "EmailAddressResetState",
+            "properties": [
+                {
+                    "name": "reset_in",
+                    "type": "int32",
+                    "description": "Left time before the email address will be reset, in seconds. updateAuthorizationState is not sent when this field changes"
+                }
+            ]
+        },
+        {
             "name": "textEntity",
             "description": "Represents a part of the text that needs to be formatted in some unusual way",
             "class": "TextEntity",
@@ -353,7 +377,7 @@
         },
         {
             "name": "authorizationStateWaitTdlibParameters",
-            "description": "Initializetion parameters are needed. Call setTdlibParameters to provide them",
+            "description": "Initialization parameters are needed. Call setTdlibParameters to provide them",
             "class": "AuthorizationState",
             "properties": []
         },
@@ -401,9 +425,9 @@
                     "description": "Information about the sent authentication code"
                 },
                 {
-                    "name": "next_phone_number_authorization_date",
-                    "type": "int32",
-                    "description": "Point in time (Unix timestamp) when the user will be able to authorize with a code sent to the user's phone number; 0 if unknown"
+                    "name": "email_address_reset_state",
+                    "type": "EmailAddressResetState",
+                    "description": "Reset state of the email address; may be null if the email address can't be reset"
                 }
             ]
         },
@@ -457,6 +481,11 @@
                     "name": "has_recovery_email_address",
                     "type": "Bool",
                     "description": "True, if a recovery email address has been set up"
+                },
+                {
+                    "name": "has_passport_data",
+                    "type": "Bool",
+                    "description": "True, if some Telegram Passport elements were saved"
                 },
                 {
                     "name": "recovery_email_address_pattern",
@@ -1224,7 +1253,7 @@
                 {
                     "name": "set_id",
                     "type": "int64",
-                    "description": "The identifier of the sticker set to which the sticker belongs; 0 if none"
+                    "description": "Identifier of the sticker set to which the sticker belongs; 0 if none"
                 },
                 {
                     "name": "width",
@@ -1524,7 +1553,7 @@
         },
         {
             "name": "game",
-            "description": "Describes a game",
+            "description": "Describes a game. Use getInternalLink with internalLinkTypeGame to share the game",
             "class": "Game",
             "properties": [
                 {
@@ -1535,7 +1564,7 @@
                 {
                     "name": "short_name",
                     "type": "string",
-                    "description": "Game short name. To share a game use the URL https://t.me/{bot_username}?game={game_short_name}"
+                    "description": "Game short name"
                 },
                 {
                     "name": "title",
@@ -1565,6 +1594,38 @@
             ]
         },
         {
+            "name": "webApp",
+            "description": "Describes a Web App. Use getInternalLink with internalLinkTypeWebApp to share the Web App",
+            "class": "WebApp",
+            "properties": [
+                {
+                    "name": "short_name",
+                    "type": "string",
+                    "description": "Web App short name"
+                },
+                {
+                    "name": "title",
+                    "type": "string",
+                    "description": "Web App title"
+                },
+                {
+                    "name": "description",
+                    "type": "string",
+                    "description": "Web App description"
+                },
+                {
+                    "name": "photo",
+                    "type": "photo",
+                    "description": "Web App photo"
+                },
+                {
+                    "name": "animation",
+                    "type": "animation",
+                    "description": "Web App animation; may be null"
+                }
+            ]
+        },
+        {
             "name": "poll",
             "description": "Describes a poll",
             "class": "Poll",
@@ -1590,9 +1651,9 @@
                     "description": "Total number of voters, participating in the poll"
                 },
                 {
-                    "name": "recent_voter_user_ids",
-                    "type": "vector\u003cint53\u003e",
-                    "description": "User identifiers of recent voters, if the poll is non-anonymous"
+                    "name": "recent_voter_ids",
+                    "type": "vector\u003cMessageSender\u003e",
+                    "description": "Identifiers of recent voters, if the poll is non-anonymous"
                 },
                 {
                     "name": "is_anonymous",
@@ -1618,6 +1679,72 @@
                     "name": "is_closed",
                     "type": "Bool",
                     "description": "True, if the poll is closed"
+                }
+            ]
+        },
+        {
+            "name": "background",
+            "description": "Describes a chat background",
+            "class": "Background",
+            "properties": [
+                {
+                    "name": "id",
+                    "type": "int64",
+                    "description": "Unique background identifier"
+                },
+                {
+                    "name": "is_default",
+                    "type": "Bool",
+                    "description": "True, if this is one of default backgrounds"
+                },
+                {
+                    "name": "is_dark",
+                    "type": "Bool",
+                    "description": "True, if the background is dark and is recommended to be used with dark theme"
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Unique background name"
+                },
+                {
+                    "name": "document",
+                    "type": "document",
+                    "description": "Document with the background; may be null. Null only for filled backgrounds"
+                },
+                {
+                    "name": "type",
+                    "type": "BackgroundType",
+                    "description": "Type of the background"
+                }
+            ]
+        },
+        {
+            "name": "backgrounds",
+            "description": "Contains a list of backgrounds",
+            "class": "Backgrounds",
+            "properties": [
+                {
+                    "name": "backgrounds",
+                    "type": "vector\u003cbackground\u003e",
+                    "description": "A list of backgrounds"
+                }
+            ]
+        },
+        {
+            "name": "chatBackground",
+            "description": "Describes a background set for a specific chat",
+            "class": "ChatBackground",
+            "properties": [
+                {
+                    "name": "background",
+                    "type": "background",
+                    "description": "The background"
+                },
+                {
+                    "name": "dark_theme_dimming",
+                    "type": "int32",
+                    "description": "Dimming of the background in dark themes, as a percentage; 0-100"
                 }
             ]
         },
@@ -1707,6 +1834,11 @@
             "description": "A bot (see https://core.telegram.org/bots)",
             "class": "UserType",
             "properties": [
+                {
+                    "name": "can_be_edited",
+                    "type": "Bool",
+                    "description": "True, if the bot is owned by the current user and can be edited using the methods toggleBotUsernameIsActive, reorderBotActiveUsernames, setBotProfilePhoto, setBotName, setBotInfoDescription, and setBotInfoShortDescription"
+                },
                 {
                     "name": "can_join_groups",
                     "type": "Bool",
@@ -1999,7 +2131,7 @@
             "class": "ChatPermissions",
             "properties": [
                 {
-                    "name": "can_send_messages",
+                    "name": "can_send_basic_messages",
                     "type": "Bool",
                     "description": "True, if the user can send text messages, contacts, invoices, locations, and venues"
                 },
@@ -2210,18 +2342,23 @@
                     "name": "custom_emoji_id",
                     "type": "int64",
                     "description": "Identifier of the custom emoji in stickerFormatTgs format"
+                },
+                {
+                    "name": "expiration_date",
+                    "type": "int32",
+                    "description": "Point in time (Unix timestamp) when the status will expire; 0 if never"
                 }
             ]
         },
         {
             "name": "emojiStatuses",
-            "description": "Contains a list of emoji statuses",
+            "description": "Contains a list of custom emoji identifiers, which can be set as emoji statuses",
             "class": "EmojiStatuses",
             "properties": [
                 {
-                    "name": "emoji_statuses",
-                    "type": "vector\u003cemojiStatus\u003e",
-                    "description": "The list of emoji statuses"
+                    "name": "custom_emoji_ids",
+                    "type": "vector\u003cint64\u003e",
+                    "description": "The list of custom emoji identifiers"
                 }
             ]
         },
@@ -2233,17 +2370,17 @@
                 {
                     "name": "active_usernames",
                     "type": "vector\u003cstring\u003e",
-                    "description": "List of active usernames; the first one must be shown as the primary username. The order of active usernames can be changed with reorderActiveUsernames or reorderSupergroupActiveUsernames"
+                    "description": "List of active usernames; the first one must be shown as the primary username. The order of active usernames can be changed with reorderActiveUsernames, reorderBotActiveUsernames or reorderSupergroupActiveUsernames"
                 },
                 {
                     "name": "disabled_usernames",
                     "type": "vector\u003cstring\u003e",
-                    "description": "List of currently disabled usernames; the username can be activated with toggleUsernameIsActive/toggleSupergroupUsernameIsActive"
+                    "description": "List of currently disabled usernames; the username can be activated with toggleUsernameIsActive, toggleBotUsernameIsActive, or toggleSupergroupUsernameIsActive"
                 },
                 {
                     "name": "editable_username",
                     "type": "string",
-                    "description": "The active username, which can be changed with setUsername/setSupergroupUsername"
+                    "description": "The active username, which can be changed with setUsername or setSupergroupUsername"
                 }
             ]
         },
@@ -2303,6 +2440,11 @@
                     "description": "The user is a contact of the current user and the current user is a contact of the user"
                 },
                 {
+                    "name": "is_close_friend",
+                    "type": "Bool",
+                    "description": "The user is a close friend of the current user; implies that the user is a contact"
+                },
+                {
                     "name": "is_verified",
                     "type": "Bool",
                     "description": "True, if the user is verified"
@@ -2333,6 +2475,16 @@
                     "description": "True, if many users reported this user as a fake account"
                 },
                 {
+                    "name": "has_active_stories",
+                    "type": "Bool",
+                    "description": "True, if the user has non-expired stories available to the current user"
+                },
+                {
+                    "name": "has_unread_active_stories",
+                    "type": "Bool",
+                    "description": "True, if the user has unread non-expired stories available to the current user"
+                },
+                {
                     "name": "have_access",
                     "type": "Bool",
                     "description": "If false, the user is inaccessible, and the only information known about the user is inside this class. Identifier of the user can't be passed to any method"
@@ -2360,7 +2512,7 @@
             "class": "BotInfo",
             "properties": [
                 {
-                    "name": "share_text",
+                    "name": "short_description",
                     "type": "string",
                     "description": "The text that is shown on the bot's profile page and is sent together with the link when users share the bot"
                 },
@@ -2398,6 +2550,26 @@
                     "name": "default_channel_administrator_rights",
                     "type": "chatAdministratorRights",
                     "description": "Default administrator rights for adding the bot to channels; may be null"
+                },
+                {
+                    "name": "edit_commands_link",
+                    "type": "InternalLinkType",
+                    "description": "The internal link, which can be used to edit bot commands; may be null"
+                },
+                {
+                    "name": "edit_description_link",
+                    "type": "InternalLinkType",
+                    "description": "The internal link, which can be used to edit bot description; may be null"
+                },
+                {
+                    "name": "edit_description_media_link",
+                    "type": "InternalLinkType",
+                    "description": "The internal link, which can be used to edit the photo or animation shown in the chat with the bot if the chat is empty; may be null"
+                },
+                {
+                    "name": "edit_settings_link",
+                    "type": "InternalLinkType",
+                    "description": "The internal link, which can be used to edit bot settings; may be null"
                 }
             ]
         },
@@ -2450,6 +2622,11 @@
                     "name": "has_restricted_voice_and_video_note_messages",
                     "type": "Bool",
                     "description": "True, if voice and video notes can't be sent or forwarded to the user"
+                },
+                {
+                    "name": "has_pinned_stories",
+                    "type": "Bool",
+                    "description": "True, if the user has pinned stories"
                 },
                 {
                     "name": "need_phone_number_privacy_exception",
@@ -2928,6 +3105,11 @@
                     "description": "Point in time (Unix timestamp) when the user joined the chat"
                 },
                 {
+                    "name": "via_chat_folder_invite_link",
+                    "type": "Bool",
+                    "description": "True, if the user has joined the chat using an invite link for a chat folder"
+                },
+                {
                     "name": "approver_user_id",
                     "type": "int53",
                     "description": "User identifier of the chat administrator, approved user join request"
@@ -3171,7 +3353,7 @@
                 {
                     "name": "member_count",
                     "type": "int32",
-                    "description": "Number of members in the supergroup or channel; 0 if unknown. Currently, it is guaranteed to be known only if the supergroup or channel was received through searchPublicChats, searchChatsNearby, getInactiveSupergroupChats, getSuitableDiscussionChats, getGroupsInCommon, or getUserPrivacySettingRules"
+                    "description": "Number of members in the supergroup or channel; 0 if unknown. Currently, it is guaranteed to be known only if the supergroup or channel was received through searchPublicChats, searchChatsNearby, getInactiveSupergroupChats, getSuitableDiscussionChats, getGroupsInCommon, getUserPrivacySettingRules, or in chatFolderInviteLinkInfo.missing_chat_ids"
                 },
                 {
                     "name": "has_linked_chat",
@@ -3304,11 +3486,6 @@
                     "name": "can_hide_members",
                     "type": "Bool",
                     "description": "True, if non-administrators and non-bots can be hidden in responses to getSupergroupMembers and searchChatMembers for non-administrators"
-                },
-                {
-                    "name": "can_set_username",
-                    "type": "Bool",
-                    "description": "True, if the chat username can be changed"
                 },
                 {
                     "name": "can_set_sticker_set",
@@ -3494,6 +3671,35 @@
                     "name": "senders",
                     "type": "vector\u003cchatMessageSender\u003e",
                     "description": "List of available message senders"
+                }
+            ]
+        },
+        {
+            "name": "messageViewer",
+            "description": "Represents a viewer of a message",
+            "class": "MessageViewer",
+            "properties": [
+                {
+                    "name": "user_id",
+                    "type": "int53",
+                    "description": "User identifier of the viewer"
+                },
+                {
+                    "name": "view_date",
+                    "type": "int32",
+                    "description": "Approximate point in time (Unix timestamp) when the message was viewed"
+                }
+            ]
+        },
+        {
+            "name": "messageViewers",
+            "description": "Represents a list of message viewers",
+            "class": "MessageViewers",
+            "properties": [
+                {
+                    "name": "viewers",
+                    "type": "vector\u003cmessageViewer\u003e",
+                    "description": "List of message viewers"
                 }
             ]
         },
@@ -3740,7 +3946,13 @@
             "name": "messageSendingStatePending",
             "description": "The message is being sent now, but has not yet been delivered to the server",
             "class": "MessageSendingState",
-            "properties": []
+            "properties": [
+                {
+                    "name": "sending_id",
+                    "type": "int32",
+                    "description": "Non-persistent message sending identifier, specified by the application"
+                }
+            ]
         },
         {
             "name": "messageSendingStateFailed",
@@ -3771,6 +3983,40 @@
                     "name": "retry_after",
                     "type": "double",
                     "description": "Time left before the message can be re-sent, in seconds. No update is sent when this field changes"
+                }
+            ]
+        },
+        {
+            "name": "messageReplyToMessage",
+            "description": "Describes a replied message",
+            "class": "MessageReplyTo",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "The identifier of the chat to which the replied message belongs; ignored for outgoing replies. For example, messages in the Replies chat are replies to messages in different chats"
+                },
+                {
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "The identifier of the replied message"
+                }
+            ]
+        },
+        {
+            "name": "messageReplyToStory",
+            "description": "Describes a replied story",
+            "class": "MessageReplyTo",
+            "properties": [
+                {
+                    "name": "story_sender_chat_id",
+                    "type": "int53",
+                    "description": "The identifier of the sender of the replied story. Currently, stories can be replied only in the sender's chat"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "The identifier of the replied story"
                 }
             ]
         },
@@ -3915,14 +4161,9 @@
                     "description": "Information about unread reactions added to the message"
                 },
                 {
-                    "name": "reply_in_chat_id",
-                    "type": "int53",
-                    "description": "If non-zero, the identifier of the chat to which the replied message belongs; Currently, only messages in the Replies chat can have different reply_in_chat_id and chat_id"
-                },
-                {
-                    "name": "reply_to_message_id",
-                    "type": "int53",
-                    "description": "If non-zero, the identifier of the message this message is replying to; can be the identifier of a deleted message"
+                    "name": "reply_to",
+                    "type": "MessageReplyTo",
+                    "description": "Information about the message or the story this message is replying to; may be null if none"
                 },
                 {
                     "name": "message_thread_id",
@@ -4111,6 +4352,156 @@
             ]
         },
         {
+            "name": "messageSourceChatHistory",
+            "description": "The message is from a chat history",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSourceMessageThreadHistory",
+            "description": "The message is from a message thread history",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSourceForumTopicHistory",
+            "description": "The message is from a forum topic history",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSourceHistoryPreview",
+            "description": "The message is from chat, message thread or forum topic history preview",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSourceChatList",
+            "description": "The message is from a chat list or a forum topic list",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSourceSearch",
+            "description": "The message is from search results, including file downloads, local file list, outgoing document messages, calendar",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSourceChatEventLog",
+            "description": "The message is from a chat event log",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSourceNotification",
+            "description": "The message is from a notification",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSourceScreenshot",
+            "description": "The message was screenshotted; the source must be used only if the message content was visible during the screenshot",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSourceOther",
+            "description": "The message is from some other source",
+            "class": "MessageSource",
+            "properties": []
+        },
+        {
+            "name": "messageSponsorTypeBot",
+            "description": "The sponsor is a bot",
+            "class": "MessageSponsorType",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "User identifier of the bot"
+                },
+                {
+                    "name": "link",
+                    "type": "InternalLinkType",
+                    "description": "An internal link to be opened when the sponsored message is clicked"
+                }
+            ]
+        },
+        {
+            "name": "messageSponsorTypePublicChannel",
+            "description": "The sponsor is a public channel chat",
+            "class": "MessageSponsorType",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Sponsor chat identifier"
+                },
+                {
+                    "name": "link",
+                    "type": "InternalLinkType",
+                    "description": "An internal link to be opened when the sponsored message is clicked; may be null if the sponsor chat needs to be opened instead"
+                }
+            ]
+        },
+        {
+            "name": "messageSponsorTypePrivateChannel",
+            "description": "The sponsor is a private channel chat",
+            "class": "MessageSponsorType",
+            "properties": [
+                {
+                    "name": "title",
+                    "type": "string",
+                    "description": "Title of the chat"
+                },
+                {
+                    "name": "invite_link",
+                    "type": "string",
+                    "description": "Invite link for the channel"
+                }
+            ]
+        },
+        {
+            "name": "messageSponsorTypeWebsite",
+            "description": "The sponsor is a website",
+            "class": "MessageSponsorType",
+            "properties": [
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "URL of the website"
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Name of the website"
+                }
+            ]
+        },
+        {
+            "name": "messageSponsor",
+            "description": "Information about the sponsor of a message",
+            "class": "MessageSponsor",
+            "properties": [
+                {
+                    "name": "type",
+                    "type": "MessageSponsorType",
+                    "description": "Type of the sponsor"
+                },
+                {
+                    "name": "photo",
+                    "type": "chatPhotoInfo",
+                    "description": "Photo of the sponsor; may be null if must not be shown"
+                },
+                {
+                    "name": "info",
+                    "type": "string",
+                    "description": "Additional optional information about the sponsor to be shown along with the message"
+                }
+            ]
+        },
+        {
             "name": "sponsoredMessage",
             "description": "Describes a sponsored message",
             "class": "SponsoredMessage",
@@ -4126,29 +4517,19 @@
                     "description": "True, if the message needs to be labeled as \"recommended\" instead of \"sponsored\""
                 },
                 {
-                    "name": "sponsor_chat_id",
-                    "type": "int53",
-                    "description": "Sponsor chat identifier; 0 if the sponsor chat is accessible through an invite link"
-                },
-                {
-                    "name": "sponsor_chat_info",
-                    "type": "chatInviteLinkInfo",
-                    "description": "Information about the sponsor chat; may be null unless sponsor_chat_id == 0"
-                },
-                {
-                    "name": "show_chat_photo",
-                    "type": "Bool",
-                    "description": "True, if the sponsor's chat photo must be shown"
-                },
-                {
-                    "name": "link",
-                    "type": "InternalLinkType",
-                    "description": "An internal link to be opened when the sponsored message is clicked; may be null if the sponsor chat needs to be opened instead"
-                },
-                {
                     "name": "content",
                     "type": "MessageContent",
                     "description": "Content of the message. Currently, can be only of the type messageText"
+                },
+                {
+                    "name": "sponsor",
+                    "type": "messageSponsor",
+                    "description": "Information about the sponsor of the message"
+                },
+                {
+                    "name": "additional_info",
+                    "type": "string",
+                    "description": "If non-empty, additional information about the sponsored message to be shown along with the message"
                 }
             ]
         },
@@ -4265,7 +4646,7 @@
         },
         {
             "name": "chatNotificationSettings",
-            "description": "Contains information about notification settings for a chat or a froum topic",
+            "description": "Contains information about notification settings for a chat or a forum topic",
             "class": "ChatNotificationSettings",
             "properties": [
                 {
@@ -4286,7 +4667,7 @@
                 {
                     "name": "sound_id",
                     "type": "int64",
-                    "description": "Identifier of the notification sound to be played; 0 if sound is disabled"
+                    "description": "Identifier of the notification sound to be played for messages; 0 if sound is disabled"
                 },
                 {
                     "name": "use_default_show_preview",
@@ -4297,6 +4678,36 @@
                     "name": "show_preview",
                     "type": "Bool",
                     "description": "True, if message content must be displayed in notifications"
+                },
+                {
+                    "name": "use_default_mute_stories",
+                    "type": "Bool",
+                    "description": "If true, mute_stories is ignored and the value for the relevant type of chat is used instead"
+                },
+                {
+                    "name": "mute_stories",
+                    "type": "Bool",
+                    "description": "True, if story notifications are received without sound"
+                },
+                {
+                    "name": "use_default_story_sound",
+                    "type": "Bool",
+                    "description": "If true, the value for the relevant type of chat is used instead of story_sound_id"
+                },
+                {
+                    "name": "story_sound_id",
+                    "type": "int64",
+                    "description": "Identifier of the notification sound to be played for stories; 0 if sound is disabled"
+                },
+                {
+                    "name": "use_default_show_story_sender",
+                    "type": "Bool",
+                    "description": "If true, show_story_sender is ignored and the value for the relevant type of chat is used instead"
+                },
+                {
+                    "name": "show_story_sender",
+                    "type": "Bool",
+                    "description": "True, if the sender of stories must be displayed in notifications"
                 },
                 {
                     "name": "use_default_disable_pinned_message_notifications",
@@ -4339,6 +4750,26 @@
                     "name": "show_preview",
                     "type": "Bool",
                     "description": "True, if message content must be displayed in notifications"
+                },
+                {
+                    "name": "use_default_mute_stories",
+                    "type": "Bool",
+                    "description": "If true, mute_stories is ignored and stories are unmuted only for the first 5 chats from topChatCategoryUsers"
+                },
+                {
+                    "name": "mute_stories",
+                    "type": "Bool",
+                    "description": "True, if story notifications are received without sound"
+                },
+                {
+                    "name": "story_sound_id",
+                    "type": "int64",
+                    "description": "Identifier of the notification sound to be played for stories; 0 if sound is disabled"
+                },
+                {
+                    "name": "show_story_sender",
+                    "type": "Bool",
+                    "description": "True, if the sender of stories must be displayed in notifications"
                 },
                 {
                     "name": "disable_pinned_message_notifications",
@@ -4433,34 +4864,51 @@
             ]
         },
         {
-            "name": "chatFilter",
-            "description": "Represents a filter of user chats",
-            "class": "ChatFilter",
+            "name": "chatFolderIcon",
+            "description": "Represents an icon for a chat folder",
+            "class": "ChatFolderIcon",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "The chosen icon name for short folder representation; one of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\", \"Airplane\", \"Book\", \"Light\", \"Like\", \"Money\", \"Note\", \"Palette\""
+                }
+            ]
+        },
+        {
+            "name": "chatFolder",
+            "description": "Represents a folder for user chats",
+            "class": "ChatFolder",
             "properties": [
                 {
                     "name": "title",
                     "type": "string",
-                    "description": "The title of the filter; 1-12 characters without line feeds"
+                    "description": "The title of the folder; 1-12 characters without line feeds"
                 },
                 {
-                    "name": "icon_name",
-                    "type": "string",
-                    "description": "The chosen icon name for short filter representation. If non-empty, must be one of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\", \"Airplane\", \"Book\", \"Light\", \"Like\", \"Money\", \"Note\", \"Palette\". If empty, use getChatFilterDefaultIconName to get default icon name for the filter"
+                    "name": "icon",
+                    "type": "chatFolderIcon",
+                    "description": "The chosen icon for the chat folder; may be null. If null, use getChatFolderDefaultIconName to get default icon name for the folder"
+                },
+                {
+                    "name": "is_shareable",
+                    "type": "Bool",
+                    "description": "True, if at least one link has been created for the folder"
                 },
                 {
                     "name": "pinned_chat_ids",
                     "type": "vector\u003cint53\u003e",
-                    "description": "The chat identifiers of pinned chats in the filtered chat list. There can be up to getOption(\"chat_filter_chosen_chat_count_max\") pinned and always included non-secret chats and the same number of secret chats, but the limit can be increased with Telegram Premium"
+                    "description": "The chat identifiers of pinned chats in the folder. There can be up to getOption(\"chat_folder_chosen_chat_count_max\") pinned and always included non-secret chats and the same number of secret chats, but the limit can be increased with Telegram Premium"
                 },
                 {
                     "name": "included_chat_ids",
                     "type": "vector\u003cint53\u003e",
-                    "description": "The chat identifiers of always included chats in the filtered chat list. There can be up to getOption(\"chat_filter_chosen_chat_count_max\") pinned and always included non-secret chats and the same number of secret chats, but the limit can be increased with Telegram Premium"
+                    "description": "The chat identifiers of always included chats in the folder. There can be up to getOption(\"chat_folder_chosen_chat_count_max\") pinned and always included non-secret chats and the same number of secret chats, but the limit can be increased with Telegram Premium"
                 },
                 {
                     "name": "excluded_chat_ids",
                     "type": "vector\u003cint53\u003e",
-                    "description": "The chat identifiers of always excluded chats in the filtered chat list. There can be up to getOption(\"chat_filter_chosen_chat_count_max\") always excluded non-secret chats and the same number of secret chats, but the limit can be increased with Telegram Premium"
+                    "description": "The chat identifiers of always excluded chats in the folder. There can be up to getOption(\"chat_folder_chosen_chat_count_max\") always excluded non-secret chats and the same number of secret chats, but the limit can be increased with Telegram Premium"
                 },
                 {
                     "name": "exclude_muted",
@@ -4505,53 +4953,141 @@
             ]
         },
         {
-            "name": "chatFilterInfo",
-            "description": "Contains basic information about a chat filter",
-            "class": "ChatFilterInfo",
+            "name": "chatFolderInfo",
+            "description": "Contains basic information about a chat folder",
+            "class": "ChatFolderInfo",
             "properties": [
                 {
                     "name": "id",
                     "type": "int32",
-                    "description": "Unique chat filter identifier"
+                    "description": "Unique chat folder identifier"
                 },
                 {
                     "name": "title",
                     "type": "string",
-                    "description": "The title of the filter; 1-12 characters without line feeds"
+                    "description": "The title of the folder; 1-12 characters without line feeds"
                 },
                 {
-                    "name": "icon_name",
-                    "type": "string",
-                    "description": "The chosen or default icon name for short filter representation. One of \"All\", \"Unread\", \"Unmuted\", \"Bots\", \"Channels\", \"Groups\", \"Private\", \"Custom\", \"Setup\", \"Cat\", \"Crown\", \"Favorite\", \"Flower\", \"Game\", \"Home\", \"Love\", \"Mask\", \"Party\", \"Sport\", \"Study\", \"Trade\", \"Travel\", \"Work\", \"Airplane\", \"Book\", \"Light\", \"Like\", \"Money\", \"Note\", \"Palette\""
+                    "name": "icon",
+                    "type": "chatFolderIcon",
+                    "description": "The chosen or default icon for the chat folder"
+                },
+                {
+                    "name": "is_shareable",
+                    "type": "Bool",
+                    "description": "True, if at least one link has been created for the folder"
+                },
+                {
+                    "name": "has_my_invite_links",
+                    "type": "Bool",
+                    "description": "True, if the chat folder has invite links created by the current user"
                 }
             ]
         },
         {
-            "name": "recommendedChatFilter",
-            "description": "Describes a recommended chat filter",
-            "class": "RecommendedChatFilter",
+            "name": "chatFolderInviteLink",
+            "description": "Contains a chat folder invite link",
+            "class": "ChatFolderInviteLink",
             "properties": [
                 {
-                    "name": "filter",
-                    "type": "chatFilter",
-                    "description": "The chat filter"
+                    "name": "invite_link",
+                    "type": "string",
+                    "description": "The chat folder invite link"
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Name of the link"
+                },
+                {
+                    "name": "chat_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of chats, included in the link"
+                }
+            ]
+        },
+        {
+            "name": "chatFolderInviteLinks",
+            "description": "Represents a list of chat folder invite links",
+            "class": "ChatFolderInviteLinks",
+            "properties": [
+                {
+                    "name": "invite_links",
+                    "type": "vector\u003cchatFolderInviteLink\u003e",
+                    "description": "List of the invite links"
+                }
+            ]
+        },
+        {
+            "name": "chatFolderInviteLinkInfo",
+            "description": "Contains information about an invite link to a chat folder",
+            "class": "ChatFolderInviteLinkInfo",
+            "properties": [
+                {
+                    "name": "chat_folder_info",
+                    "type": "chatFolderInfo",
+                    "description": "Basic information about the chat folder; chat folder identifier will be 0 if the user didn't have the chat folder yet"
+                },
+                {
+                    "name": "missing_chat_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of the chats from the link, which aren't added to the folder yet"
+                },
+                {
+                    "name": "added_chat_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of the chats from the link, which are added to the folder already"
+                }
+            ]
+        },
+        {
+            "name": "recommendedChatFolder",
+            "description": "Describes a recommended chat folder",
+            "class": "RecommendedChatFolder",
+            "properties": [
+                {
+                    "name": "folder",
+                    "type": "chatFolder",
+                    "description": "The chat folder"
                 },
                 {
                     "name": "description",
                     "type": "string",
-                    "description": "Chat filter description"
+                    "description": "Chat folder description"
                 }
             ]
         },
         {
-            "name": "recommendedChatFilters",
-            "description": "Contains a list of recommended chat filters",
-            "class": "RecommendedChatFilters",
+            "name": "recommendedChatFolders",
+            "description": "Contains a list of recommended chat folders",
+            "class": "RecommendedChatFolders",
             "properties": [
                 {
-                    "name": "chat_filters",
-                    "type": "vector\u003crecommendedChatFilter\u003e",
-                    "description": "List of recommended chat filters"
+                    "name": "chat_folders",
+                    "type": "vector\u003crecommendedChatFolder\u003e",
+                    "description": "List of recommended chat folders"
+                }
+            ]
+        },
+        {
+            "name": "archiveChatListSettings",
+            "description": "Contains settings for automatic moving of chats to and from the Archive chat lists",
+            "class": "ArchiveChatListSettings",
+            "properties": [
+                {
+                    "name": "archive_and_mute_new_chats_from_unknown_users",
+                    "type": "Bool",
+                    "description": "True, if new chats from non-contacts will be automatically archived and muted. Can be set to true only if the option \"can_archive_and_mute_new_chats_from_unknown_users\" is true"
+                },
+                {
+                    "name": "keep_unmuted_chats_archived",
+                    "type": "Bool",
+                    "description": "True, if unmuted chats will be kept in the Archive chat list when they get a new message"
+                },
+                {
+                    "name": "keep_chats_from_folders_archived",
+                    "type": "Bool",
+                    "description": "True, if unmuted chats, that are always included or pinned in a folder, will be kept in the Archive chat list when they get a new message. Ignored if keep_unmuted_chats_archived == true"
                 }
             ]
         },
@@ -4568,14 +5104,14 @@
             "properties": []
         },
         {
-            "name": "chatListFilter",
-            "description": "A list of chats belonging to a chat filter",
+            "name": "chatListFolder",
+            "description": "A list of chats added to a chat folder",
             "class": "ChatList",
             "properties": [
                 {
-                    "name": "chat_filter_id",
+                    "name": "chat_folder_id",
                     "type": "int32",
-                    "description": "Chat filter identifier"
+                    "description": "Chat folder identifier"
                 }
             ]
         },
@@ -4812,6 +5348,11 @@
                     "description": "Current message auto-delete or self-destruct timer setting for the chat, in seconds; 0 if disabled. Self-destruct timer in secret chats starts after the message or its content is viewed. Auto-delete timer in other chats starts from the send date"
                 },
                 {
+                    "name": "background",
+                    "type": "chatBackground",
+                    "description": "Background set for the chat; may be null if none"
+                },
+                {
                     "name": "theme_name",
                     "type": "string",
                     "description": "If non-empty, name of a theme, set for the chat"
@@ -4913,7 +5454,7 @@
         },
         {
             "name": "chatActionBarReportSpam",
-            "description": "The chat can be reported as spam using the method reportChat with the reason chatReportReasonSpam. If the chat is a private chat with a user with an emoji status, then a notice about emoji status usage must be shown",
+            "description": "The chat can be reported as spam using the method reportChat with the reason reportReasonSpam. If the chat is a private chat with a user with an emoji status, then a notice about emoji status usage must be shown",
             "class": "ChatActionBar",
             "properties": [
                 {
@@ -4925,7 +5466,7 @@
         },
         {
             "name": "chatActionBarReportUnrelatedLocation",
-            "description": "The chat is a location-based supergroup, which can be reported as having unrelated location using the method reportChat with the reason chatReportReasonUnrelatedLocation",
+            "description": "The chat is a location-based supergroup, which can be reported as having unrelated location using the method reportChat with the reason reportReasonUnrelatedLocation",
             "class": "ChatActionBar",
             "properties": []
         },
@@ -5226,9 +5767,9 @@
                     "description": "Inline query to be sent to the bot"
                 },
                 {
-                    "name": "in_current_chat",
-                    "type": "Bool",
-                    "description": "True, if the inline query must be sent from the current chat"
+                    "name": "target_chat",
+                    "type": "TargetChat",
+                    "description": "Target chat from which to send the inline query"
                 }
             ]
         },
@@ -5356,9 +5897,9 @@
                     "description": "The URL to open"
                 },
                 {
-                    "name": "skip_confirm",
+                    "name": "skip_confirmation",
                     "type": "Bool",
-                    "description": "True, if there is no need to show an ordinary open URL confirm"
+                    "description": "True, if there is no need to show an ordinary open URL confirmation"
                 }
             ]
         },
@@ -5385,7 +5926,29 @@
                 {
                     "name": "request_write_access",
                     "type": "Bool",
-                    "description": "True, if the user needs to be requested to give the permission to the bot to send them messages"
+                    "description": "True, if the user must be asked for the permission to the bot to send them messages"
+                }
+            ]
+        },
+        {
+            "name": "foundWebApp",
+            "description": "Contains information about a Web App found by its short name",
+            "class": "FoundWebApp",
+            "properties": [
+                {
+                    "name": "web_app",
+                    "type": "webApp",
+                    "description": "The Web App"
+                },
+                {
+                    "name": "request_write_access",
+                    "type": "Bool",
+                    "description": "True, if the user must be asked for the permission to the bot to send them messages"
+                },
+                {
+                    "name": "skip_confirmation",
+                    "type": "Bool",
+                    "description": "True, if there is no need to show an ordinary open URL confirmation before opening the Web App. The field must be ignored and confirmation must be shown anyway if the Web App link was hidden"
                 }
             ]
         },
@@ -5483,7 +6046,7 @@
                 {
                     "name": "creation_date",
                     "type": "int32",
-                    "description": "Date the topic was created"
+                    "description": "Point in time (Unix timestamp) when the topic was created"
                 },
                 {
                     "name": "creator_id",
@@ -6679,6 +7242,16 @@
                     "description": "Preview of the content as a voice note, if available; may be null"
                 },
                 {
+                    "name": "story_sender_chat_id",
+                    "type": "int53",
+                    "description": "The identifier of the sender of the previewed story; 0 if none"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "The identifier of the previewed story; 0 if none"
+                },
+                {
                     "name": "instant_view_version",
                     "type": "int32",
                     "description": "Version of web page instant view (currently, can be 1 or 2); 0 if none"
@@ -7410,7 +7983,7 @@
         },
         {
             "name": "messageExtendedMediaUnsupported",
-            "description": "The media is unuspported",
+            "description": "The media is unsupported",
             "class": "MessageExtendedMedia",
             "properties": [
                 {
@@ -7605,9 +8178,9 @@
                     "description": "Document number; 1-24 characters"
                 },
                 {
-                    "name": "expiry_date",
+                    "name": "expiration_date",
                     "type": "date",
-                    "description": "Document expiry date; may be null if not applicable"
+                    "description": "Document expiration date; may be null if not applicable"
                 },
                 {
                     "name": "front_side",
@@ -7642,9 +8215,9 @@
                     "description": "Document number; 1-24 characters"
                 },
                 {
-                    "name": "expiry_date",
+                    "name": "expiration_date",
                     "type": "date",
-                    "description": "Document expiry date; pass null if not applicable"
+                    "description": "Document expiration date; pass null if not applicable"
                 },
                 {
                     "name": "front_side",
@@ -8742,8 +9315,30 @@
             ]
         },
         {
+            "name": "messageStory",
+            "description": "A message with a forwarded story",
+            "class": "MessageContent",
+            "properties": [
+                {
+                    "name": "story_sender_chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat that posted the story"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Story identifier"
+                },
+                {
+                    "name": "via_mention",
+                    "type": "Bool",
+                    "description": "True, if the story was automatically forwarded because of a mention of the user"
+                }
+            ]
+        },
+        {
             "name": "messageInvoice",
-            "description": "A message with an invoice from a bot",
+            "description": "A message with an invoice from a bot. Use getInternalLink with internalLinkTypeBotStart to share the invoice",
             "class": "MessageContent",
             "properties": [
                 {
@@ -8774,7 +9369,7 @@
                 {
                     "name": "start_parameter",
                     "type": "string",
-                    "description": "Unique invoice bot start_parameter. To share an invoice use the URL https://t.me/{bot_username}?start={start_parameter}"
+                    "description": "Unique invoice bot start_parameter to be passed to getInternalLink"
                 },
                 {
                     "name": "is_test",
@@ -9021,6 +9616,23 @@
             "properties": []
         },
         {
+            "name": "messageChatSetBackground",
+            "description": "A new background was set in the chat",
+            "class": "MessageContent",
+            "properties": [
+                {
+                    "name": "old_background_message_id",
+                    "type": "int53",
+                    "description": "Identifier of the message with a previously set same background; 0 if none. Can be an identifier of a deleted message"
+                },
+                {
+                    "name": "background",
+                    "type": "chatBackground",
+                    "description": "The new background"
+                }
+            ]
+        },
+        {
             "name": "messageChatSetTheme",
             "description": "A theme in the chat has been changed",
             "class": "MessageContent",
@@ -9258,6 +9870,11 @@
             "class": "MessageContent",
             "properties": [
                 {
+                    "name": "gifter_user_id",
+                    "type": "int53",
+                    "description": "The identifier of a user that gifted Telegram Premium; 0 if the gift was anonymous"
+                },
+                {
                     "name": "currency",
                     "type": "string",
                     "description": "Currency for the paid amount"
@@ -9266,6 +9883,16 @@
                     "name": "amount",
                     "type": "int53",
                     "description": "The paid amount, in the smallest units of the currency"
+                },
+                {
+                    "name": "cryptocurrency",
+                    "type": "string",
+                    "description": "Cryptocurrency used to pay for the gift; may be empty if none"
+                },
+                {
+                    "name": "cryptocurrency_amount",
+                    "type": "int64",
+                    "description": "The paid amount, in the smallest units of the cryptocurrency"
                 },
                 {
                     "name": "month_count",
@@ -9335,7 +9962,13 @@
             "name": "messageBotWriteAccessAllowed",
             "description": "The user allowed the bot to send messages",
             "class": "MessageContent",
-            "properties": []
+            "properties": [
+                {
+                    "name": "web_app",
+                    "type": "webApp",
+                    "description": "Information about the Web App, which requested the access; may be null if none or the Web App was opened from the attachment menu"
+                }
+            ]
         },
         {
             "name": "messageWebAppDataSent",
@@ -9362,7 +9995,7 @@
                 {
                     "name": "data",
                     "type": "string",
-                    "description": "Received data"
+                    "description": "The data"
                 }
             ]
         },
@@ -9419,7 +10052,7 @@
         },
         {
             "name": "messageUnsupported",
-            "description": "Message content that is not supported in the current TDLib version",
+            "description": "A message content that is not supported in the current TDLib version",
             "class": "MessageContent",
             "properties": []
         },
@@ -9603,7 +10236,7 @@
                 {
                     "name": "send_date",
                     "type": "int32",
-                    "description": "Date the message will be sent. The date must be within 367 days in the future"
+                    "description": "Point in time (Unix timestamp) when the message will be sent. The date must be within 367 days in the future"
                 }
             ]
         },
@@ -9642,6 +10275,11 @@
                     "name": "scheduling_state",
                     "type": "MessageSchedulingState",
                     "description": "Message scheduling state; pass null to send message immediately. Messages sent to a secret chat, live location messages and self-destructing messages can't be scheduled"
+                },
+                {
+                    "name": "sending_id",
+                    "type": "int32",
+                    "description": "Non-persistent identifier, which will be returned back in messageSendingStatePending object and can be used to match sent messages and corresponding updateNewMessage updates"
                 }
             ]
         },
@@ -10185,6 +10823,23 @@
             ]
         },
         {
+            "name": "inputMessageStory",
+            "description": "A message with a forwarded story. Stories can't be sent to secret chats. A story can be forwarded only if story.can_be_forwarded",
+            "class": "InputMessageContent",
+            "properties": [
+                {
+                    "name": "story_sender_chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat that posted the story"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Story identifier"
+                }
+            ]
+        },
+        {
             "name": "inputMessageForwarded",
             "description": "A forwarded message",
             "class": "InputMessageContent",
@@ -10705,9 +11360,9 @@
                     "description": "Name of the category"
                 },
                 {
-                    "name": "icon_custom_emoji_id",
-                    "type": "int64",
-                    "description": "Unique identifier of the custom emoji, which represents icon of the category"
+                    "name": "icon",
+                    "type": "sticker",
+                    "description": "Custom emoji sticker, which represents icon of the category"
                 },
                 {
                     "name": "emojis",
@@ -10799,7 +11454,7 @@
                 {
                     "name": "max_layer",
                     "type": "int32",
-                    "description": "The maximum supported API layer; use 65"
+                    "description": "The maximum supported API layer; use 92"
                 },
                 {
                     "name": "library_versions",
@@ -11507,6 +12162,11 @@
                     "name": "sender_id",
                     "type": "MessageSender",
                     "description": "Identifier of the chat member, applied the reaction"
+                },
+                {
+                    "name": "date",
+                    "type": "int32",
+                    "description": "Point in time (Unix timestamp) when the reaction was added"
                 }
             ]
         },
@@ -11738,7 +12398,7 @@
                 {
                     "name": "error",
                     "type": "error",
-                    "description": "Received error"
+                    "description": "Recognition error"
                 }
             ]
         },
@@ -11802,7 +12462,7 @@
                 {
                     "name": "request_write_access",
                     "type": "Bool",
-                    "description": "True, if the user needs to be requested to give the permission to the bot to send them messages"
+                    "description": "True, if the user must be asked for the permission to the bot to send them messages"
                 },
                 {
                     "name": "name",
@@ -12746,6 +13406,47 @@
             ]
         },
         {
+            "name": "inlineQueryResultsButtonTypeStartBot",
+            "description": "Describes the button that opens a private chat with the bot and sends a start message to the bot with the given parameter",
+            "class": "InlineQueryResultsButtonType",
+            "properties": [
+                {
+                    "name": "parameter",
+                    "type": "string",
+                    "description": "The parameter for the bot start message"
+                }
+            ]
+        },
+        {
+            "name": "inlineQueryResultsButtonTypeWebApp",
+            "description": "Describes the button that opens a Web App by calling getWebAppUrl",
+            "class": "InlineQueryResultsButtonType",
+            "properties": [
+                {
+                    "name": "url",
+                    "type": "string",
+                    "description": "An HTTP URL to pass to getWebAppUrl"
+                }
+            ]
+        },
+        {
+            "name": "inlineQueryResultsButton",
+            "description": "Represents a button to be shown above inline query results",
+            "class": "InlineQueryResultsButton",
+            "properties": [
+                {
+                    "name": "text",
+                    "type": "string",
+                    "description": "The text of the button"
+                },
+                {
+                    "name": "type",
+                    "type": "InlineQueryResultsButtonType",
+                    "description": "Type of the button"
+                }
+            ]
+        },
+        {
             "name": "inlineQueryResults",
             "description": "Represents the results of the inline query. Use sendInlineQueryResultMessage to send the result of the query",
             "class": "InlineQueryResults",
@@ -12756,9 +13457,9 @@
                     "description": "Unique identifier of the inline query"
                 },
                 {
-                    "name": "next_offset",
-                    "type": "string",
-                    "description": "The offset for the next request. If empty, there are no more results"
+                    "name": "button",
+                    "type": "inlineQueryResultsButton",
+                    "description": "Button to be shown above inline query results; may be null"
                 },
                 {
                     "name": "results",
@@ -12766,14 +13467,9 @@
                     "description": "Results of the query"
                 },
                 {
-                    "name": "switch_pm_text",
+                    "name": "next_offset",
                     "type": "string",
-                    "description": "If non-empty, this text must be shown on the button, which opens a private chat with the bot and sends the bot a start message with the switch_pm_parameter"
-                },
-                {
-                    "name": "switch_pm_parameter",
-                    "type": "string",
-                    "description": "Parameter for the bot start message"
+                    "description": "The offset for the next request. If empty, there are no more results"
                 }
             ]
         },
@@ -12971,6 +13667,11 @@
                     "name": "invite_link",
                     "type": "chatInviteLink",
                     "description": "Invite link used to join the chat"
+                },
+                {
+                    "name": "via_chat_folder_invite_link",
+                    "type": "Bool",
+                    "description": "True, if the user has joined the chat using an invite link for a chat folder"
                 }
             ]
         },
@@ -13837,14 +14538,14 @@
             "properties": []
         },
         {
-            "name": "premiumLimitTypeChatFilterCount",
-            "description": "The maximum number of chat filters",
+            "name": "premiumLimitTypeChatFolderCount",
+            "description": "The maximum number of chat folders",
             "class": "PremiumLimitType",
             "properties": []
         },
         {
-            "name": "premiumLimitTypeChatFilterChosenChatCount",
-            "description": "The maximum number of pinned and always included, or always excluded chats in a chat filter",
+            "name": "premiumLimitTypeChatFolderChosenChatCount",
+            "description": "The maximum number of pinned and always included, or always excluded chats in a chat folder",
             "class": "PremiumLimitType",
             "properties": []
         },
@@ -13863,6 +14564,24 @@
         {
             "name": "premiumLimitTypeBioLength",
             "description": "The maximum length of the user's bio",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeChatFolderInviteLinkCount",
+            "description": "The maximum number of invite links for a chat folder",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeShareableChatFolderCount",
+            "description": "The maximum number of added shareable chat folders",
+            "class": "PremiumLimitType",
+            "properties": []
+        },
+        {
+            "name": "premiumLimitTypeActiveStoryCount",
+            "description": "The maximum number of active stories",
             "class": "PremiumLimitType",
             "properties": []
         },
@@ -13946,7 +14665,7 @@
         },
         {
             "name": "premiumFeatureAppIcons",
-            "description": "Allowed to set a premium appllication icons",
+            "description": "Allowed to set a premium application icons",
             "class": "PremiumFeature",
             "properties": []
         },
@@ -14414,55 +15133,6 @@
             ]
         },
         {
-            "name": "background",
-            "description": "Describes a chat background",
-            "class": "Background",
-            "properties": [
-                {
-                    "name": "id",
-                    "type": "int64",
-                    "description": "Unique background identifier"
-                },
-                {
-                    "name": "is_default",
-                    "type": "Bool",
-                    "description": "True, if this is one of default backgrounds"
-                },
-                {
-                    "name": "is_dark",
-                    "type": "Bool",
-                    "description": "True, if the background is dark and is recommended to be used with dark theme"
-                },
-                {
-                    "name": "name",
-                    "type": "string",
-                    "description": "Unique background name"
-                },
-                {
-                    "name": "document",
-                    "type": "document",
-                    "description": "Document with the background; may be null. Null only for filled backgrounds"
-                },
-                {
-                    "name": "type",
-                    "type": "BackgroundType",
-                    "description": "Type of the background"
-                }
-            ]
-        },
-        {
-            "name": "backgrounds",
-            "description": "Contains a list of backgrounds",
-            "class": "Backgrounds",
-            "properties": [
-                {
-                    "name": "backgrounds",
-                    "type": "vector\u003cbackground\u003e",
-                    "description": "A list of backgrounds"
-                }
-            ]
-        },
-        {
             "name": "inputBackgroundLocal",
             "description": "A background from a local file",
             "class": "InputBackground",
@@ -14483,6 +15153,18 @@
                     "name": "background_id",
                     "type": "int64",
                     "description": "The background identifier"
+                }
+            ]
+        },
+        {
+            "name": "inputBackgroundPrevious",
+            "description": "A background previously set in the chat; for chat backgrounds only",
+            "class": "InputBackground",
+            "properties": [
+                {
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "Identifier of the message with the background"
                 }
             ]
         },
@@ -14944,6 +15626,18 @@
             ]
         },
         {
+            "name": "pushMessageContentStory",
+            "description": "A message with a story",
+            "class": "PushMessageContent",
+            "properties": [
+                {
+                    "name": "is_pinned",
+                    "type": "Bool",
+                    "description": "True, if the message is a pinned message with the specified content"
+                }
+            ]
+        },
+        {
             "name": "pushMessageContentText",
             "description": "A text message",
             "class": "PushMessageContent",
@@ -15068,6 +15762,18 @@
             ]
         },
         {
+            "name": "pushMessageContentChatSetBackground",
+            "description": "A chat background was edited",
+            "class": "PushMessageContent",
+            "properties": [
+                {
+                    "name": "is_same",
+                    "type": "Bool",
+                    "description": "True, if the set background is the same as the background of the current user"
+                }
+            ]
+        },
+        {
             "name": "pushMessageContentChatSetTheme",
             "description": "A chat theme was edited",
             "class": "PushMessageContent",
@@ -15115,7 +15821,7 @@
         },
         {
             "name": "pushMessageContentRecurringPayment",
-            "description": "A new recurrent payment was made by the current user",
+            "description": "A new recurring payment was made by the current user",
             "class": "PushMessageContent",
             "properties": [
                 {
@@ -15218,7 +15924,7 @@
                 {
                     "name": "message_id",
                     "type": "int53",
-                    "description": "The message identifier. The message will not be available in the chat history, but the ID can be used in viewMessages, or as reply_to_message_id"
+                    "description": "The message identifier. The message will not be available in the chat history, but the ID can be used in viewMessages, or as a message to reply"
                 },
                 {
                     "name": "sender_id",
@@ -15500,6 +16206,42 @@
             ]
         },
         {
+            "name": "storyPrivacySettingsEveryone",
+            "description": "The story can be viewed by everyone",
+            "class": "StoryPrivacySettings",
+            "properties": []
+        },
+        {
+            "name": "storyPrivacySettingsContacts",
+            "description": "The story can be viewed by all contacts except chosen users",
+            "class": "StoryPrivacySettings",
+            "properties": [
+                {
+                    "name": "except_user_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "User identifiers of the contacts that can't see the story; always empty for non-owned stories"
+                }
+            ]
+        },
+        {
+            "name": "storyPrivacySettingsCloseFriends",
+            "description": "The story can be viewed by all close friends",
+            "class": "StoryPrivacySettings",
+            "properties": []
+        },
+        {
+            "name": "storyPrivacySettingsSelectedContacts",
+            "description": "The story can be viewed by certain specified users",
+            "class": "StoryPrivacySettings",
+            "properties": [
+                {
+                    "name": "user_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of the users; always empty for non-owned stories"
+                }
+            ]
+        },
+        {
             "name": "userPrivacySettingRuleAllowAll",
             "description": "A rule to allow all users to do something",
             "class": "UserPrivacySettingRule",
@@ -15507,7 +16249,7 @@
         },
         {
             "name": "userPrivacySettingRuleAllowContacts",
-            "description": "A rule to allow all of a user's contacts to do something",
+            "description": "A rule to allow all contacts of the user to do something",
             "class": "UserPrivacySettingRule",
             "properties": []
         },
@@ -15543,7 +16285,7 @@
         },
         {
             "name": "userPrivacySettingRuleRestrictContacts",
-            "description": "A rule to restrict all contacts of a user from doing something",
+            "description": "A rule to restrict all contacts of the user from doing something",
             "class": "UserPrivacySettingRule",
             "properties": []
         },
@@ -15604,6 +16346,12 @@
         {
             "name": "userPrivacySettingShowPhoneNumber",
             "description": "A privacy setting for managing whether the user's phone number is visible",
+            "class": "UserPrivacySetting",
+            "properties": []
+        },
+        {
+            "name": "userPrivacySettingShowBio",
+            "description": "A privacy setting for managing whether the user's bio is visible",
             "class": "UserPrivacySetting",
             "properties": []
         },
@@ -15942,63 +16690,63 @@
             ]
         },
         {
-            "name": "chatReportReasonSpam",
+            "name": "reportReasonSpam",
             "description": "The chat contains spam messages",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
-            "name": "chatReportReasonViolence",
+            "name": "reportReasonViolence",
             "description": "The chat promotes violence",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
-            "name": "chatReportReasonPornography",
+            "name": "reportReasonPornography",
             "description": "The chat contains pornographic messages",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
-            "name": "chatReportReasonChildAbuse",
+            "name": "reportReasonChildAbuse",
             "description": "The chat has child abuse related content",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
-            "name": "chatReportReasonCopyright",
+            "name": "reportReasonCopyright",
             "description": "The chat contains copyrighted content",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
-            "name": "chatReportReasonUnrelatedLocation",
+            "name": "reportReasonUnrelatedLocation",
             "description": "The location-based chat is unrelated to its stated location",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
-            "name": "chatReportReasonFake",
+            "name": "reportReasonFake",
             "description": "The chat represents a fake account",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
-            "name": "chatReportReasonIllegalDrugs",
+            "name": "reportReasonIllegalDrugs",
             "description": "The chat has illegal drugs related content",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
-            "name": "chatReportReasonPersonalDetails",
+            "name": "reportReasonPersonalDetails",
             "description": "The chat contains messages with personal details",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
-            "name": "chatReportReasonCustom",
+            "name": "reportReasonCustom",
             "description": "A custom reason provided by the user",
-            "class": "ChatReportReason",
+            "class": "ReportReason",
             "properties": []
         },
         {
@@ -16099,6 +16847,23 @@
             ]
         },
         {
+            "name": "internalLinkTypeBotAddToChannel",
+            "description": "The link is a link to a Telegram bot, which is supposed to be added to a channel chat as an administrator. Call searchPublicChat with the given bot username and check that the user is a bot, ask the current user to select a channel chat to add the bot to as an administrator. Then, call getChatMember to receive the current bot rights in the chat and if the bot already is an administrator, check that the current user can edit its administrator rights and combine received rights with the requested administrator rights. Then, show confirmation box to the user, and call setChatMemberStatus with the chosen chat and confirmed rights",
+            "class": "InternalLinkType",
+            "properties": [
+                {
+                    "name": "bot_username",
+                    "type": "string",
+                    "description": "Username of the bot"
+                },
+                {
+                    "name": "administrator_rights",
+                    "type": "chatAdministratorRights",
+                    "description": "Expected administrator rights for the bot"
+                }
+            ]
+        },
+        {
             "name": "internalLinkTypeBotStart",
             "description": "The link is a link to a chat with a Telegram bot. Call searchPublicChat with the given bot username, check that the user is a bot, show START button in the chat with the bot, and then call sendBotStartMessage with the given start parameter after the button is pressed",
             "class": "InternalLinkType",
@@ -16143,25 +16908,26 @@
             ]
         },
         {
-            "name": "internalLinkTypeBotAddToChannel",
-            "description": "The link is a link to a Telegram bot, which is supposed to be added to a channel chat as an administrator. Call searchPublicChat with the given bot username and check that the user is a bot, ask the current user to select a channel chat to add the bot to as an administrator. Then, call getChatMember to receive the current bot rights in the chat and if the bot already is an administrator, check that the current user can edit its administrator rights and combine received rights with the requested administrator rights. Then, show confirmation box to the user, and call setChatMemberStatus with the chosen chat and confirmed rights",
+            "name": "internalLinkTypeChangePhoneNumber",
+            "description": "The link is a link to the change phone number section of the app",
+            "class": "InternalLinkType",
+            "properties": []
+        },
+        {
+            "name": "internalLinkTypeChatFolderInvite",
+            "description": "The link is an invite link to a chat folder. Call checkChatFolderInviteLink with the given invite link to process the link",
             "class": "InternalLinkType",
             "properties": [
                 {
-                    "name": "bot_username",
+                    "name": "invite_link",
                     "type": "string",
-                    "description": "Username of the bot"
-                },
-                {
-                    "name": "administrator_rights",
-                    "type": "chatAdministratorRights",
-                    "description": "Expected administrator rights for the bot"
+                    "description": "Internal representation of the invite link"
                 }
             ]
         },
         {
-            "name": "internalLinkTypeChangePhoneNumber",
-            "description": "The link is a link to the change phone number section of the app",
+            "name": "internalLinkTypeChatFolderSettings",
+            "description": "The link is a link to the folder section of the app settings",
             "class": "InternalLinkType",
             "properties": []
         },
@@ -16186,12 +16952,6 @@
         {
             "name": "internalLinkTypeEditProfileSettings",
             "description": "The link is a link to the edit profile section of the app settings",
-            "class": "InternalLinkType",
-            "properties": []
-        },
-        {
-            "name": "internalLinkTypeFilterSettings",
-            "description": "The link is a link to the filter section of the app settings",
             "class": "InternalLinkType",
             "properties": []
         },
@@ -16339,7 +17099,7 @@
         },
         {
             "name": "internalLinkTypePremiumFeatures",
-            "description": "The link is a link to the Premium features screen of the applcation from which the user can subscribe to Telegram Premium. Call getPremiumFeatures with the given referrer to process the link",
+            "description": "The link is a link to the Premium features screen of the application from which the user can subscribe to Telegram Premium. Call getPremiumFeatures with the given referrer to process the link",
             "class": "InternalLinkType",
             "properties": [
                 {
@@ -16421,6 +17181,23 @@
                     "name": "expect_custom_emoji",
                     "type": "Bool",
                     "description": "True, if the sticker set is expected to contain custom emoji"
+                }
+            ]
+        },
+        {
+            "name": "internalLinkTypeStory",
+            "description": "The link is a link to a story. Call searchPublicChat with the given sender username, then call getStory with the received chat identifier and the given story identifier",
+            "class": "InternalLinkType",
+            "properties": [
+                {
+                    "name": "story_sender_username",
+                    "type": "string",
+                    "description": "Username of the sender of the story"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Story identifier"
                 }
             ]
         },
@@ -16507,6 +17284,28 @@
             ]
         },
         {
+            "name": "internalLinkTypeWebApp",
+            "description": "The link is a link to a Web App. Call searchPublicChat with the given bot username, check that the user is a bot, then call searchWebApp with the received bot and the given web_app_short_name. Process received foundWebApp by showing a confirmation dialog if needed, then calling getWebAppLinkUrl and opening the returned URL",
+            "class": "InternalLinkType",
+            "properties": [
+                {
+                    "name": "bot_username",
+                    "type": "string",
+                    "description": "Username of the bot that owns the Web App"
+                },
+                {
+                    "name": "web_app_short_name",
+                    "type": "string",
+                    "description": "Short name of the Web App"
+                },
+                {
+                    "name": "start_parameter",
+                    "type": "string",
+                    "description": "Start parameter to be passed to getWebAppLinkUrl"
+                }
+            ]
+        },
+        {
             "name": "messageLink",
             "description": "Contains an HTTPS link to a message in a supergroup or channel, or a forum topic",
             "class": "MessageLink",
@@ -16561,6 +17360,319 @@
             ]
         },
         {
+            "name": "storyVideo",
+            "description": "Describes a video file sent in a story",
+            "class": "StoryVideo",
+            "properties": [
+                {
+                    "name": "duration",
+                    "type": "double",
+                    "description": "Duration of the video, in seconds"
+                },
+                {
+                    "name": "width",
+                    "type": "int32",
+                    "description": "Video width"
+                },
+                {
+                    "name": "height",
+                    "type": "int32",
+                    "description": "Video height"
+                },
+                {
+                    "name": "has_stickers",
+                    "type": "Bool",
+                    "description": "True, if stickers were added to the video. The list of corresponding sticker sets can be received using getAttachedStickerSets"
+                },
+                {
+                    "name": "is_animation",
+                    "type": "Bool",
+                    "description": "True, if the video has no sound"
+                },
+                {
+                    "name": "minithumbnail",
+                    "type": "minithumbnail",
+                    "description": "Video minithumbnail; may be null"
+                },
+                {
+                    "name": "thumbnail",
+                    "type": "thumbnail",
+                    "description": "Video thumbnail in JPEG or MPEG4 format; may be null"
+                },
+                {
+                    "name": "preload_prefix_size",
+                    "type": "int32",
+                    "description": "Size of file prefix, which is supposed to be preloaded, in bytes"
+                },
+                {
+                    "name": "video",
+                    "type": "file",
+                    "description": "File containing the video"
+                }
+            ]
+        },
+        {
+            "name": "storyContentPhoto",
+            "description": "A photo story",
+            "class": "StoryContent",
+            "properties": [
+                {
+                    "name": "photo",
+                    "type": "photo",
+                    "description": "The photo"
+                }
+            ]
+        },
+        {
+            "name": "storyContentVideo",
+            "description": "A video story",
+            "class": "StoryContent",
+            "properties": [
+                {
+                    "name": "video",
+                    "type": "storyVideo",
+                    "description": "The video in MPEG4 format"
+                },
+                {
+                    "name": "alternative_video",
+                    "type": "storyVideo",
+                    "description": "Alternative version of the video in MPEG4 format, encoded by x264 codec; may be null"
+                }
+            ]
+        },
+        {
+            "name": "storyContentUnsupported",
+            "description": "A story content that is not supported in the current TDLib version",
+            "class": "StoryContent",
+            "properties": []
+        },
+        {
+            "name": "inputStoryContentPhoto",
+            "description": "A photo story",
+            "class": "InputStoryContent",
+            "properties": [
+                {
+                    "name": "photo",
+                    "type": "InputFile",
+                    "description": "Photo to send. The photo must be at most 10 MB in size. The photo size must be 720x1280"
+                },
+                {
+                    "name": "added_sticker_file_ids",
+                    "type": "vector\u003cint32\u003e",
+                    "description": "File identifiers of the stickers added to the photo, if applicable"
+                }
+            ]
+        },
+        {
+            "name": "inputStoryContentVideo",
+            "description": "A video story",
+            "class": "InputStoryContent",
+            "properties": [
+                {
+                    "name": "video",
+                    "type": "InputFile",
+                    "description": "Video to be sent. The video size must be 720x1280. The video must be streamable and stored in MPEG4 format, after encoding with x265 codec and key frames added each second"
+                },
+                {
+                    "name": "added_sticker_file_ids",
+                    "type": "vector\u003cint32\u003e",
+                    "description": "File identifiers of the stickers added to the video, if applicable"
+                },
+                {
+                    "name": "duration",
+                    "type": "double",
+                    "description": "Precise duration of the video, in seconds; 0-60"
+                },
+                {
+                    "name": "is_animation",
+                    "type": "Bool",
+                    "description": "True, if the video has no sound"
+                }
+            ]
+        },
+        {
+            "name": "storyListMain",
+            "description": "The list of stories, shown in the main chat list and folder chat lists",
+            "class": "StoryList",
+            "properties": []
+        },
+        {
+            "name": "storyListArchive",
+            "description": "The list of stories, shown in the Arvhive chat list",
+            "class": "StoryList",
+            "properties": []
+        },
+        {
+            "name": "storyInteractionInfo",
+            "description": "Contains information about interactions with a story",
+            "class": "StoryInteractionInfo",
+            "properties": [
+                {
+                    "name": "view_count",
+                    "type": "int32",
+                    "description": "Number of times the story was viewed"
+                },
+                {
+                    "name": "recent_viewer_user_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of at most 3 recent viewers of the story"
+                }
+            ]
+        },
+        {
+            "name": "story",
+            "description": "Represents a story",
+            "class": "Story",
+            "properties": [
+                {
+                    "name": "id",
+                    "type": "int32",
+                    "description": "Unique story identifier among stories of the given sender"
+                },
+                {
+                    "name": "sender_chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat that posted the story"
+                },
+                {
+                    "name": "date",
+                    "type": "int32",
+                    "description": "Point in time (Unix timestamp) when the story was published"
+                },
+                {
+                    "name": "is_being_edited",
+                    "type": "Bool",
+                    "description": "True, if the story is being edited by the current user"
+                },
+                {
+                    "name": "is_edited",
+                    "type": "Bool",
+                    "description": "True, if the story was edited"
+                },
+                {
+                    "name": "is_pinned",
+                    "type": "Bool",
+                    "description": "True, if the story is saved in the sender's profile and will be available there after expiration"
+                },
+                {
+                    "name": "is_visible_only_for_self",
+                    "type": "Bool",
+                    "description": "True, if the story is visible only for the current user"
+                },
+                {
+                    "name": "can_be_forwarded",
+                    "type": "Bool",
+                    "description": "True, if the story can be forwarded as a message. Otherwise, screenshots and saving of the story content must be also forbidden"
+                },
+                {
+                    "name": "can_be_replied",
+                    "type": "Bool",
+                    "description": "True, if the story can be replied in the chat with the story sender"
+                },
+                {
+                    "name": "can_get_viewers",
+                    "type": "Bool",
+                    "description": "True, if users viewed the story can be received through getStoryViewers"
+                },
+                {
+                    "name": "has_expired_viewers",
+                    "type": "Bool",
+                    "description": "True, if users viewed the story can't be received, because the story has expired more than getOption(\"story_viewers_expiration_delay\") seconds ago"
+                },
+                {
+                    "name": "interaction_info",
+                    "type": "storyInteractionInfo",
+                    "description": "Information about interactions with the story; may be null if the story isn't owned or there were no interactions"
+                },
+                {
+                    "name": "privacy_settings",
+                    "type": "StoryPrivacySettings",
+                    "description": "Privacy rules affecting story visibility; may be approximate for non-owned stories"
+                },
+                {
+                    "name": "content",
+                    "type": "StoryContent",
+                    "description": "Content of the story"
+                },
+                {
+                    "name": "caption",
+                    "type": "formattedText",
+                    "description": "Caption of the story"
+                }
+            ]
+        },
+        {
+            "name": "stories",
+            "description": "Represents a list of stories",
+            "class": "Stories",
+            "properties": [
+                {
+                    "name": "total_count",
+                    "type": "int32",
+                    "description": "Approximate total number of stories found"
+                },
+                {
+                    "name": "stories",
+                    "type": "vector\u003cstory\u003e",
+                    "description": "The list of stories"
+                }
+            ]
+        },
+        {
+            "name": "storyInfo",
+            "description": "Contains basic information about a story",
+            "class": "StoryInfo",
+            "properties": [
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Unique story identifier among stories of the given sender"
+                },
+                {
+                    "name": "date",
+                    "type": "int32",
+                    "description": "Point in time (Unix timestamp) when the story was published"
+                },
+                {
+                    "name": "is_for_close_friends",
+                    "type": "Bool",
+                    "description": "True, if the story is available only to close friends"
+                }
+            ]
+        },
+        {
+            "name": "chatActiveStories",
+            "description": "Describes active stories posted by a chat",
+            "class": "ChatActiveStories",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat that posted the stories"
+                },
+                {
+                    "name": "list",
+                    "type": "StoryList",
+                    "description": "Identifier of the story list in which the stories are shown; may be null if the stories aren't shown in a story list"
+                },
+                {
+                    "name": "order",
+                    "type": "int53",
+                    "description": "A parameter used to determine order of the stories in the story list; 0 if the stories doesn't need to be shown in the story list. Stories must be sorted by the pair (order, story_sender_chat_id) in descending order"
+                },
+                {
+                    "name": "max_read_story_id",
+                    "type": "int32",
+                    "description": "Identifier of the last read active story"
+                },
+                {
+                    "name": "stories",
+                    "type": "vector\u003cstoryInfo\u003e",
+                    "description": "Basic information about the stories; use getStory to get full information about the stories. The stories are in a chronological order (i.e., in order of increasing story identifiers)"
+                }
+            ]
+        },
+        {
             "name": "filePart",
             "description": "Contains a part of a file",
             "class": "FilePart",
@@ -16605,6 +17717,12 @@
         {
             "name": "fileTypePhoto",
             "description": "The file is a photo",
+            "class": "FileType",
+            "properties": []
+        },
+        {
+            "name": "fileTypePhotoStory",
+            "description": "The file is a photo published as a story",
             "class": "FileType",
             "properties": []
         },
@@ -16659,6 +17777,12 @@
         {
             "name": "fileTypeVideoNote",
             "description": "The file is a video note",
+            "class": "FileType",
+            "properties": []
+        },
+        {
+            "name": "fileTypeVideoStory",
+            "description": "The file is a video published as a story",
             "class": "FileType",
             "properties": []
         },
@@ -16929,6 +18053,11 @@
                     "name": "preload_next_audio",
                     "type": "Bool",
                     "description": "True, if the next audio track needs to be preloaded while the user is listening to an audio file"
+                },
+                {
+                    "name": "preload_stories",
+                    "type": "Bool",
+                    "description": "True, if stories needs to be preloaded"
                 },
                 {
                     "name": "use_less_data_for_calls",
@@ -17206,7 +18335,7 @@
         },
         {
             "name": "suggestedActionEnableArchiveAndMuteNewChats",
-            "description": "Suggests the user to enable \"archive_and_mute_new_chats_from_unknown_users\" option",
+            "description": "Suggests the user to enable archive_and_mute_new_chats_from_unknown_users setting in archiveChatListSettings",
             "class": "SuggestedAction",
             "properties": []
         },
@@ -17255,6 +18384,12 @@
         {
             "name": "suggestedActionUpgradePremium",
             "description": "Suggests the user to upgrade the Premium subscription from monthly payments to annual payments",
+            "class": "SuggestedAction",
+            "properties": []
+        },
+        {
+            "name": "suggestedActionRestorePremium",
+            "description": "Suggests the user to restore a recently expired Premium subscription",
             "class": "SuggestedAction",
             "properties": []
         },
@@ -17455,22 +18590,22 @@
                 {
                     "name": "sticker",
                     "type": "InputFile",
-                    "description": "File with the sticker; must fit in a 512x512 square. For WEBP stickers and masks the file must be in PNG format, which will be converted to WEBP server-side. Otherwise, the file must be local or uploaded within a week. See https://core.telegram.org/animated_stickers#technical-requirements for technical requirements"
+                    "description": "File with the sticker; must fit in a 512x512 square. For WEBP stickers the file must be in WEBP or PNG format, which will be converted to WEBP server-side. See https://core.telegram.org/animated_stickers#technical-requirements for technical requirements"
                 },
                 {
                     "name": "emojis",
                     "type": "string",
-                    "description": "Emojis corresponding to the sticker"
-                },
-                {
-                    "name": "format",
-                    "type": "StickerFormat",
-                    "description": "Sticker format"
+                    "description": "String with 1-20 emoji corresponding to the sticker"
                 },
                 {
                     "name": "mask_position",
                     "type": "maskPosition",
                     "description": "Position where the mask is placed; pass null if not specified"
+                },
+                {
+                    "name": "keywords",
+                    "type": "vector\u003cstring\u003e",
+                    "description": "List of up to 20 keywords with total length up to 64 characters, which can be used to find the sticker"
                 }
             ]
         },
@@ -18483,6 +19618,23 @@
             ]
         },
         {
+            "name": "updateChatBackground",
+            "description": "The chat background was changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "background",
+                    "type": "chatBackground",
+                    "description": "The new chat background; may be null if background was reset to default"
+                }
+            ]
+        },
+        {
             "name": "updateChatTheme",
             "description": "The chat theme was changed",
             "class": "Update",
@@ -18653,19 +19805,19 @@
             ]
         },
         {
-            "name": "updateChatFilters",
-            "description": "The list of chat filters or a chat filter has changed",
+            "name": "updateChatFolders",
+            "description": "The list of chat folders or a chat folder has changed",
             "class": "Update",
             "properties": [
                 {
-                    "name": "chat_filters",
-                    "type": "vector\u003cchatFilterInfo\u003e",
-                    "description": "The new list of chat filters"
+                    "name": "chat_folders",
+                    "type": "vector\u003cchatFolderInfo\u003e",
+                    "description": "The new list of chat folders"
                 },
                 {
                     "name": "main_chat_list_position",
                     "type": "int32",
-                    "description": "Position of the main chat list among chat filters, 0-based"
+                    "description": "Position of the main chat list among chat folders, 0-based"
                 }
             ]
         },
@@ -19269,6 +20421,64 @@
             ]
         },
         {
+            "name": "updateStory",
+            "description": "A story was changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "story",
+                    "type": "story",
+                    "description": "The new information about the story"
+                }
+            ]
+        },
+        {
+            "name": "updateStoryDeleted",
+            "description": "A story became inaccessible",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "story_sender_chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat that posted the story"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Story identifier"
+                }
+            ]
+        },
+        {
+            "name": "updateChatActiveStories",
+            "description": "The list of active stories posted by a specific chat has changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "active_stories",
+                    "type": "chatActiveStories",
+                    "description": "The new list of active stories"
+                }
+            ]
+        },
+        {
+            "name": "updateStoryListChatCount",
+            "description": "Number of chats in a story list has changed",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "story_list",
+                    "type": "StoryList",
+                    "description": "The story list"
+                },
+                {
+                    "name": "chat_count",
+                    "type": "int32",
+                    "description": "Approximate total number of chats with active stories in the list"
+                }
+            ]
+        },
+        {
             "name": "updateOption",
             "description": "An option changed its value",
             "class": "Update",
@@ -19431,7 +20641,7 @@
                 {
                     "name": "strings",
                     "type": "vector\u003clanguagePackString\u003e",
-                    "description": "List of changed language pack strings"
+                    "description": "List of changed language pack strings; empty if all strings have changed"
                 }
             ]
         },
@@ -19589,6 +20799,23 @@
                     "name": "removed_actions",
                     "type": "vector\u003cSuggestedAction\u003e",
                     "description": "Removed suggested actions"
+                }
+            ]
+        },
+        {
+            "name": "updateAddChatMembersPrivacyForbidden",
+            "description": "Adding users to a chat has failed because of their privacy settings. An invite link can be shared with the users if appropriate",
+            "class": "Update",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "user_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of users, which weren't added because of their privacy settings"
                 }
             ]
         },
@@ -19873,9 +21100,9 @@
                     "description": "Unique poll identifier"
                 },
                 {
-                    "name": "user_id",
-                    "type": "int53",
-                    "description": "The user, who changed the answer to the poll"
+                    "name": "voter_id",
+                    "type": "MessageSender",
+                    "description": "Identifier of the message sender that changed the answer to the poll"
                 },
                 {
                     "name": "option_ids",
@@ -19908,6 +21135,11 @@
                     "name": "invite_link",
                     "type": "chatInviteLink",
                     "description": "If user has joined the chat using an invite link, the invite link; may be null"
+                },
+                {
+                    "name": "via_chat_folder_invite_link",
+                    "type": "Bool",
+                    "description": "True, if the user has joined the chat using an invite link for a chat folder"
                 },
                 {
                     "name": "old_chat_member",
@@ -20135,6 +21367,10 @@
             "description": "Contains authentication data for a email address"
         },
         {
+            "name": "EmailAddressResetState",
+            "description": "Describes reset state of a email address"
+        },
+        {
             "name": "AuthorizationState",
             "description": "Represents the current authorization state of the TDLib client"
         },
@@ -20209,6 +21445,18 @@
         {
             "name": "MessageSendingState",
             "description": "Contains information about the sending state of the message"
+        },
+        {
+            "name": "MessageReplyTo",
+            "description": "Contains information about the message or the story a message is replying to"
+        },
+        {
+            "name": "MessageSource",
+            "description": "Describes source of a message"
+        },
+        {
+            "name": "MessageSponsorType",
+            "description": "Describes type of a message sponsor"
         },
         {
             "name": "NotificationSettingsScope",
@@ -20379,6 +21627,10 @@
             "description": "Represents a single result of an inline query"
         },
         {
+            "name": "InlineQueryResultsButtonType",
+            "description": "Represents a type of a button in results of inline query"
+        },
+        {
             "name": "CallbackQueryPayload",
             "description": "Represents a payload of a callback query"
         },
@@ -20463,8 +21715,12 @@
             "description": "Represents a JSON value"
         },
         {
+            "name": "StoryPrivacySettings",
+            "description": "Describes privacy settings of a story"
+        },
+        {
             "name": "UserPrivacySettingRule",
-            "description": "Represents a single rule for managing privacy settings"
+            "description": "Represents a single rule for managing user privacy settings"
         },
         {
             "name": "UserPrivacySetting",
@@ -20475,7 +21731,7 @@
             "description": "Represents the type of a session"
         },
         {
-            "name": "ChatReportReason",
+            "name": "ReportReason",
             "description": "Describes the reason why a chat is reported"
         },
         {
@@ -20485,6 +21741,18 @@
         {
             "name": "InternalLinkType",
             "description": "Describes an internal https://t.me or tg: link, which must be processed by the application in a special way"
+        },
+        {
+            "name": "StoryContent",
+            "description": "Contains the content of a story"
+        },
+        {
+            "name": "InputStoryContent",
+            "description": "The content of a story to send"
+        },
+        {
+            "name": "StoryList",
+            "description": "Describes a list of stories"
         },
         {
             "name": "FileType",
@@ -20752,6 +22020,14 @@
             "type": 1
         },
         {
+            "name": "resetAuthenticationEmailAddress",
+            "description": "Resets the login email address. May return an error with a message \"TASK_ALREADY_EXISTS\" if reset is still pending. Works only when the current authorization state is authorizationStateWaitEmailCode and authorization_state.can_reset_email_address == true",
+            "class": "Ok",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
             "name": "checkAuthenticationPassword",
             "description": "Checks the 2-step verification password for correctness. Works only when the current authorization state is authorizationStateWaitPassword",
             "class": "Ok",
@@ -20943,7 +22219,7 @@
         },
         {
             "name": "setLoginEmailAddress",
-            "description": "Changes the login email address of the user. The change will not be applied until the new login email address is confirmed with checkLoginEmailAddressCode. To use Apple ID/Google ID instead of a email address, call checkLoginEmailAddressCode directly",
+            "description": "Changes the login email address of the user. The email address can be changed only if the current user already has login email and passwordState.login_email_address_pattern is non-empty. The change will not be applied until the new login email address is confirmed with checkLoginEmailAddressCode. To use Apple ID/Google ID instead of a email address, call checkLoginEmailAddressCode directly",
             "class": "EmailAddressAuthenticationCodeInfo",
             "properties": [
                 {
@@ -21229,7 +22505,7 @@
         },
         {
             "name": "getChat",
-            "description": "Returns information about a chat by its identifier, this is an offline request if the current user is not a bot",
+            "description": "Returns information about a chat by its identifier; this is an offline request if the current user is not a bot",
             "class": "Chat",
             "properties": [
                 {
@@ -21281,7 +22557,7 @@
         },
         {
             "name": "getRepliedMessage",
-            "description": "Returns information about a message that is replied by a given message. Also, returns the pinned message, the game message, the invoice message, and the topic creation message for messages of the types messagePinMessage, messageGameScore, messagePaymentSuccessful, and topic messages without replied message respectively",
+            "description": "Returns information about a message that is replied by a given message. Also, returns the pinned message, the game message, the invoice message, and the topic creation message for messages of the types messagePinMessage, messageGameScore, messagePaymentSuccessful, messageChatSetBackground and topic messages without replied message respectively",
             "class": "Message",
             "properties": [
                 {
@@ -21377,7 +22653,7 @@
         {
             "name": "getMessageViewers",
             "description": "Returns viewers of a recent outgoing message in a basic group or a supergroup chat. For video notes and voice notes only users, opened content of the message, are returned. The method can be called if message.can_get_viewers == true",
-            "class": "Users",
+            "class": "MessageViewers",
             "properties": [
                 {
                     "name": "chat_id",
@@ -21494,7 +22770,7 @@
         },
         {
             "name": "searchChats",
-            "description": "Searches for the specified query in the title and username of already known chats, this is an offline request. Returns chats in the order seen in the main chat list",
+            "description": "Searches for the specified query in the title and username of already known chats; this is an offline request. Returns chats in the order seen in the main chat list",
             "class": "Chats",
             "properties": [
                 {
@@ -21583,6 +22859,25 @@
             "type": 2
         },
         {
+            "name": "searchRecentlyFoundChats",
+            "description": "Searches for the specified query in the title and username of up to 50 recently found chats; this is an offline request",
+            "class": "Chats",
+            "properties": [
+                {
+                    "name": "query",
+                    "type": "string",
+                    "description": "Query to search for"
+                },
+                {
+                    "name": "limit",
+                    "type": "int32",
+                    "description": "The maximum number of chats to be returned"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "addRecentlyFoundChat",
             "description": "Adds a chat to the list of recently found chats. The chat is added to the beginning of the list. If the chat is already in the list, it will be removed from the list first",
             "class": "Ok",
@@ -21620,7 +22915,7 @@
         },
         {
             "name": "getRecentlyOpenedChats",
-            "description": "Returns recently opened chats, this is an offline request. Returns chats in the order of last opening",
+            "description": "Returns recently opened chats; this is an offline request. Returns chats in the order of last opening",
             "class": "Chats",
             "properties": [
                 {
@@ -22219,6 +23514,25 @@
             "type": 2
         },
         {
+            "name": "clickChatSponsoredMessage",
+            "description": "Informs TDLib that the user opened the sponsored chat via the button, the name, the photo, or a mention in the sponsored message",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier of the sponsored message"
+                },
+                {
+                    "name": "message_id",
+                    "type": "int53",
+                    "description": "Identifier of the sponsored message"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "removeNotification",
             "description": "Removes an active notification from notification list. Needs to be called only if the notification is removed by the current user",
             "class": "Ok",
@@ -22341,7 +23655,7 @@
                 {
                     "name": "to_language_code",
                     "type": "string",
-                    "description": "ISO language code of the language to which the message is translated. Must be one of \"af\", \"sq\", \"am\", \"ar\", \"hy\", \"az\", \"eu\", \"be\", \"bn\", \"bs\", \"bg\", \"ca\", \"ceb\", \"zh-CN\", \"zh\", \"zh-Hans\", \"zh-TW\", \"zh-Hant\", \"co\", \"hr\", \"cs\", \"da\", \"nl\", \"en\", \"eo\", \"et\", \"fi\", \"fr\", \"fy\", \"gl\", \"ka\", \"de\", \"el\", \"gu\", \"ht\", \"ha\", \"haw\", \"he\", \"iw\", \"hi\", \"hmn\", \"hu\", \"is\", \"ig\", \"id\", \"in\", \"ga\", \"it\", \"ja\", \"jv\", \"kn\", \"kk\", \"km\", \"rw\", \"ko\", \"ku\", \"ky\", \"lo\", \"la\", \"lv\", \"lt\", \"lb\", \"mk\", \"mg\", \"ms\", \"ml\", \"mt\", \"mi\", \"mr\", \"mn\", \"my\", \"ne\", \"no\", \"ny\", \"or\", \"ps\", \"fa\", \"pl\", \"pt\", \"pa\", \"ro\", \"ru\", \"sm\", \"gd\", \"sr\", \"st\", \"sn\", \"sd\", \"si\", \"sk\", \"sl\", \"so\", \"es\", \"su\", \"sw\", \"sv\", \"tl\", \"tg\", \"ta\", \"tt\", \"te\", \"th\", \"tr\", \"tk\", \"uk\", \"ur\", \"ug\", \"uz\", \"vi\", \"cy\", \"xh\", \"yi\", \"ji\", \"yo\", \"zu\""
+                    "description": "Language code of the language to which the message is translated. Must be one of \"af\", \"sq\", \"am\", \"ar\", \"hy\", \"az\", \"eu\", \"be\", \"bn\", \"bs\", \"bg\", \"ca\", \"ceb\", \"zh-CN\", \"zh\", \"zh-Hans\", \"zh-TW\", \"zh-Hant\", \"co\", \"hr\", \"cs\", \"da\", \"nl\", \"en\", \"eo\", \"et\", \"fi\", \"fr\", \"fy\", \"gl\", \"ka\", \"de\", \"el\", \"gu\", \"ht\", \"ha\", \"haw\", \"he\", \"iw\", \"hi\", \"hmn\", \"hu\", \"is\", \"ig\", \"id\", \"in\", \"ga\", \"it\", \"ja\", \"jv\", \"kn\", \"kk\", \"km\", \"rw\", \"ko\", \"ku\", \"ky\", \"lo\", \"la\", \"lv\", \"lt\", \"lb\", \"mk\", \"mg\", \"ms\", \"ml\", \"mt\", \"mi\", \"mr\", \"mn\", \"my\", \"ne\", \"no\", \"ny\", \"or\", \"ps\", \"fa\", \"pl\", \"pt\", \"pa\", \"ro\", \"ru\", \"sm\", \"gd\", \"sr\", \"st\", \"sn\", \"sd\", \"si\", \"sk\", \"sl\", \"so\", \"es\", \"su\", \"sw\", \"sv\", \"tl\", \"tg\", \"ta\", \"tt\", \"te\", \"th\", \"tr\", \"tk\", \"uk\", \"ur\", \"ug\", \"uz\", \"vi\", \"cy\", \"xh\", \"yi\", \"ji\", \"yo\", \"zu\""
                 }
             ],
             "is_synchronous": false,
@@ -22365,7 +23679,7 @@
                 {
                     "name": "to_language_code",
                     "type": "string",
-                    "description": "ISO language code of the language to which the message is translated. Must be one of \"af\", \"sq\", \"am\", \"ar\", \"hy\", \"az\", \"eu\", \"be\", \"bn\", \"bs\", \"bg\", \"ca\", \"ceb\", \"zh-CN\", \"zh\", \"zh-Hans\", \"zh-TW\", \"zh-Hant\", \"co\", \"hr\", \"cs\", \"da\", \"nl\", \"en\", \"eo\", \"et\", \"fi\", \"fr\", \"fy\", \"gl\", \"ka\", \"de\", \"el\", \"gu\", \"ht\", \"ha\", \"haw\", \"he\", \"iw\", \"hi\", \"hmn\", \"hu\", \"is\", \"ig\", \"id\", \"in\", \"ga\", \"it\", \"ja\", \"jv\", \"kn\", \"kk\", \"km\", \"rw\", \"ko\", \"ku\", \"ky\", \"lo\", \"la\", \"lv\", \"lt\", \"lb\", \"mk\", \"mg\", \"ms\", \"ml\", \"mt\", \"mi\", \"mr\", \"mn\", \"my\", \"ne\", \"no\", \"ny\", \"or\", \"ps\", \"fa\", \"pl\", \"pt\", \"pa\", \"ro\", \"ru\", \"sm\", \"gd\", \"sr\", \"st\", \"sn\", \"sd\", \"si\", \"sk\", \"sl\", \"so\", \"es\", \"su\", \"sw\", \"sv\", \"tl\", \"tg\", \"ta\", \"tt\", \"te\", \"th\", \"tr\", \"tk\", \"uk\", \"ur\", \"ug\", \"uz\", \"vi\", \"cy\", \"xh\", \"yi\", \"ji\", \"yo\", \"zu\""
+                    "description": "Language code of the language to which the message is translated. Must be one of \"af\", \"sq\", \"am\", \"ar\", \"hy\", \"az\", \"eu\", \"be\", \"bn\", \"bs\", \"bg\", \"ca\", \"ceb\", \"zh-CN\", \"zh\", \"zh-Hans\", \"zh-TW\", \"zh-Hant\", \"co\", \"hr\", \"cs\", \"da\", \"nl\", \"en\", \"eo\", \"et\", \"fi\", \"fr\", \"fy\", \"gl\", \"ka\", \"de\", \"el\", \"gu\", \"ht\", \"ha\", \"haw\", \"he\", \"iw\", \"hi\", \"hmn\", \"hu\", \"is\", \"ig\", \"id\", \"in\", \"ga\", \"it\", \"ja\", \"jv\", \"kn\", \"kk\", \"km\", \"rw\", \"ko\", \"ku\", \"ky\", \"lo\", \"la\", \"lv\", \"lt\", \"lb\", \"mk\", \"mg\", \"ms\", \"ml\", \"mt\", \"mi\", \"mr\", \"mn\", \"my\", \"ne\", \"no\", \"ny\", \"or\", \"ps\", \"fa\", \"pl\", \"pt\", \"pa\", \"ro\", \"ru\", \"sm\", \"gd\", \"sr\", \"st\", \"sn\", \"sd\", \"si\", \"sk\", \"sl\", \"so\", \"es\", \"su\", \"sw\", \"sv\", \"tl\", \"tg\", \"ta\", \"tt\", \"te\", \"th\", \"tr\", \"tk\", \"uk\", \"ur\", \"ug\", \"uz\", \"vi\", \"cy\", \"xh\", \"yi\", \"ji\", \"yo\", \"zu\""
                 }
             ],
             "is_synchronous": false,
@@ -22463,9 +23777,9 @@
                     "description": "If not 0, a message thread identifier in which the message will be sent"
                 },
                 {
-                    "name": "reply_to_message_id",
-                    "type": "int53",
-                    "description": "Identifier of the replied message; 0 if none"
+                    "name": "reply_to",
+                    "type": "MessageReplyTo",
+                    "description": "Identifier of the replied message or story; pass null if none"
                 },
                 {
                     "name": "options",
@@ -22502,9 +23816,9 @@
                     "description": "If not 0, a message thread identifier in which the messages will be sent"
                 },
                 {
-                    "name": "reply_to_message_id",
-                    "type": "int53",
-                    "description": "Identifier of a replied message; 0 if none"
+                    "name": "reply_to",
+                    "type": "MessageReplyTo",
+                    "description": "Identifier of the replied message or story; pass null if none"
                 },
                 {
                     "name": "options",
@@ -22565,9 +23879,9 @@
                     "description": "If not 0, a message thread identifier in which the message will be sent"
                 },
                 {
-                    "name": "reply_to_message_id",
-                    "type": "int53",
-                    "description": "Identifier of a replied message; 0 if none"
+                    "name": "reply_to",
+                    "type": "MessageReplyTo",
+                    "description": "Identifier of the replied message or story; pass null if none"
                 },
                 {
                     "name": "options",
@@ -22662,20 +23976,6 @@
             "type": 1
         },
         {
-            "name": "sendChatScreenshotTakenNotification",
-            "description": "Sends a notification about a screenshot taken in a chat. Supported only in private and secret chats",
-            "class": "Ok",
-            "properties": [
-                {
-                    "name": "chat_id",
-                    "type": "int53",
-                    "description": "Chat identifier"
-                }
-            ],
-            "is_synchronous": false,
-            "type": 2
-        },
-        {
             "name": "addLocalMessage",
             "description": "Adds a local message to a chat. The message is persistent across application restarts only if the message database is used. Returns the added message",
             "class": "Message",
@@ -22691,9 +23991,9 @@
                     "description": "Identifier of the sender of the message"
                 },
                 {
-                    "name": "reply_to_message_id",
-                    "type": "int53",
-                    "description": "Identifier of the replied message; 0 if none"
+                    "name": "reply_to",
+                    "type": "MessageReplyTo",
+                    "description": "Identifier of the replied message or story; pass null if none"
                 },
                 {
                     "name": "disable_notification",
@@ -23520,7 +24820,7 @@
                 {
                     "name": "text",
                     "type": "string",
-                    "description": "The text in which to look for entites"
+                    "description": "The text in which to look for entities"
                 }
             ],
             "is_synchronous": true,
@@ -23712,8 +25012,8 @@
         },
         {
             "name": "getPollVoters",
-            "description": "Returns users voted for the specified option in a non-anonymous polls. For optimal performance, the number of returned users is chosen by TDLib",
-            "class": "Users",
+            "description": "Returns message senders voted for the specified option in a non-anonymous polls. For optimal performance, the number of returned users is chosen by TDLib",
+            "class": "MessageSenders",
             "properties": [
                 {
                     "name": "chat_id",
@@ -23733,12 +25033,12 @@
                 {
                     "name": "offset",
                     "type": "int32",
-                    "description": "Number of users to skip in the result; must be non-negative"
+                    "description": "Number of voters to skip in the result; must be non-negative"
                 },
                 {
                     "name": "limit",
                     "type": "int32",
-                    "description": "The maximum number of users to be returned; must be positive and can't be greater than 50. For optimal performance, the number of returned users is chosen by TDLib and can be smaller than the specified limit, even if the end of the voter list has not been reached"
+                    "description": "The maximum number of voters to be returned; must be positive and can't be greater than 50. For optimal performance, the number of returned voters is chosen by TDLib and can be smaller than the specified limit, even if the end of the voter list has not been reached"
                 }
             ],
             "is_synchronous": false,
@@ -23911,7 +25211,7 @@
                 {
                     "name": "bot_user_id",
                     "type": "int53",
-                    "description": "The identifier of the target bot"
+                    "description": "Identifier of the target bot"
                 },
                 {
                     "name": "chat_id",
@@ -23953,6 +25253,11 @@
                     "description": "Pass true if results may be cached and returned only for the user that sent the query. By default, results may be returned to any user who sends the same query"
                 },
                 {
+                    "name": "button",
+                    "type": "inlineQueryResultsButton",
+                    "description": "Button to be shown above inline query results; pass null if none"
+                },
+                {
                     "name": "results",
                     "type": "vector\u003cInputInlineQueryResult\u003e",
                     "description": "The results of the query"
@@ -23966,24 +25271,77 @@
                     "name": "next_offset",
                     "type": "string",
                     "description": "Offset for the next inline query; pass an empty string if there are no more results"
-                },
-                {
-                    "name": "switch_pm_text",
-                    "type": "string",
-                    "description": "If non-empty, this text must be shown on the button that opens a private chat with the bot and sends a start message to the bot with the parameter switch_pm_parameter"
-                },
-                {
-                    "name": "switch_pm_parameter",
-                    "type": "string",
-                    "description": "The parameter for the bot start message"
                 }
             ],
             "is_synchronous": false,
             "type": 3
         },
         {
+            "name": "searchWebApp",
+            "description": "Returns information about a Web App by its short name. Returns a 404 error if the Web App is not found",
+            "class": "FoundWebApp",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "web_app_short_name",
+                    "type": "string",
+                    "description": "Short name of the Web App"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getWebAppLinkUrl",
+            "description": "Returns an HTTPS URL of a Web App to open after a link of the type internalLinkTypeWebApp is clicked",
+            "class": "HttpUrl",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat in which the link was clicked; pass 0 if none"
+                },
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "web_app_short_name",
+                    "type": "string",
+                    "description": "Short name of the Web App"
+                },
+                {
+                    "name": "start_parameter",
+                    "type": "string",
+                    "description": "Start parameter from internalLinkTypeWebApp"
+                },
+                {
+                    "name": "theme",
+                    "type": "themeParameters",
+                    "description": "Preferred Web App theme; pass null to use the default theme"
+                },
+                {
+                    "name": "application_name",
+                    "type": "string",
+                    "description": "Short name of the application; 0-64 English letters, digits, and underscores"
+                },
+                {
+                    "name": "allow_write_access",
+                    "type": "Bool",
+                    "description": "Pass true if the current user allowed the bot to send them messages"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
             "name": "getWebAppUrl",
-            "description": "Returns an HTTPS URL of a Web App to open after keyboardButtonTypeWebApp button is pressed",
+            "description": "Returns an HTTPS URL of a Web App to open after keyboardButtonTypeWebApp or inlineQueryResultsButtonTypeWebApp button is pressed",
             "class": "HttpUrl",
             "properties": [
                 {
@@ -23994,7 +25352,7 @@
                 {
                     "name": "url",
                     "type": "string",
-                    "description": "The URL from the keyboardButtonTypeWebApp button"
+                    "description": "The URL from the keyboardButtonTypeWebApp or inlineQueryResultsButtonTypeWebApp button"
                 },
                 {
                     "name": "theme",
@@ -24028,7 +25386,7 @@
                 {
                     "name": "data",
                     "type": "string",
-                    "description": "Received data"
+                    "description": "The data"
                 }
             ],
             "is_synchronous": false,
@@ -24042,7 +25400,7 @@
                 {
                     "name": "chat_id",
                     "type": "int53",
-                    "description": "Identifier of the chat in which the Web App is opened"
+                    "description": "Identifier of the chat in which the Web App is opened. The Web App can't be opened in secret chats"
                 },
                 {
                     "name": "bot_user_id",
@@ -24070,9 +25428,9 @@
                     "description": "If not 0, a message thread identifier in which the message will be sent"
                 },
                 {
-                    "name": "reply_to_message_id",
-                    "type": "int53",
-                    "description": "Identifier of the replied message for the message sent by the Web App; 0 if none"
+                    "name": "reply_to",
+                    "type": "MessageReplyTo",
+                    "description": "Identifier of the replied message or story for the message sent by the Web App; pass null if none"
                 }
             ],
             "is_synchronous": false,
@@ -24410,14 +25768,14 @@
                     "description": "Chat identifier"
                 },
                 {
-                    "name": "message_thread_id",
-                    "type": "int53",
-                    "description": "If not 0, a message thread identifier in which the messages are being viewed"
-                },
-                {
                     "name": "message_ids",
                     "type": "vector\u003cint53\u003e",
                     "description": "The identifiers of the messages being viewed"
+                },
+                {
+                    "name": "source",
+                    "type": "MessageSource",
+                    "description": "Source of the message view; pass null to guess the source based on chat open state"
                 },
                 {
                     "name": "force_read",
@@ -24465,6 +25823,25 @@
             ],
             "is_synchronous": false,
             "type": 2
+        },
+        {
+            "name": "getInternalLink",
+            "description": "Returns an HTTPS or a tg: link with the given type. Can be called before authorization",
+            "class": "HttpUrl",
+            "properties": [
+                {
+                    "name": "type",
+                    "type": "InternalLinkType",
+                    "description": "Expected type of the link"
+                },
+                {
+                    "name": "is_http",
+                    "type": "Bool",
+                    "description": "Pass true to create an HTTPS link (only available for some link types); pass false to create a tg: link"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
         },
         {
             "name": "getInternalLinkType",
@@ -24658,7 +26035,7 @@
                 {
                     "name": "user_ids",
                     "type": "vector\u003cint53\u003e",
-                    "description": "Identifiers of users to be added to the basic group"
+                    "description": "Identifiers of users to be added to the basic group; may be empty to create a basic group without other members"
                 },
                 {
                     "name": "title",
@@ -24780,106 +26157,327 @@
             "type": 2
         },
         {
-            "name": "getChatFilter",
-            "description": "Returns information about a chat filter by its identifier",
-            "class": "ChatFilter",
+            "name": "getChatFolder",
+            "description": "Returns information about a chat folder by its identifier",
+            "class": "ChatFolder",
             "properties": [
                 {
-                    "name": "chat_filter_id",
+                    "name": "chat_folder_id",
                     "type": "int32",
-                    "description": "Chat filter identifier"
+                    "description": "Chat folder identifier"
                 }
             ],
             "is_synchronous": false,
             "type": 2
         },
         {
-            "name": "createChatFilter",
-            "description": "Creates new chat filter. Returns information about the created chat filter. There can be up to getOption(\"chat_filter_count_max\") chat filters, but the limit can be increased with Telegram Premium",
-            "class": "ChatFilterInfo",
+            "name": "createChatFolder",
+            "description": "Creates new chat folder. Returns information about the created chat folder. There can be up to getOption(\"chat_folder_count_max\") chat folders, but the limit can be increased with Telegram Premium",
+            "class": "ChatFolderInfo",
             "properties": [
                 {
-                    "name": "filter",
-                    "type": "chatFilter",
-                    "description": "Chat filter"
+                    "name": "folder",
+                    "type": "chatFolder",
+                    "description": "The new chat folder"
                 }
             ],
             "is_synchronous": false,
             "type": 2
         },
         {
-            "name": "editChatFilter",
-            "description": "Edits existing chat filter. Returns information about the edited chat filter",
-            "class": "ChatFilterInfo",
+            "name": "editChatFolder",
+            "description": "Edits existing chat folder. Returns information about the edited chat folder",
+            "class": "ChatFolderInfo",
             "properties": [
                 {
-                    "name": "chat_filter_id",
+                    "name": "chat_folder_id",
                     "type": "int32",
-                    "description": "Chat filter identifier"
+                    "description": "Chat folder identifier"
                 },
                 {
-                    "name": "filter",
-                    "type": "chatFilter",
-                    "description": "The edited chat filter"
+                    "name": "folder",
+                    "type": "chatFolder",
+                    "description": "The edited chat folder"
                 }
             ],
             "is_synchronous": false,
             "type": 2
         },
         {
-            "name": "deleteChatFilter",
-            "description": "Deletes existing chat filter",
+            "name": "deleteChatFolder",
+            "description": "Deletes existing chat folder",
             "class": "Ok",
             "properties": [
                 {
-                    "name": "chat_filter_id",
+                    "name": "chat_folder_id",
                     "type": "int32",
-                    "description": "Chat filter identifier"
+                    "description": "Chat folder identifier"
+                },
+                {
+                    "name": "leave_chat_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of the chats to leave. The chats must be pinned or always included in the folder"
                 }
             ],
             "is_synchronous": false,
             "type": 2
         },
         {
-            "name": "reorderChatFilters",
-            "description": "Changes the order of chat filters",
+            "name": "getChatFolderChatsToLeave",
+            "description": "Returns identifiers of pinned or always included chats from a chat folder, which are suggested to be left when the chat folder is deleted",
+            "class": "Chats",
+            "properties": [
+                {
+                    "name": "chat_folder_id",
+                    "type": "int32",
+                    "description": "Chat folder identifier"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getChatFolderChatCount",
+            "description": "Returns approximate number of chats in a being created chat folder. Main and archive chat lists must be fully preloaded for this function to work correctly",
+            "class": "Count",
+            "properties": [
+                {
+                    "name": "folder",
+                    "type": "chatFolder",
+                    "description": "The new chat folder"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "reorderChatFolders",
+            "description": "Changes the order of chat folders",
             "class": "Ok",
             "properties": [
                 {
-                    "name": "chat_filter_ids",
+                    "name": "chat_folder_ids",
                     "type": "vector\u003cint32\u003e",
-                    "description": "Identifiers of chat filters in the new correct order"
+                    "description": "Identifiers of chat folders in the new correct order"
                 },
                 {
                     "name": "main_chat_list_position",
                     "type": "int32",
-                    "description": "Position of the main chat list among chat filters, 0-based. Can be non-zero only for Premium users"
+                    "description": "Position of the main chat list among chat folders, 0-based. Can be non-zero only for Premium users"
                 }
             ],
             "is_synchronous": false,
             "type": 2
         },
         {
-            "name": "getRecommendedChatFilters",
-            "description": "Returns recommended chat filters for the current user",
-            "class": "RecommendedChatFilters",
+            "name": "getRecommendedChatFolders",
+            "description": "Returns recommended chat folders for the current user",
+            "class": "RecommendedChatFolders",
             "properties": [],
             "is_synchronous": false,
             "type": 2
         },
         {
-            "name": "getChatFilterDefaultIconName",
-            "description": "Returns default icon name for a filter. Can be called synchronously",
-            "class": "Text",
+            "name": "getChatFolderDefaultIconName",
+            "description": "Returns default icon name for a folder. Can be called synchronously",
+            "class": "ChatFolderIcon",
             "properties": [
                 {
-                    "name": "filter",
-                    "type": "chatFilter",
-                    "description": "Chat filter"
+                    "name": "folder",
+                    "type": "chatFolder",
+                    "description": "Chat folder"
                 }
             ],
             "is_synchronous": true,
             "type": 1
+        },
+        {
+            "name": "getChatsForChatFolderInviteLink",
+            "description": "Returns identifiers of chats from a chat folder, suitable for adding to a chat folder invite link",
+            "class": "Chats",
+            "properties": [
+                {
+                    "name": "chat_folder_id",
+                    "type": "int32",
+                    "description": "Chat folder identifier"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "createChatFolderInviteLink",
+            "description": "Creates a new invite link for a chat folder. A link can be created for a chat folder if it has only pinned and included chats",
+            "class": "ChatFolderInviteLink",
+            "properties": [
+                {
+                    "name": "chat_folder_id",
+                    "type": "int32",
+                    "description": "Chat folder identifier"
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Name of the link; 0-32 characters"
+                },
+                {
+                    "name": "chat_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of chats to be accessible by the invite link. Use getChatsForChatFolderInviteLink to get suitable chats. Basic groups will be automatically converted to supergroups before link creation"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getChatFolderInviteLinks",
+            "description": "Returns invite links created by the current user for a shareable chat folder",
+            "class": "ChatFolderInviteLinks",
+            "properties": [
+                {
+                    "name": "chat_folder_id",
+                    "type": "int32",
+                    "description": "Chat folder identifier"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "editChatFolderInviteLink",
+            "description": "Edits an invite link for a chat folder",
+            "class": "ChatFolderInviteLink",
+            "properties": [
+                {
+                    "name": "chat_folder_id",
+                    "type": "int32",
+                    "description": "Chat folder identifier"
+                },
+                {
+                    "name": "invite_link",
+                    "type": "string",
+                    "description": "Invite link to be edited"
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "New name of the link; 0-32 characters"
+                },
+                {
+                    "name": "chat_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "New identifiers of chats to be accessible by the invite link. Use getChatsForChatFolderInviteLink to get suitable chats. Basic groups will be automatically converted to supergroups before link editing"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "deleteChatFolderInviteLink",
+            "description": "Deletes an invite link for a chat folder",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_folder_id",
+                    "type": "int32",
+                    "description": "Chat folder identifier"
+                },
+                {
+                    "name": "invite_link",
+                    "type": "string",
+                    "description": "Invite link to be deleted"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "checkChatFolderInviteLink",
+            "description": "Checks the validity of an invite link for a chat folder and returns information about the corresponding chat folder",
+            "class": "ChatFolderInviteLinkInfo",
+            "properties": [
+                {
+                    "name": "invite_link",
+                    "type": "string",
+                    "description": "Invite link to be checked"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "addChatFolderByInviteLink",
+            "description": "Adds a chat folder by an invite link",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "invite_link",
+                    "type": "string",
+                    "description": "Invite link for the chat folder"
+                },
+                {
+                    "name": "chat_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of the chats added to the chat folder. The chats are automatically joined if they aren't joined yet"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getChatFolderNewChats",
+            "description": "Returns new chats added to a shareable chat folder by its owner. The method must be called at most once in getOption(\"chat_folder_new_chats_update_period\") for the given chat folder",
+            "class": "Chats",
+            "properties": [
+                {
+                    "name": "chat_folder_id",
+                    "type": "int32",
+                    "description": "Chat folder identifier"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "processChatFolderNewChats",
+            "description": "Process new chats added to a shareable chat folder by its owner",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_folder_id",
+                    "type": "int32",
+                    "description": "Chat folder identifier"
+                },
+                {
+                    "name": "added_chat_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "Identifiers of the new chats, which are added to the chat folder. The chats are automatically joined if they aren't joined yet"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getArchiveChatListSettings",
+            "description": "Returns settings for automatic moving of chats to and from the Archive chat lists",
+            "class": "ArchiveChatListSettings",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "setArchiveChatListSettings",
+            "description": "Changes settings for automatic moving of chats to and from the Archive chat lists",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "settings",
+                    "type": "archiveChatListSettings",
+                    "description": "New settings"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
         },
         {
             "name": "setChatTitle",
@@ -24956,6 +26554,35 @@
             ],
             "is_synchronous": false,
             "type": 1
+        },
+        {
+            "name": "setChatBackground",
+            "description": "Changes the background in a specific chat. Supported only in private and secret chats with non-deleted users",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "background",
+                    "type": "InputBackground",
+                    "description": "The input background to use; pass null to create a new filled background or to remove the current background"
+                },
+                {
+                    "name": "type",
+                    "type": "BackgroundType",
+                    "description": "Background type; pass null to remove the current background"
+                },
+                {
+                    "name": "dark_theme_dimming",
+                    "type": "int32",
+                    "description": "Dimming of the background in dark themes, as a percentage; 0-100"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
         },
         {
             "name": "setChatTheme",
@@ -25040,7 +26667,7 @@
         },
         {
             "name": "toggleChatIsTranslatable",
-            "description": "Changes the tranlatable state of a chat; for Telegram Premium users only",
+            "description": "Changes the translatable state of a chat; for Telegram Premium users only",
             "class": "Ok",
             "properties": [
                 {
@@ -25574,7 +27201,7 @@
         },
         {
             "name": "getChatNotificationSettingsExceptions",
-            "description": "Returns list of chats with non-default notification settings",
+            "description": "Returns list of chats with non-default notification settings for new messages",
             "class": "Chats",
             "properties": [
                 {
@@ -25670,6 +27297,348 @@
                     "name": "chat_ids",
                     "type": "vector\u003cint53\u003e",
                     "description": "The new list of pinned chats"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "readChatList",
+            "description": "Traverse all chats in a chat list and marks all messages in the chats as read",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_list",
+                    "type": "ChatList",
+                    "description": "Chat list in which to mark all chats as read"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getStory",
+            "description": "Returns a story",
+            "class": "Story",
+            "properties": [
+                {
+                    "name": "story_sender_chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat that posted the story"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Story identifier"
+                },
+                {
+                    "name": "only_local",
+                    "type": "Bool",
+                    "description": "Pass true to get only locally available information without sending network requests"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "sendStory",
+            "description": "Sends a new story. Returns a temporary story with identifier 0",
+            "class": "Story",
+            "properties": [
+                {
+                    "name": "content",
+                    "type": "InputStoryContent",
+                    "description": "Content of the story"
+                },
+                {
+                    "name": "caption",
+                    "type": "formattedText",
+                    "description": "Story caption; pass null to use an empty caption; 0-getOption(\"story_caption_length_max\") characters"
+                },
+                {
+                    "name": "privacy_settings",
+                    "type": "StoryPrivacySettings",
+                    "description": "The privacy settings for the story"
+                },
+                {
+                    "name": "active_period",
+                    "type": "int32",
+                    "description": "Period after which the story is moved to archive, in seconds; must be one of 6 * 3600, 12 * 3600, 86400, 2 * 86400, 3 * 86400, or 7 * 86400 for Telegram Premium users, and 86400 otherwise"
+                },
+                {
+                    "name": "is_pinned",
+                    "type": "Bool",
+                    "description": "Pass true to keep the story accessible after expiration"
+                },
+                {
+                    "name": "protect_content",
+                    "type": "Bool",
+                    "description": "Pass true if the content of the story must be protected from forwarding and screenshotting"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "editStory",
+            "description": "Changes content and caption of a previously sent story",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Identifier of the story to edit"
+                },
+                {
+                    "name": "content",
+                    "type": "InputStoryContent",
+                    "description": "New content of the story; pass null to keep the current content"
+                },
+                {
+                    "name": "caption",
+                    "type": "formattedText",
+                    "description": "New story caption; pass null to keep the current caption"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "setStoryPrivacySettings",
+            "description": "Changes privacy settings of a previously sent story",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Identifier of the story"
+                },
+                {
+                    "name": "privacy_settings",
+                    "type": "StoryPrivacySettings",
+                    "description": "The new privacy settigs for the story"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "toggleStoryIsPinned",
+            "description": "Toggles whether a story is accessible after expiration",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Identifier of the story"
+                },
+                {
+                    "name": "is_pinned",
+                    "type": "Bool",
+                    "description": "Pass true to make the story accessible after expiration; pass false to make it private"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "deleteStory",
+            "description": "Deletes a previously sent story",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Identifier of the story to delete"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getStoryNotificationSettingsExceptions",
+            "description": "Returns list of chats with non-default notification settings for stories",
+            "class": "Chats",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "loadActiveStories",
+            "description": "Loads more active stories from a story list. The loaded stories will be sent through updates. Active stories are sorted by the pair (active_stories.order, active_stories.story_sender_chat_id) in descending order. Returns a 404 error if all active stories have been loaded",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "story_list",
+                    "type": "StoryList",
+                    "description": "The story list in which to load active stories"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "setChatActiveStoriesList",
+            "description": "Changes story list in which stories from the chat are shown",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Identifier of the chat that posted stories"
+                },
+                {
+                    "name": "story_list",
+                    "type": "StoryList",
+                    "description": "New list for active stories posted by the chat"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getChatActiveStories",
+            "description": "Returns the list of active stories posted by the given chat",
+            "class": "ChatActiveStories",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getChatPinnedStories",
+            "description": "Returns the list of pinned stories posted by the given chat. The stories are returned in a reverse chronological order (i.e., in order of decreasing story_id). For optimal performance, the number of returned stories is chosen by TDLib",
+            "class": "Stories",
+            "properties": [
+                {
+                    "name": "chat_id",
+                    "type": "int53",
+                    "description": "Chat identifier"
+                },
+                {
+                    "name": "from_story_id",
+                    "type": "int32",
+                    "description": "Identifier of the story starting from which stories must be returned; use 0 to get results from the last story"
+                },
+                {
+                    "name": "limit",
+                    "type": "int32",
+                    "description": "The maximum number of stories to be returned For optimal performance, the number of returned stories is chosen by TDLib and can be smaller than the specified limit"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getArchivedStories",
+            "description": "Returns the list of all stories of the current user. The stories are returned in a reverse chronological order (i.e., in order of decreasing story_id). For optimal performance, the number of returned stories is chosen by TDLib",
+            "class": "Stories",
+            "properties": [
+                {
+                    "name": "from_story_id",
+                    "type": "int32",
+                    "description": "Identifier of the story starting from which stories must be returned; use 0 to get results from the last story"
+                },
+                {
+                    "name": "limit",
+                    "type": "int32",
+                    "description": "The maximum number of stories to be returned For optimal performance, the number of returned stories is chosen by TDLib and can be smaller than the specified limit"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "openStory",
+            "description": "Informs TDLib that a story is opened and is being viewed by the user",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "story_sender_chat_id",
+                    "type": "int53",
+                    "description": "The identifier of the sender of the opened story"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "The identifier of the story"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "closeStory",
+            "description": "Informs TDLib that a story is closed by the user",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "story_sender_chat_id",
+                    "type": "int53",
+                    "description": "The identifier of the sender of the story to close"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "The identifier of the story"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getStoryViewers",
+            "description": "Returns viewers of a recent outgoing story. The method can be called if story.can_get_viewers == true. The views are returned in a reverse chronological order (i.e., in order of decreasing view_date) For optimal performance, the number of returned stories is chosen by TDLib",
+            "class": "MessageViewers",
+            "properties": [
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "Story identifier"
+                },
+                {
+                    "name": "offset_viewer",
+                    "type": "messageViewer",
+                    "description": "A viewer from which to return next viewers; pass null to get results from the beginning"
+                },
+                {
+                    "name": "limit",
+                    "type": "int32",
+                    "description": "The maximum number of story viewers to return For optimal performance, the number of returned stories is chosen by TDLib and can be smaller than the specified limit"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "reportStory",
+            "description": "Reports a story to the Telegram moderators",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "story_sender_chat_id",
+                    "type": "int53",
+                    "description": "The identifier of the sender of the story to report"
+                },
+                {
+                    "name": "story_id",
+                    "type": "int32",
+                    "description": "The identifier of the story to report"
+                },
+                {
+                    "name": "reason",
+                    "type": "ReportReason",
+                    "description": "The reason for reporting the story"
+                },
+                {
+                    "name": "text",
+                    "type": "string",
+                    "description": "Additional report details; 0-1024 characters"
                 }
             ],
             "is_synchronous": false,
@@ -27139,7 +29108,7 @@
                 {
                     "name": "is_muted",
                     "type": "Bool",
-                    "description": "Pass true to mute the user; pass false to unmute the them"
+                    "description": "Pass true to mute the user; pass false to unmute them"
                 }
             ],
             "is_synchronous": false,
@@ -27390,7 +29359,7 @@
         },
         {
             "name": "getContacts",
-            "description": "Returns all user contacts",
+            "description": "Returns all contacts of the user",
             "class": "Users",
             "properties": [],
             "is_synchronous": false,
@@ -27455,6 +29424,28 @@
             "name": "clearImportedContacts",
             "description": "Clears all imported contacts, contact list remains unchanged",
             "class": "Ok",
+            "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "setCloseFriends",
+            "description": "Changes the list of close friends of the current user",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "user_ids",
+                    "type": "vector\u003cint53\u003e",
+                    "description": "User identifiers of close friends; the users must be contacts of the current user"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getCloseFriends",
+            "description": "Returns all close friends of the current user",
+            "class": "Users",
             "properties": [],
             "is_synchronous": false,
             "type": 2
@@ -28259,11 +30250,6 @@
                     "name": "emoji_status",
                     "type": "emojiStatus",
                     "description": "New emoji status; pass null to switch to the default badge"
-                },
-                {
-                    "name": "duration",
-                    "type": "int32",
-                    "description": "Duration of the status, in seconds; pass 0 to keep the status active until it will be changed manually"
                 }
             ],
             "is_synchronous": false,
@@ -28285,7 +30271,7 @@
         },
         {
             "name": "changePhoneNumber",
-            "description": "Changes the phone number of the user and sends an authentication code to the user's new phone number. On success, returns information about the sent code",
+            "description": "Changes the phone number of the user and sends an authentication code to the user's new phone number; for official Android and iOS applications only. On success, returns information about the sent code",
             "class": "AuthenticationCodeInfo",
             "properties": [
                 {
@@ -28470,6 +30456,197 @@
             "type": 3
         },
         {
+            "name": "setBotName",
+            "description": "Sets the name of a bot. Can be called only if userTypeBot.can_be_edited == true",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "language_code",
+                    "type": "string",
+                    "description": "A two-letter ISO 639-1 language code. If empty, the name will be shown to all users for whose languages there is no dedicated name"
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "New bot's name on the specified language; 0-64 characters; must be non-empty if language code is empty"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
+            "name": "getBotName",
+            "description": "Returns the name of a bot in the given language. Can be called only if userTypeBot.can_be_edited == true",
+            "class": "Text",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "language_code",
+                    "type": "string",
+                    "description": "A two-letter ISO 639-1 language code or an empty string"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
+            "name": "setBotProfilePhoto",
+            "description": "Changes a profile photo for a bot",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "photo",
+                    "type": "InputChatPhoto",
+                    "description": "Profile photo to set; pass null to delete the chat photo"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
+            "name": "toggleBotUsernameIsActive",
+            "description": "Changes active state for a username of a bot. The editable username can't be disabled. May return an error with a message \"USERNAMES_ACTIVE_TOO_MUCH\" if the maximum number of active usernames has been reached. Can be called only if userTypeBot.can_be_edited == true",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "username",
+                    "type": "string",
+                    "description": "The username to change"
+                },
+                {
+                    "name": "is_active",
+                    "type": "Bool",
+                    "description": "Pass true to activate the username; pass false to disable it"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "reorderBotActiveUsernames",
+            "description": "Changes order of active usernames of a bot. Can be called only if userTypeBot.can_be_edited == true",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "usernames",
+                    "type": "vector\u003cstring\u003e",
+                    "description": "The new order of active usernames. All currently active usernames must be specified"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "setBotInfoDescription",
+            "description": "Sets the text shown in the chat with a bot if the chat is empty. Can be called only if userTypeBot.can_be_edited == true",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "language_code",
+                    "type": "string",
+                    "description": "A two-letter ISO 639-1 language code. If empty, the description will be shown to all users for whose languages there is no dedicated description"
+                },
+                {
+                    "name": "description",
+                    "type": "string",
+                    "description": "New bot's description on the specified language"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
+            "name": "getBotInfoDescription",
+            "description": "Returns the text shown in the chat with a bot if the chat is empty in the given language. Can be called only if userTypeBot.can_be_edited == true",
+            "class": "Text",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "language_code",
+                    "type": "string",
+                    "description": "A two-letter ISO 639-1 language code or an empty string"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
+            "name": "setBotInfoShortDescription",
+            "description": "Sets the text shown on a bot's profile page and sent together with the link when users share the bot. Can be called only if userTypeBot.can_be_edited == true",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "language_code",
+                    "type": "string",
+                    "description": "A two-letter ISO 639-1 language code. If empty, the short description will be shown to all users for whose languages there is no dedicated description"
+                },
+                {
+                    "name": "short_description",
+                    "type": "string",
+                    "description": "New bot's short description on the specified language"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
+            "name": "getBotInfoShortDescription",
+            "description": "Returns the text shown on a bot's profile page and sent together with the link when users share the bot in the given language. Can be called only if userTypeBot.can_be_edited == true",
+            "class": "Text",
+            "properties": [
+                {
+                    "name": "bot_user_id",
+                    "type": "int53",
+                    "description": "Identifier of the target bot"
+                },
+                {
+                    "name": "language_code",
+                    "type": "string",
+                    "description": "A two-letter ISO 639-1 language code or an empty string"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 1
+        },
+        {
             "name": "getActiveSessions",
             "description": "Returns all active sessions of the current user",
             "class": "Sessions",
@@ -28531,7 +30708,7 @@
                 {
                     "name": "can_accept_secret_chats",
                     "type": "Bool",
-                    "description": "Pass true to allow accepring secret chats by the session; pass false otherwise"
+                    "description": "Pass true to allow accepting secret chats by the session; pass false otherwise"
                 }
             ],
             "is_synchronous": false,
@@ -29145,7 +31322,7 @@
                 {
                     "name": "background",
                     "type": "InputBackground",
-                    "description": "The input background to use; pass null to create a new filled backgrounds or to remove the current background"
+                    "description": "The input background to use; pass null to create a new filled background or to remove the current background"
                 },
                 {
                     "name": "type",
@@ -29252,7 +31429,7 @@
                 {
                     "name": "language_pack_id",
                     "type": "string",
-                    "description": "Identifier of a language pack to be added; may be different from a name that is used in an \"https://t.me/setlanguage/\" link"
+                    "description": "Identifier of a language pack to be added"
                 }
             ],
             "is_synchronous": false,
@@ -29545,7 +31722,7 @@
                 },
                 {
                     "name": "reason",
-                    "type": "ChatReportReason",
+                    "type": "ReportReason",
                     "description": "The reason for reporting the chat"
                 },
                 {
@@ -29574,7 +31751,7 @@
                 },
                 {
                     "name": "reason",
-                    "type": "ChatReportReason",
+                    "type": "ReportReason",
                     "description": "The reason for reporting the chat photo"
                 },
                 {
@@ -30206,9 +32383,14 @@
                     "description": "Sticker file owner; ignored for regular users"
                 },
                 {
+                    "name": "sticker_format",
+                    "type": "StickerFormat",
+                    "description": "Sticker format"
+                },
+                {
                     "name": "sticker",
-                    "type": "inputSticker",
-                    "description": "Sticker file to upload"
+                    "type": "InputFile",
+                    "description": "File file to upload; must fit in a 512x512 square. For WEBP stickers the file must be in WEBP or PNG format, which will be converted to WEBP server-side. See https://core.telegram.org/animated_stickers#technical-requirements for technical requirements"
                 }
             ],
             "is_synchronous": false,
@@ -30263,9 +32445,19 @@
                     "description": "Sticker set name. Can contain only English letters, digits and underscores. Must end with *\"_by_\u003cbot username\u003e\"* (*\u003cbot_username\u003e* is case insensitive) for bots; 1-64 characters"
                 },
                 {
+                    "name": "sticker_format",
+                    "type": "StickerFormat",
+                    "description": "Format of the stickers in the set"
+                },
+                {
                     "name": "sticker_type",
                     "type": "StickerType",
                     "description": "Type of the stickers in the set"
+                },
+                {
+                    "name": "needs_repainting",
+                    "type": "Bool",
+                    "description": "Pass true if stickers in the sticker set must be repainted; for custom emoji sticker sets only"
                 },
                 {
                     "name": "stickers",
@@ -30283,8 +32475,8 @@
         },
         {
             "name": "addStickerToSet",
-            "description": "Adds a new sticker to a set; for bots only. Returns the sticker set",
-            "class": "StickerSet",
+            "description": "Adds a new sticker to a set; for bots only",
+            "class": "Ok",
             "properties": [
                 {
                     "name": "user_id",
@@ -30307,8 +32499,8 @@
         },
         {
             "name": "setStickerSetThumbnail",
-            "description": "Sets a sticker set thumbnail; for bots only. Returns the sticker set",
-            "class": "StickerSet",
+            "description": "Sets a sticker set thumbnail; for bots only",
+            "class": "Ok",
             "properties": [
                 {
                     "name": "user_id",
@@ -30324,6 +32516,58 @@
                     "name": "thumbnail",
                     "type": "InputFile",
                     "description": "Thumbnail to set in PNG, TGS, or WEBM format; pass null to remove the sticker set thumbnail. Thumbnail format must match the format of stickers in the set"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "setCustomEmojiStickerSetThumbnail",
+            "description": "Sets a custom emoji sticker set thumbnail; for bots only",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Sticker set name"
+                },
+                {
+                    "name": "custom_emoji_id",
+                    "type": "int64",
+                    "description": "Identifier of the custom emoji from the sticker set, which will be set as sticker set thumbnail; pass 0 to remove the sticker set thumbnail"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "setStickerSetTitle",
+            "description": "Sets a sticker set title; for bots only",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Sticker set name"
+                },
+                {
+                    "name": "title",
+                    "type": "string",
+                    "description": "New sticker set title"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "deleteStickerSet",
+            "description": "Deleted a sticker set; for bots only",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "description": "Sticker set name"
                 }
             ],
             "is_synchronous": false,
@@ -30357,6 +32601,63 @@
                     "name": "sticker",
                     "type": "InputFile",
                     "description": "Sticker"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "setStickerEmojis",
+            "description": "Changes the list of emoji corresponding to a sticker; for bots only. The sticker must belong to a regular or custom emoji sticker set created by the bot",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "sticker",
+                    "type": "InputFile",
+                    "description": "Sticker"
+                },
+                {
+                    "name": "emojis",
+                    "type": "string",
+                    "description": "New string with 1-20 emoji corresponding to the sticker"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "setStickerKeywords",
+            "description": "Changes the list of keywords of a sticker; for bots only. The sticker must belong to a regular or custom emoji sticker set created by the bot",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "sticker",
+                    "type": "InputFile",
+                    "description": "Sticker"
+                },
+                {
+                    "name": "keywords",
+                    "type": "vector\u003cstring\u003e",
+                    "description": "List of up to 20 keywords with total length up to 64 characters, which can be used to find the sticker"
+                }
+            ],
+            "is_synchronous": false,
+            "type": 3
+        },
+        {
+            "name": "setStickerMaskPosition",
+            "description": "Changes the mask position of a mask sticker; for bots only. The sticker must belong to a mask sticker set created by the bot",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "sticker",
+                    "type": "InputFile",
+                    "description": "Sticker"
+                },
+                {
+                    "name": "mask_position",
+                    "type": "maskPosition",
+                    "description": "Position where the mask is placed; pass null to remove mask position"
                 }
             ],
             "is_synchronous": false,
@@ -30645,14 +32946,6 @@
             "type": 1
         },
         {
-            "name": "getApplicationDownloadLink",
-            "description": "Returns the link for downloading official Telegram application to be used when the current user invites friends to Telegram",
-            "class": "HttpUrl",
-            "properties": [],
-            "is_synchronous": false,
-            "type": 2
-        },
-        {
             "name": "getDeepLinkInfo",
             "description": "Returns information about a tg:// deep link. Use \"tg://need_update_for_some_feature\" or \"tg:some_unsupported_feature\" for testing. Returns a 404 error for unknown links. Can be called before authorization",
             "class": "DeepLinkInfo",
@@ -30671,6 +32964,20 @@
             "description": "Returns application config, provided by the server. Can be called before authorization",
             "class": "JsonValue",
             "properties": [],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "addApplicationChangelog",
+            "description": "Adds server-provided application changelog as messages to the chat 777000 (Telegram) or as a stories; for official applications only. Returns a 404 error if nothing changed",
+            "class": "Ok",
+            "properties": [
+                {
+                    "name": "previous_application_version",
+                    "type": "string",
+                    "description": "The previous application version"
+                }
+            ],
             "is_synchronous": false,
             "type": 2
         },
@@ -30695,6 +33002,14 @@
                     "description": "The log event data"
                 }
             ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getApplicationDownloadLink",
+            "description": "Returns the link for downloading official Telegram application to be used when the current user invites friends to Telegram",
+            "class": "HttpUrl",
+            "properties": [],
             "is_synchronous": false,
             "type": 2
         },
@@ -30967,6 +33282,14 @@
                     "description": "New information message"
                 }
             ],
+            "is_synchronous": false,
+            "type": 2
+        },
+        {
+            "name": "getSupportName",
+            "description": "Returns localized name of the Telegram support user; for Telegram support only",
+            "class": "Text",
+            "properties": [],
             "is_synchronous": false,
             "type": 2
         },
