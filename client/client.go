@@ -46,7 +46,7 @@ func WithLogVerbosity(req *SetLogVerbosityLevelRequest) Option {
 func NewClient(authorizationStateHandler AuthorizationStateHandler, options ...Option) (*Client, error) {
 	client := &Client{
 		jsonClient:    NewJsonClient(),
-		responses:     make(chan *Response, 1000),
+		responses:     make(chan *Response, 10000),
 		listenerStore: newListenerStore(),
 		catchersStore: &sync.Map{},
 	}
@@ -127,7 +127,7 @@ func (client *Client) Send(req Request) (*Response, error) {
 func (client *Client) GetListener() *Listener {
 	listener := &Listener{
 		isActive: true,
-		Updates:  make(chan Type, 1000),
+		Updates:  make(chan Type, 10000),
 	}
 	client.listenerStore.Add(listener)
 
