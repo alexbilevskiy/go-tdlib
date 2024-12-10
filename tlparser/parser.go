@@ -91,30 +91,23 @@ func parseFunction(firstLine string, scanner *bufio.Scanner) *Function {
 }
 
 func parseClass(firstLine string, scanner *bufio.Scanner) *Class {
-	class := &Class{
-		Name:        "",
-		Description: "",
-	}
-
 	classLineParts := strings.Split(firstLine, "@")
 
-	_, class.Name = parseProperty(classLineParts[1])
-	_, class.Description = parseProperty(classLineParts[2])
+	_, name := parseProperty(classLineParts[1])
+	_, description := parseProperty(classLineParts[2])
 
 	for scanner.Scan() {
 		line := scanner.Text()
-
-		switch {
-		case strings.HasPrefix(line, "//-"):
-			class.Description += " " + strings.TrimLeft(line, "//-")
-
-		default:
-
-			return class
+		if !strings.HasPrefix(line, "//-") {
+			break
 		}
+		description += " " + strings.TrimLeft(line, "//-")
 	}
 
-	return class
+	return &Class{
+		Name:        name,
+		Description: description,
+	}
 }
 
 func parseEntity(firstLine string, scanner *bufio.Scanner) (string, string, string, []*Property, bool) {

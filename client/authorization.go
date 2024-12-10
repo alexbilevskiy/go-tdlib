@@ -68,6 +68,15 @@ func (stateHandler *clientAuthorizer) Handle(client *Client, state Authorization
 		_, err := client.SetTdlibParameters(<-stateHandler.TdlibParameters)
 		return err
 
+	case TypeAuthorizationStateWaitEmailAddress:
+		return ErrNotSupportedAuthorizationState
+
+	case TypeAuthorizationStateWaitEmailCode:
+		return ErrNotSupportedAuthorizationState
+
+	case TypeAuthorizationStateWaitOtherDeviceConfirmation:
+		return ErrNotSupportedAuthorizationState
+
 	case TypeAuthorizationStateWaitPhoneNumber:
 		_, err := client.SetAuthenticationPhoneNumber(&SetAuthenticationPhoneNumberRequest{
 			PhoneNumber: <-stateHandler.PhoneNumber,
@@ -78,13 +87,6 @@ func (stateHandler *clientAuthorizer) Handle(client *Client, state Authorization
 			},
 		})
 		return err
-
-	case TypeAuthorizationStateWaitEmailAddress:
-		panic("unsupported authorization state TypeAuthorizationStateWaitEmailAddress")
-	case TypeAuthorizationStateWaitEmailCode:
-		panic("unsupported authorization state TypeAuthorizationStateWaitEmailCode")
-	case TypeAuthorizationStateWaitOtherDeviceConfirmation:
-		panic("unsupported authorization state TypeAuthorizationStateWaitOtherDeviceConfirmation")
 
 	case TypeAuthorizationStateWaitCode:
 		_, err := client.CheckAuthenticationCode(&CheckAuthenticationCodeRequest{

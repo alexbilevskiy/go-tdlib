@@ -1,16 +1,19 @@
 # go-tdlib
 
-Go wrapper for [TDLib (Telegram Database Library)](https://github.com/tdlib/td) with full support of TDLib v1.8.0
+Go wrapper for [TDLib (Telegram Database Library)](https://github.com/tdlib/td) with full support of the TDLib.
+Current supported version of TDLib corresponds to the commit hash [22d49d5](https://github.com/tdlib/td/commit/22d49d5b87a4d5fc60a194dab02dd1d71529687f), updated on 2024-11-27
 
 ## TDLib installation
 
-Use [TDLib build instructions](https://tdlib.github.io/td/build.html) with checkmarked `Install built TDLib to /usr/local instead of placing the files to td/tdlib`.
+Use [TDLib build instructions](https://tdlib.github.io/td/build.html) with checkmarked `Install built TDLib to /usr/local instead of placing the files to td/tdlib`. Don't forget to checkout a supported commit (see above).
+
 
 ### Windows
 
-Build with environment variables:
+Build with environment variables (use full paths):
 
 ```
+CGO_ENABLED=1
 CGO_CFLAGS=-IC:/path/to/tdlib/build/tdlib/include
 CGO_LDFLAGS=-LC:/path/to/tdlib/build/tdlib/bin -ltdjson
 ```
@@ -18,8 +21,9 @@ CGO_LDFLAGS=-LC:/path/to/tdlib/build/tdlib/bin -ltdjson
 Example for PowerShell:
 
 ```powershell
-$env:CGO_CFLAGS="-IC:/td/tdlib/include"; $env:CGO_LDFLAGS="-LC:/td/tdlib/bin -ltdjson"; go build -trimpath -ldflags="-s -w" -o demo.exe .\cmd\demo.go
+$env:CGO_ENABLED=1; $env:CGO_CFLAGS="-IC:/td/tdlib/include"; $env:CGO_LDFLAGS="-LC:/td/tdlib/bin -ltdjson"; go build -trimpath -ldflags="-s -w" -o demo.exe .\cmd\demo.go
 ```
+To run, put the .dll from C:/td/tdlib/bin to the directory with the compiled .exe.
 
 ## Usage
 
@@ -51,7 +55,7 @@ func main() {
         apiHash = "8pu9yg32qkuukj83ozaqo5zzjwhkxhnk"
     )
 
-    authorizer.TdlibParameters <- &client.TdlibParameters{
+    authorizer.TdlibParameters <- &client.SetTdlibParametersRequest{
         UseTestDc:              false,
         DatabaseDirectory:      filepath.Join(".tdlib", "database"),
         FilesDirectory:         filepath.Join(".tdlib", "files"),
@@ -65,8 +69,6 @@ func main() {
         DeviceModel:            "Server",
         SystemVersion:          "1.0.0",
         ApplicationVersion:     "1.0.0",
-        EnableStorageOptimizer: true,
-        IgnoreFileNames:        false,
     }
 
 	_, err := client.SetLogVerbosityLevel(&client.SetLogVerbosityLevelRequest{
@@ -81,7 +83,7 @@ func main() {
         log.Fatalf("NewClient error: %s", err)
     }
 
-    optionValue, err := tdlibClient.GetOption(&client.GetOptionRequest{
+    optionValue, err := client.GetOption(&client.GetOptionRequest{
         Name: "version",
     })
     if err != nil {
@@ -95,7 +97,7 @@ func main() {
         log.Fatalf("GetMe error: %s", err)
     }
 
-    log.Printf("Me: %s %s [%s]", me.FirstName, me.LastName, me.Username)
+    log.Printf("Me: %s %s", me.FirstName, me.LastName)
 }
 
 ```
@@ -133,6 +135,17 @@ proxy := client.WithProxy(&client.AddProxyRequest{
 
 tdlibClient, err := client.NewClient(authorizer, proxy)
 
+```
+
+## Example
+
+[Example application](https://github.com/zelenin/go-tdlib/tree/master/example)
+
+```
+cd example
+docker build --network host --progress plain --tag tdlib-test .
+docker run --rm -it -e "API_ID=00000" -e "API_HASH=abcdef0123456789" tdlib-test ash
+./app
 ```
 
 ## Notes

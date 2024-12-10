@@ -1,47 +1,45 @@
 package main
 
 import (
-	"bufio"
 	"encoding/json"
 	"flag"
 	"github.com/zelenin/go-tdlib/tlparser"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
 func main() {
+	var version string
 	var outputFilePath string
 
+	flag.StringVar(&version, "version", "", "TDLib version")
 	flag.StringVar(&outputFilePath, "output", "./td_api.json", "json schema file")
 
 	flag.Parse()
 
-	tlFile, err := os.Open("data/td_api.tl")
+	resp, err := http.Get("https://raw.githubusercontent.com/tdlib/td/" + version + "/td/generate/scheme/td_api.tl")
 	if err != nil {
-		log.Fatalf("open td_api.tl error: %s", err)
-		return
+		log.Fatalf("http.Get error: %s", err)
 	}
-	defer tlFile.Close()
+	defer resp.Body.Close()
 
-	schema, err := tlparser.Parse(bufio.NewReader(tlFile))
+	schema, err := tlparser.Parse(resp.Body)
 	if err != nil {
 		log.Fatalf("schema parse error: %s", err)
-		return
 	}
 
-	cppFile, err := os.Open("data/Td.cpp")
+	resp, err = http.Get("https://raw.githubusercontent.com/tdlib/td/" + version + "/td/telegram/Td.cpp")
 	if err != nil {
-		log.Fatalf("open Td.cpp error: %s", err)
-		return
+		log.Fatalf("http.Get error: %s", err)
 	}
-	defer cppFile.Close()
+	defer resp.Body.Close()
 
-	err = tlparser.ParseCode(bufio.NewReader(cppFile), schema)
+	err = tlparser.ParseCode(resp.Body, schema)
 	if err != nil {
 		log.Fatalf("parse code error: %s", err)
-		return
 	}
 
 	err = os.MkdirAll(filepath.Dir(outputFilePath), os.ModePerm)
@@ -49,16 +47,17 @@ func main() {
 		log.Fatalf("make dir error: %s", filepath.Dir(outputFilePath))
 	}
 
-	file, err := os.OpenFile(outputFilePath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModePerm)
+	file, err := os.Create(outputFilePath)
 	if err != nil {
 		log.Fatalf("open file error: %s", err)
-		return
 	}
+	defer file.Close()
 
-	data, err := json.MarshalIndent(schema, "", strings.Repeat(" ", 4))
+	enc := json.NewEncoder(file)
+	enc.SetIndent("", strings.Repeat(" ", 4))
+	err = enc.Encode(schema)
 	if err != nil {
-		log.Fatalf("json marshal error: %s", err)
-		return
+		log.Fatalf("enc.Encode error: %s", err)
+
 	}
-	bufio.NewWriter(file).Write(data)
 }
