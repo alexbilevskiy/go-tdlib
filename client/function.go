@@ -1931,6 +1931,90 @@ func (client *Client) OpenChatSimilarChat(req *OpenChatSimilarChatRequest) (*Ok,
 	return UnmarshalOk(result.Data)
 }
 
+type GetBotSimilarBotsRequest struct {
+	// User identifier of the target bot
+	BotUserId int64 `json:"bot_user_id"`
+}
+
+// Returns a list of bots similar to the given bot
+func (client *Client) GetBotSimilarBots(req *GetBotSimilarBotsRequest) (*Users, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getBotSimilarBots",
+		},
+		Data: map[string]interface{}{
+			"bot_user_id": req.BotUserId,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalUsers(result.Data)
+}
+
+type GetBotSimilarBotCountRequest struct {
+	// User identifier of the target bot
+	BotUserId int64 `json:"bot_user_id"`
+	// Pass true to get the number of bots without sending network requests, or -1 if the number of bots is unknown locally
+	ReturnLocal bool `json:"return_local"`
+}
+
+// Returns approximate number of bots similar to the given bot
+func (client *Client) GetBotSimilarBotCount(req *GetBotSimilarBotCountRequest) (*Count, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getBotSimilarBotCount",
+		},
+		Data: map[string]interface{}{
+			"bot_user_id":  req.BotUserId,
+			"return_local": req.ReturnLocal,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalCount(result.Data)
+}
+
+type OpenBotSimilarBotRequest struct {
+	// Identifier of the original bot, which similar bots were requested
+	BotUserId int64 `json:"bot_user_id"`
+	// Identifier of the opened bot
+	OpenedBotUserId int64 `json:"opened_bot_user_id"`
+}
+
+// Informs TDLib that a bot was opened from the list of similar bots
+func (client *Client) OpenBotSimilarBot(req *OpenBotSimilarBotRequest) (*Ok, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "openBotSimilarBot",
+		},
+		Data: map[string]interface{}{
+			"bot_user_id":        req.BotUserId,
+			"opened_bot_user_id": req.OpenedBotUserId,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalOk(result.Data)
+}
+
 type GetTopChatsRequest struct {
 	// Category of chats to be returned
 	Category TopChatCategory `json:"category"`
@@ -2696,8 +2780,6 @@ func (client *Client) SearchChatMessages(req *SearchChatMessagesRequest) (*Found
 type SearchMessagesRequest struct {
 	// Chat list in which to search messages; pass null to search in all chats regardless of their chat list. Only Main and Archive chat lists are supported
 	ChatList ChatList `json:"chat_list"`
-	// Pass true to search only for messages in channels
-	OnlyInChannels bool `json:"only_in_channels"`
 	// Query to search for
 	Query string `json:"query"`
 	// Offset of the first entry to return as received from the previous request; use empty string to get the first chunk of results
@@ -2706,6 +2788,8 @@ type SearchMessagesRequest struct {
 	Limit int32 `json:"limit"`
 	// Additional filter for messages to search; pass null to search for all messages. Filters searchMessagesFilterMention, searchMessagesFilterUnreadMention, searchMessagesFilterUnreadReaction, searchMessagesFilterFailedToSend, and searchMessagesFilterPinned are unsupported in this function
 	Filter SearchMessagesFilter `json:"filter"`
+	// Additional filter for type of the chat of the searched messages; pass null to search for messages in all chats
+	ChatTypeFilter SearchMessagesChatTypeFilter `json:"chat_type_filter"`
 	// If not 0, the minimum date of the messages to return
 	MinDate int32 `json:"min_date"`
 	// If not 0, the maximum date of the messages to return
@@ -2720,11 +2804,11 @@ func (client *Client) SearchMessages(req *SearchMessagesRequest) (*FoundMessages
 		},
 		Data: map[string]interface{}{
 			"chat_list":        req.ChatList,
-			"only_in_channels": req.OnlyInChannels,
 			"query":            req.Query,
 			"offset":           req.Offset,
 			"limit":            req.Limit,
 			"filter":           req.Filter,
+			"chat_type_filter": req.ChatTypeFilter,
 			"min_date":         req.MinDate,
 			"max_date":         req.MaxDate,
 		},
@@ -4133,7 +4217,7 @@ type DeleteChatMessagesBySenderRequest struct {
 	SenderId MessageSender `json:"sender_id"`
 }
 
-// Deletes all messages sent by the specified message sender in a chat. Supported only for supergroups; requires can_delete_messages administrator privileges
+// Deletes all messages sent by the specified message sender in a chat. Supported only for supergroups; requires can_delete_messages administrator right
 func (client *Client) DeleteChatMessagesBySender(req *DeleteChatMessagesBySenderRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
@@ -5875,6 +5959,32 @@ func (client *Client) RemoveMessageReaction(req *RemoveMessageReactionRequest) (
 	return UnmarshalOk(result.Data)
 }
 
+type GetChatAvailablePaidMessageReactionSendersRequest struct {
+	// Chat identifier
+	ChatId int64 `json:"chat_id"`
+}
+
+// Returns the list of message sender identifiers, which can be used to send a paid reaction in a chat
+func (client *Client) GetChatAvailablePaidMessageReactionSenders(req *GetChatAvailablePaidMessageReactionSendersRequest) (*MessageSenders, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getChatAvailablePaidMessageReactionSenders",
+		},
+		Data: map[string]interface{}{
+			"chat_id": req.ChatId,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalMessageSenders(result.Data)
+}
+
 type AddPendingPaidMessageReactionRequest struct {
 	// Identifier of the chat to which the message belongs
 	ChatId int64 `json:"chat_id"`
@@ -5882,10 +5992,8 @@ type AddPendingPaidMessageReactionRequest struct {
 	MessageId int64 `json:"message_id"`
 	// Number of Telegram Stars to be used for the reaction. The total number of pending paid reactions must not exceed getOption("paid_reaction_star_count_max")
 	StarCount int64 `json:"star_count"`
-	// Pass true if the user didn't choose anonymity explicitly, for example, the reaction is set from the message bubble
-	UseDefaultIsAnonymous bool `json:"use_default_is_anonymous"`
-	// Pass true to make paid reaction of the user on the message anonymous; pass false to make the user's profile visible among top reactors. Ignored if use_default_is_anonymous == true
-	IsAnonymous bool `json:"is_anonymous"`
+	// Type of the paid reaction; pass null if the user didn't choose reaction type explicitly, for example, the reaction is set from the message bubble
+	Type PaidReactionType `json:"type"`
 }
 
 // Adds the paid message reaction to a message. Use getMessageAvailableReactions to check whether the reaction is available for the message
@@ -5895,11 +6003,10 @@ func (client *Client) AddPendingPaidMessageReaction(req *AddPendingPaidMessageRe
 			Type: "addPendingPaidMessageReaction",
 		},
 		Data: map[string]interface{}{
-			"chat_id":                  req.ChatId,
-			"message_id":               req.MessageId,
-			"star_count":               req.StarCount,
-			"use_default_is_anonymous": req.UseDefaultIsAnonymous,
-			"is_anonymous":             req.IsAnonymous,
+			"chat_id":    req.ChatId,
+			"message_id": req.MessageId,
+			"star_count": req.StarCount,
+			"type":       req.Type,
 		},
 	})
 	if err != nil {
@@ -5971,25 +6078,25 @@ func (client *Client) RemovePendingPaidMessageReactions(req *RemovePendingPaidMe
 	return UnmarshalOk(result.Data)
 }
 
-type TogglePaidMessageReactionIsAnonymousRequest struct {
+type SetPaidMessageReactionTypeRequest struct {
 	// Identifier of the chat to which the message belongs
 	ChatId int64 `json:"chat_id"`
 	// Identifier of the message
 	MessageId int64 `json:"message_id"`
-	// Pass true to make paid reaction of the user on the message anonymous; pass false to make the user's profile visible among top reactors
-	IsAnonymous bool `json:"is_anonymous"`
+	// New type of the paid reaction
+	Type PaidReactionType `json:"type"`
 }
 
-// Changes whether the paid message reaction of the user to a message is anonymous. The message must have paid reaction added by the user
-func (client *Client) TogglePaidMessageReactionIsAnonymous(req *TogglePaidMessageReactionIsAnonymousRequest) (*Ok, error) {
+// Changes type of paid message reaction of the current user on a message. The message must have paid reaction added by the current user
+func (client *Client) SetPaidMessageReactionType(req *SetPaidMessageReactionTypeRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "togglePaidMessageReactionIsAnonymous",
+			Type: "setPaidMessageReactionType",
 		},
 		Data: map[string]interface{}{
-			"chat_id":      req.ChatId,
-			"message_id":   req.MessageId,
-			"is_anonymous": req.IsAnonymous,
+			"chat_id":    req.ChatId,
+			"message_id": req.MessageId,
+			"type":       req.Type,
 		},
 	})
 	if err != nil {
@@ -7555,7 +7662,7 @@ func (client *Client) GetWebAppLinkUrl(req *GetWebAppLinkUrlRequest) (*HttpUrl, 
 type GetMainWebAppRequest struct {
 	// Identifier of the chat in which the Web App is opened; pass 0 if none
 	ChatId int64 `json:"chat_id"`
-	// Identifier of the target bot
+	// Identifier of the target bot. If the bot is restricted for the current user, then show an error instead of calling the method
 	BotUserId int64 `json:"bot_user_id"`
 	// Start parameter from internalLinkTypeMainWebApp
 	StartParameter string `json:"start_parameter"`
@@ -7588,7 +7695,7 @@ func (client *Client) GetMainWebApp(req *GetMainWebAppRequest) (*MainWebApp, err
 }
 
 type GetWebAppUrlRequest struct {
-	// Identifier of the target bot
+	// Identifier of the target bot. If the bot is restricted for the current user, then show an error instead of calling the method
 	BotUserId int64 `json:"bot_user_id"`
 	// The URL from a keyboardButtonTypeWebApp button, inlineQueryResultsButtonTypeWebApp button, or an empty string when the bot is opened from the side menu
 	Url string `json:"url"`
@@ -7654,7 +7761,7 @@ func (client *Client) SendWebAppData(req *SendWebAppDataRequest) (*Ok, error) {
 type OpenWebAppRequest struct {
 	// Identifier of the chat in which the Web App is opened. The Web App can't be opened in secret chats
 	ChatId int64 `json:"chat_id"`
-	// Identifier of the bot, providing the Web App
+	// Identifier of the bot, providing the Web App. If the bot is restricted for the current user, then show an error instead of calling the method
 	BotUserId int64 `json:"bot_user_id"`
 	// The URL from an inlineKeyboardButtonTypeWebApp button, a botMenuButton button, an internalLinkTypeAttachmentMenuBot link, or an empty string otherwise
 	Url string `json:"url"`
@@ -8437,6 +8544,9 @@ func (client *Client) GetInternalLinkType(req *GetInternalLinkTypeRequest) (Inte
 
 	case TypeInternalLinkTypeUnsupportedProxy:
 		return UnmarshalInternalLinkTypeUnsupportedProxy(result.Data)
+
+	case TypeInternalLinkTypeUpgradedGift:
+		return UnmarshalInternalLinkTypeUpgradedGift(result.Data)
 
 	case TypeInternalLinkTypeUserPhoneNumber:
 		return UnmarshalInternalLinkTypeUserPhoneNumber(result.Data)
@@ -12132,7 +12242,7 @@ func (client *Client) ToggleBotIsAddedToAttachmentMenu(req *ToggleBotIsAddedToAt
 }
 
 // Returns up to 8 emoji statuses, which must be shown right after the default Premium Badge in the emoji status list for self status
-func (client *Client) GetThemedEmojiStatuses() (*EmojiStatuses, error) {
+func (client *Client) GetThemedEmojiStatuses() (*EmojiStatusCustomEmojis, error) {
 	result, err := client.Send(Request{
 		meta: meta{
 			Type: "getThemedEmojiStatuses",
@@ -12147,7 +12257,7 @@ func (client *Client) GetThemedEmojiStatuses() (*EmojiStatuses, error) {
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalEmojiStatuses(result.Data)
+	return UnmarshalEmojiStatusCustomEmojis(result.Data)
 }
 
 // Returns recent emoji statuses for self status
@@ -12169,8 +12279,27 @@ func (client *Client) GetRecentEmojiStatuses() (*EmojiStatuses, error) {
 	return UnmarshalEmojiStatuses(result.Data)
 }
 
+// Returns available upgraded gift emoji statuses for self status
+func (client *Client) GetUpgradedGiftEmojiStatuses() (*EmojiStatuses, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getUpgradedGiftEmojiStatuses",
+		},
+		Data: map[string]interface{}{},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalEmojiStatuses(result.Data)
+}
+
 // Returns default emoji statuses for self status
-func (client *Client) GetDefaultEmojiStatuses() (*EmojiStatuses, error) {
+func (client *Client) GetDefaultEmojiStatuses() (*EmojiStatusCustomEmojis, error) {
 	result, err := client.Send(Request{
 		meta: meta{
 			Type: "getDefaultEmojiStatuses",
@@ -12185,7 +12314,7 @@ func (client *Client) GetDefaultEmojiStatuses() (*EmojiStatuses, error) {
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalEmojiStatuses(result.Data)
+	return UnmarshalEmojiStatusCustomEmojis(result.Data)
 }
 
 // Clears the list of recently used emoji statuses for self status
@@ -12208,7 +12337,7 @@ func (client *Client) ClearRecentEmojiStatuses() (*Ok, error) {
 }
 
 // Returns up to 8 emoji statuses, which must be shown in the emoji status list for chats
-func (client *Client) GetThemedChatEmojiStatuses() (*EmojiStatuses, error) {
+func (client *Client) GetThemedChatEmojiStatuses() (*EmojiStatusCustomEmojis, error) {
 	result, err := client.Send(Request{
 		meta: meta{
 			Type: "getThemedChatEmojiStatuses",
@@ -12223,11 +12352,11 @@ func (client *Client) GetThemedChatEmojiStatuses() (*EmojiStatuses, error) {
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalEmojiStatuses(result.Data)
+	return UnmarshalEmojiStatusCustomEmojis(result.Data)
 }
 
 // Returns default emoji statuses for chats
-func (client *Client) GetDefaultChatEmojiStatuses() (*EmojiStatuses, error) {
+func (client *Client) GetDefaultChatEmojiStatuses() (*EmojiStatusCustomEmojis, error) {
 	result, err := client.Send(Request{
 		meta: meta{
 			Type: "getDefaultChatEmojiStatuses",
@@ -12242,11 +12371,11 @@ func (client *Client) GetDefaultChatEmojiStatuses() (*EmojiStatuses, error) {
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalEmojiStatuses(result.Data)
+	return UnmarshalEmojiStatusCustomEmojis(result.Data)
 }
 
 // Returns the list of emoji statuses, which can't be used as chat emoji status, even they are from a sticker set with is_allowed_as_chat_emoji_status == true
-func (client *Client) GetDisallowedChatEmojiStatuses() (*EmojiStatuses, error) {
+func (client *Client) GetDisallowedChatEmojiStatuses() (*EmojiStatusCustomEmojis, error) {
 	result, err := client.Send(Request{
 		meta: meta{
 			Type: "getDisallowedChatEmojiStatuses",
@@ -12261,7 +12390,7 @@ func (client *Client) GetDisallowedChatEmojiStatuses() (*EmojiStatuses, error) {
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalEmojiStatuses(result.Data)
+	return UnmarshalEmojiStatusCustomEmojis(result.Data)
 }
 
 type DownloadFileRequest struct {
@@ -12788,13 +12917,13 @@ func (client *Client) SearchFileDownloads(req *SearchFileDownloadsRequest) (*Fou
 }
 
 type SetApplicationVerificationTokenRequest struct {
-	// Unique identifier for the verification process as received from updateApplicationVerificationRequired
+	// Unique identifier for the verification process as received from updateApplicationVerificationRequired or updateApplicationRecaptchaVerificationRequired
 	VerificationId int64 `json:"verification_id"`
-	// Play Integrity API token for the Android application, or secret from push notification for the iOS application; pass an empty string to abort verification and receive error VERIFICATION_FAILED for the request
+	// Play Integrity API token for the Android application, or secret from push notification for the iOS application for application verification, or reCAPTCHA token for reCAPTCHA verifications; pass an empty string to abort verification and receive error VERIFICATION_FAILED for the request
 	Token string `json:"token"`
 }
 
-// Application verification has been completed. Can be called before authorization
+// Application or reCAPTCHA verification has been completed. Can be called before authorization
 func (client *Client) SetApplicationVerificationToken(req *SetApplicationVerificationTokenRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
@@ -13463,6 +13592,8 @@ type CreateCallRequest struct {
 	Protocol *CallProtocol `json:"protocol"`
 	// Pass true to create a video call
 	IsVideo bool `json:"is_video"`
+	// Identifier of the group call to which the user will be added after exchanging private key via the call; pass 0 if none; currently, ignored
+	GroupCallId int32 `json:"group_call_id"`
 }
 
 // Creates a new call
@@ -13472,9 +13603,10 @@ func (client *Client) CreateCall(req *CreateCallRequest) (*CallId, error) {
 			Type: "createCall",
 		},
 		Data: map[string]interface{}{
-			"user_id":  req.UserId,
-			"protocol": req.Protocol,
-			"is_video": req.IsVideo,
+			"user_id":       req.UserId,
+			"protocol":      req.Protocol,
+			"is_video":      req.IsVideo,
+			"group_call_id": req.GroupCallId,
 		},
 	})
 	if err != nil {
@@ -13765,6 +13897,32 @@ func (client *Client) CreateVideoChat(req *CreateVideoChatRequest) (*GroupCallId
 	}
 
 	return UnmarshalGroupCallId(result.Data)
+}
+
+type CreateGroupCallRequest struct {
+	// Call identifier
+	CallId int32 `json:"call_id"`
+}
+
+// Creates a group call from a one-to-one call
+func (client *Client) CreateGroupCall(req *CreateGroupCallRequest) (*Ok, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "createGroupCall",
+		},
+		Data: map[string]interface{}{
+			"call_id": req.CallId,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalOk(result.Data)
 }
 
 type GetVideoChatRtmpUrlRequest struct {
@@ -17939,6 +18097,67 @@ func (client *Client) GetBotInfoShortDescription(req *GetBotInfoShortDescription
 	return UnmarshalText(result.Data)
 }
 
+type SetMessageSenderBotVerificationRequest struct {
+	// Identifier of the owned bot, which will verify the user or the chat
+	BotUserId int64 `json:"bot_user_id"`
+	// Identifier of the user or the supergroup or channel chat, which will be verified by the bot
+	VerifiedId MessageSender `json:"verified_id"`
+	// Custom description of verification reason; 0-getOption("bot_verification_custom_description_length_max"). If empty, then "was verified by organization "organization_name"" will be used as description. Can be specified only if the bot is allowed to provide custom description
+	CustomDescription string `json:"custom_description"`
+}
+
+// Changes the verification status of a user or a chat by an owned bot
+func (client *Client) SetMessageSenderBotVerification(req *SetMessageSenderBotVerificationRequest) (*Ok, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "setMessageSenderBotVerification",
+		},
+		Data: map[string]interface{}{
+			"bot_user_id":        req.BotUserId,
+			"verified_id":        req.VerifiedId,
+			"custom_description": req.CustomDescription,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalOk(result.Data)
+}
+
+type RemoveMessageSenderBotVerificationRequest struct {
+	// Identifier of the owned bot, which verified the user or the chat
+	BotUserId int64 `json:"bot_user_id"`
+	// Identifier of the user or the supergroup or channel chat, which verification is removed
+	VerifiedId MessageSender `json:"verified_id"`
+}
+
+// Removes the verification status of a user or a chat by an owned bot
+func (client *Client) RemoveMessageSenderBotVerification(req *RemoveMessageSenderBotVerificationRequest) (*Ok, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "removeMessageSenderBotVerification",
+		},
+		Data: map[string]interface{}{
+			"bot_user_id": req.BotUserId,
+			"verified_id": req.VerifiedId,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalOk(result.Data)
+}
+
 // Returns all active sessions of the current user
 func (client *Client) GetActiveSessions() (*Sessions, error) {
 	result, err := client.Send(Request{
@@ -19008,7 +19227,7 @@ func (client *Client) DeleteSavedCredentials() (*Ok, error) {
 	return UnmarshalOk(result.Data)
 }
 
-// Returns gifts that can be sent to other users
+// Returns gifts that can be sent to other users and channel chats
 func (client *Client) GetAvailableGifts() (*Gifts, error) {
 	result, err := client.Send(Request{
 		meta: meta{
@@ -19030,25 +19249,28 @@ func (client *Client) GetAvailableGifts() (*Gifts, error) {
 type SendGiftRequest struct {
 	// Identifier of the gift to send
 	GiftId JsonInt64 `json:"gift_id"`
-	// Identifier of the user that will receive the gift
-	UserId int64 `json:"user_id"`
+	// Identifier of the user or the channel chat that will receive the gift
+	OwnerId MessageSender `json:"owner_id"`
 	// Text to show along with the gift; 0-getOption("gift_text_length_max") characters. Only Bold, Italic, Underline, Strikethrough, Spoiler, and CustomEmoji entities are allowed
 	Text *FormattedText `json:"text"`
-	// Pass true to show the current user as sender and gift text only to the gift receiver; otherwise, everyone will be able to see them
+	// Pass true to show gift text and sender only to the gift receiver; otherwise, everyone will be able to see them
 	IsPrivate bool `json:"is_private"`
+	// Pass true to additionally pay for the gift upgrade and allow the receiver to upgrade it for free
+	PayForUpgrade bool `json:"pay_for_upgrade"`
 }
 
-// Sends a gift to another user. May return an error with a message "STARGIFT_USAGE_LIMITED" if the gift was sold out
+// Sends a gift to another user or channel chat. May return an error with a message "STARGIFT_USAGE_LIMITED" if the gift was sold out
 func (client *Client) SendGift(req *SendGiftRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
 			Type: "sendGift",
 		},
 		Data: map[string]interface{}{
-			"gift_id":    req.GiftId,
-			"user_id":    req.UserId,
-			"text":       req.Text,
-			"is_private": req.IsPrivate,
+			"gift_id":         req.GiftId,
+			"owner_id":        req.OwnerId,
+			"text":            req.Text,
+			"is_private":      req.IsPrivate,
+			"pay_for_upgrade": req.PayForUpgrade,
 		},
 	})
 	if err != nil {
@@ -19063,21 +19285,18 @@ func (client *Client) SendGift(req *SendGiftRequest) (*Ok, error) {
 }
 
 type SellGiftRequest struct {
-	// Identifier of the user that sent the gift
-	SenderUserId int64 `json:"sender_user_id"`
-	// Identifier of the message with the gift in the chat with the user
-	MessageId int64 `json:"message_id"`
+	// Identifier of the gift
+	ReceivedGiftId string `json:"received_gift_id"`
 }
 
-// Sells a gift received by the current user for Telegram Stars
+// Sells a gift for Telegram Stars
 func (client *Client) SellGift(req *SellGiftRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
 			Type: "sellGift",
 		},
 		Data: map[string]interface{}{
-			"sender_user_id": req.SenderUserId,
-			"message_id":     req.MessageId,
+			"received_gift_id": req.ReceivedGiftId,
 		},
 	})
 	if err != nil {
@@ -19092,24 +19311,21 @@ func (client *Client) SellGift(req *SellGiftRequest) (*Ok, error) {
 }
 
 type ToggleGiftIsSavedRequest struct {
-	// Identifier of the user that sent the gift
-	SenderUserId int64 `json:"sender_user_id"`
-	// Identifier of the message with the gift in the chat with the user
-	MessageId int64 `json:"message_id"`
-	// Pass true to display the gift on the user's profile page; pass false to remove it from the profile page
+	// Identifier of the gift
+	ReceivedGiftId string `json:"received_gift_id"`
+	// Pass true to display the gift on the user's or the channel's profile page; pass false to remove it from the profile page
 	IsSaved bool `json:"is_saved"`
 }
 
-// Toggles whether a gift is shown on the current user's profile page
+// Toggles whether a gift is shown on the current user's or the channel's profile page; requires can_post_messages administrator right in the chat
 func (client *Client) ToggleGiftIsSaved(req *ToggleGiftIsSavedRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
 			Type: "toggleGiftIsSaved",
 		},
 		Data: map[string]interface{}{
-			"sender_user_id": req.SenderUserId,
-			"message_id":     req.MessageId,
-			"is_saved":       req.IsSaved,
+			"received_gift_id": req.ReceivedGiftId,
+			"is_saved":         req.IsSaved,
 		},
 	})
 	if err != nil {
@@ -19123,25 +19339,22 @@ func (client *Client) ToggleGiftIsSaved(req *ToggleGiftIsSavedRequest) (*Ok, err
 	return UnmarshalOk(result.Data)
 }
 
-type GetUserGiftsRequest struct {
-	// Identifier of the user
-	UserId int64 `json:"user_id"`
-	// Offset of the first entry to return as received from the previous request; use empty string to get the first chunk of results
-	Offset string `json:"offset"`
-	// The maximum number of gifts to be returned; must be positive and can't be greater than 100. For optimal performance, the number of returned objects is chosen by TDLib and can be smaller than the specified limit
-	Limit int32 `json:"limit"`
+type ToggleChatGiftNotificationsRequest struct {
+	// Identifier of the channel chat
+	ChatId int64 `json:"chat_id"`
+	// Pass true to enable notifications about new gifts owned by the channel chat; pass false to disable the notifications
+	AreEnabled bool `json:"are_enabled"`
 }
 
-// Returns gifts saved to profile by the given user
-func (client *Client) GetUserGifts(req *GetUserGiftsRequest) (*UserGifts, error) {
+// Toggles whether notifications for new gifts received by a channel chat are sent to the current user; requires can_post_messages administrator right in the chat
+func (client *Client) ToggleChatGiftNotifications(req *ToggleChatGiftNotificationsRequest) (*Ok, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "getUserGifts",
+			Type: "toggleChatGiftNotifications",
 		},
 		Data: map[string]interface{}{
-			"user_id": req.UserId,
-			"offset":  req.Offset,
-			"limit":   req.Limit,
+			"chat_id":     req.ChatId,
+			"are_enabled": req.AreEnabled,
 		},
 	})
 	if err != nil {
@@ -19152,7 +19365,228 @@ func (client *Client) GetUserGifts(req *GetUserGiftsRequest) (*UserGifts, error)
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalUserGifts(result.Data)
+	return UnmarshalOk(result.Data)
+}
+
+type GetGiftUpgradePreviewRequest struct {
+	// Identifier of the gift
+	GiftId JsonInt64 `json:"gift_id"`
+}
+
+// Returns examples of possible upgraded gifts for a regular gift
+func (client *Client) GetGiftUpgradePreview(req *GetGiftUpgradePreviewRequest) (*GiftUpgradePreview, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getGiftUpgradePreview",
+		},
+		Data: map[string]interface{}{
+			"gift_id": req.GiftId,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalGiftUpgradePreview(result.Data)
+}
+
+type UpgradeGiftRequest struct {
+	// Identifier of the gift
+	ReceivedGiftId string `json:"received_gift_id"`
+	// Pass true to keep the original gift text, sender and receiver in the upgraded gift
+	KeepOriginalDetails bool `json:"keep_original_details"`
+	// The amount of Telegram Stars required to pay for the upgrade. It the gift has prepaid_upgrade_star_count > 0, then pass 0, otherwise, pass gift.upgrade_star_count
+	StarCount int64 `json:"star_count"`
+}
+
+// Upgrades a regular gift
+func (client *Client) UpgradeGift(req *UpgradeGiftRequest) (*UpgradeGiftResult, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "upgradeGift",
+		},
+		Data: map[string]interface{}{
+			"received_gift_id":      req.ReceivedGiftId,
+			"keep_original_details": req.KeepOriginalDetails,
+			"star_count":            req.StarCount,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalUpgradeGiftResult(result.Data)
+}
+
+type TransferGiftRequest struct {
+	// Identifier of the gift
+	ReceivedGiftId string `json:"received_gift_id"`
+	// Identifier of the user or the channel chat that will receive the gift
+	NewOwnerId MessageSender `json:"new_owner_id"`
+	// The amount of Telegram Stars required to pay for the transfer
+	StarCount int64 `json:"star_count"`
+}
+
+// Sends an upgraded gift to another user or a channel chat
+func (client *Client) TransferGift(req *TransferGiftRequest) (*Ok, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "transferGift",
+		},
+		Data: map[string]interface{}{
+			"received_gift_id": req.ReceivedGiftId,
+			"new_owner_id":     req.NewOwnerId,
+			"star_count":       req.StarCount,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalOk(result.Data)
+}
+
+type GetReceivedGiftsRequest struct {
+	// Identifier of the gift receiver
+	OwnerId MessageSender `json:"owner_id"`
+	// Pass true to exclude gifts that aren't saved to the chat's profile page. Always true for gifts received by other users and channel chats without can_post_messages administrator right
+	ExcludeUnsaved bool `json:"exclude_unsaved"`
+	// Pass true to exclude gifts that are saved to the chat's profile page. Always false for gifts received by other users and channel chats without can_post_messages administrator right
+	ExcludeSaved bool `json:"exclude_saved"`
+	// Pass true to exclude gifts that can be purchased unlimited number of times
+	ExcludeUnlimited bool `json:"exclude_unlimited"`
+	// Pass true to exclude gifts that can be purchased limited number of times
+	ExcludeLimited bool `json:"exclude_limited"`
+	// Pass true to exclude upgraded gifts
+	ExcludeUpgraded bool `json:"exclude_upgraded"`
+	// Pass true to sort results by gift price instead of send date
+	SortByPrice bool `json:"sort_by_price"`
+	// Offset of the first entry to return as received from the previous request; use empty string to get the first chunk of results
+	Offset string `json:"offset"`
+	// The maximum number of gifts to be returned; must be positive and can't be greater than 100. For optimal performance, the number of returned objects is chosen by TDLib and can be smaller than the specified limit
+	Limit int32 `json:"limit"`
+}
+
+// Returns gifts received by the given user or chat
+func (client *Client) GetReceivedGifts(req *GetReceivedGiftsRequest) (*ReceivedGifts, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getReceivedGifts",
+		},
+		Data: map[string]interface{}{
+			"owner_id":          req.OwnerId,
+			"exclude_unsaved":   req.ExcludeUnsaved,
+			"exclude_saved":     req.ExcludeSaved,
+			"exclude_unlimited": req.ExcludeUnlimited,
+			"exclude_limited":   req.ExcludeLimited,
+			"exclude_upgraded":  req.ExcludeUpgraded,
+			"sort_by_price":     req.SortByPrice,
+			"offset":            req.Offset,
+			"limit":             req.Limit,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalReceivedGifts(result.Data)
+}
+
+type GetReceivedGiftRequest struct {
+	// Identifier of the gift
+	ReceivedGiftId string `json:"received_gift_id"`
+}
+
+// Returns information about a received gift
+func (client *Client) GetReceivedGift(req *GetReceivedGiftRequest) (*ReceivedGift, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getReceivedGift",
+		},
+		Data: map[string]interface{}{
+			"received_gift_id": req.ReceivedGiftId,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalReceivedGift(result.Data)
+}
+
+type GetUpgradedGiftRequest struct {
+	// Unique name of the upgraded gift
+	Name string `json:"name"`
+}
+
+// Returns information about an upgraded gift by its name
+func (client *Client) GetUpgradedGift(req *GetUpgradedGiftRequest) (*UpgradedGift, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getUpgradedGift",
+		},
+		Data: map[string]interface{}{
+			"name": req.Name,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalUpgradedGift(result.Data)
+}
+
+type GetUpgradedGiftWithdrawalUrlRequest struct {
+	// Identifier of the gift
+	ReceivedGiftId string `json:"received_gift_id"`
+	// The 2-step verification password of the current user
+	Password string `json:"password"`
+}
+
+// Returns a URL for upgraded gift withdrawal in the TON blockchain as an NFT; requires owner privileges for gifts owned by a chat
+func (client *Client) GetUpgradedGiftWithdrawalUrl(req *GetUpgradedGiftWithdrawalUrlRequest) (*HttpUrl, error) {
+	result, err := client.Send(Request{
+		meta: meta{
+			Type: "getUpgradedGiftWithdrawalUrl",
+		},
+		Data: map[string]interface{}{
+			"received_gift_id": req.ReceivedGiftId,
+			"password":         req.Password,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if result.Type == "error" {
+		return nil, buildResponseError(result.Data)
+	}
+
+	return UnmarshalHttpUrl(result.Data)
 }
 
 type CreateInvoiceLinkRequest struct {
@@ -22722,8 +23156,8 @@ func (client *Client) SearchChatAffiliateProgram(req *SearchChatAffiliateProgram
 }
 
 type SearchAffiliateProgramsRequest struct {
-	// Identifier of the chat for which affiliate programs are searched for. Can be an identifier of the Saved Messages chat, of a chat with an owned bot, or of a channel chat with can_post_messages administrator right
-	ChatId int64 `json:"chat_id"`
+	// The affiliate for which affiliate programs are searched for
+	Affiliate AffiliateType `json:"affiliate"`
 	// Sort order for the results
 	SortOrder AffiliateProgramSortOrder `json:"sort_order"`
 	// Offset of the first affiliate program to return as received from the previous request; use empty string to get the first chunk of results
@@ -22732,14 +23166,14 @@ type SearchAffiliateProgramsRequest struct {
 	Limit int32 `json:"limit"`
 }
 
-// Searches affiliate programs that can be applied to the given chat
+// Searches affiliate programs that can be connected to the given affiliate
 func (client *Client) SearchAffiliatePrograms(req *SearchAffiliateProgramsRequest) (*FoundAffiliatePrograms, error) {
 	result, err := client.Send(Request{
 		meta: meta{
 			Type: "searchAffiliatePrograms",
 		},
 		Data: map[string]interface{}{
-			"chat_id":    req.ChatId,
+			"affiliate":  req.Affiliate,
 			"sort_order": req.SortOrder,
 			"offset":     req.Offset,
 			"limit":      req.Limit,
@@ -22756,21 +23190,21 @@ func (client *Client) SearchAffiliatePrograms(req *SearchAffiliateProgramsReques
 	return UnmarshalFoundAffiliatePrograms(result.Data)
 }
 
-type ConnectChatAffiliateProgramRequest struct {
-	// Identifier of the chat to which the affiliate program will be connected. Can be an identifier of the Saved Messages chat, of a chat with an owned bot, or of a channel chat with can_post_messages administrator right
-	ChatId int64 `json:"chat_id"`
+type ConnectAffiliateProgramRequest struct {
+	// The affiliate to which the affiliate program will be connected
+	Affiliate AffiliateType `json:"affiliate"`
 	// Identifier of the bot, which affiliate program is connected
 	BotUserId int64 `json:"bot_user_id"`
 }
 
-// Connects an affiliate program to the given chat. Returns information about the connected affiliate program
-func (client *Client) ConnectChatAffiliateProgram(req *ConnectChatAffiliateProgramRequest) (*ChatAffiliateProgram, error) {
+// Connects an affiliate program to the given affiliate. Returns information about the connected affiliate program
+func (client *Client) ConnectAffiliateProgram(req *ConnectAffiliateProgramRequest) (*ConnectedAffiliateProgram, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "connectChatAffiliateProgram",
+			Type: "connectAffiliateProgram",
 		},
 		Data: map[string]interface{}{
-			"chat_id":     req.ChatId,
+			"affiliate":   req.Affiliate,
 			"bot_user_id": req.BotUserId,
 		},
 	})
@@ -22782,25 +23216,25 @@ func (client *Client) ConnectChatAffiliateProgram(req *ConnectChatAffiliateProgr
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalChatAffiliateProgram(result.Data)
+	return UnmarshalConnectedAffiliateProgram(result.Data)
 }
 
-type DisconnectChatAffiliateProgramRequest struct {
-	// Identifier of the chat for which the affiliate program is connected
-	ChatId int64 `json:"chat_id"`
+type DisconnectAffiliateProgramRequest struct {
+	// The affiliate to which the affiliate program is connected
+	Affiliate AffiliateType `json:"affiliate"`
 	// The referral link of the affiliate program
 	Url string `json:"url"`
 }
 
-// Disconnects an affiliate program from the given chat and immediately deactivates its referral link. Returns updated information about the disconnected affiliate program
-func (client *Client) DisconnectChatAffiliateProgram(req *DisconnectChatAffiliateProgramRequest) (*ChatAffiliateProgram, error) {
+// Disconnects an affiliate program from the given affiliate and immediately deactivates its referral link. Returns updated information about the disconnected affiliate program
+func (client *Client) DisconnectAffiliateProgram(req *DisconnectAffiliateProgramRequest) (*ConnectedAffiliateProgram, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "disconnectChatAffiliateProgram",
+			Type: "disconnectAffiliateProgram",
 		},
 		Data: map[string]interface{}{
-			"chat_id": req.ChatId,
-			"url":     req.Url,
+			"affiliate": req.Affiliate,
+			"url":       req.Url,
 		},
 	})
 	if err != nil {
@@ -22811,24 +23245,24 @@ func (client *Client) DisconnectChatAffiliateProgram(req *DisconnectChatAffiliat
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalChatAffiliateProgram(result.Data)
+	return UnmarshalConnectedAffiliateProgram(result.Data)
 }
 
-type GetChatAffiliateProgramRequest struct {
-	// Identifier of the chat for which the affiliate program was connected. Can be an identifier of the Saved Messages chat, of a chat with an owned bot, or of a channel chat with can_post_messages administrator right
-	ChatId int64 `json:"chat_id"`
+type GetConnectedAffiliateProgramRequest struct {
+	// The affiliate to which the affiliate program will be connected
+	Affiliate AffiliateType `json:"affiliate"`
 	// Identifier of the bot that created the program
 	BotUserId int64 `json:"bot_user_id"`
 }
 
-// Returns an affiliate program that were connected to the given chat by identifier of the bot that created the program
-func (client *Client) GetChatAffiliateProgram(req *GetChatAffiliateProgramRequest) (*ChatAffiliateProgram, error) {
+// Returns an affiliate program that were connected to the given affiliate by identifier of the bot that created the program
+func (client *Client) GetConnectedAffiliateProgram(req *GetConnectedAffiliateProgramRequest) (*ConnectedAffiliateProgram, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "getChatAffiliateProgram",
+			Type: "getConnectedAffiliateProgram",
 		},
 		Data: map[string]interface{}{
-			"chat_id":     req.ChatId,
+			"affiliate":   req.Affiliate,
 			"bot_user_id": req.BotUserId,
 		},
 	})
@@ -22840,28 +23274,28 @@ func (client *Client) GetChatAffiliateProgram(req *GetChatAffiliateProgramReques
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalChatAffiliateProgram(result.Data)
+	return UnmarshalConnectedAffiliateProgram(result.Data)
 }
 
-type GetChatAffiliateProgramsRequest struct {
-	// Identifier of the chat for which the affiliate programs were connected. Can be an identifier of the Saved Messages chat, of a chat with an owned bot, or of a channel chat with can_post_messages administrator right
-	ChatId int64 `json:"chat_id"`
+type GetConnectedAffiliateProgramsRequest struct {
+	// The affiliate to which the affiliate program were connected
+	Affiliate AffiliateType `json:"affiliate"`
 	// Offset of the first affiliate program to return as received from the previous request; use empty string to get the first chunk of results
 	Offset string `json:"offset"`
 	// The maximum number of affiliate programs to return
 	Limit int32 `json:"limit"`
 }
 
-// Returns affiliate programs that were connected to the given chat
-func (client *Client) GetChatAffiliatePrograms(req *GetChatAffiliateProgramsRequest) (*ChatAffiliatePrograms, error) {
+// Returns affiliate programs that were connected to the given affiliate
+func (client *Client) GetConnectedAffiliatePrograms(req *GetConnectedAffiliateProgramsRequest) (*ConnectedAffiliatePrograms, error) {
 	result, err := client.Send(Request{
 		meta: meta{
-			Type: "getChatAffiliatePrograms",
+			Type: "getConnectedAffiliatePrograms",
 		},
 		Data: map[string]interface{}{
-			"chat_id": req.ChatId,
-			"offset":  req.Offset,
-			"limit":   req.Limit,
+			"affiliate": req.Affiliate,
+			"offset":    req.Offset,
+			"limit":     req.Limit,
 		},
 	})
 	if err != nil {
@@ -22872,7 +23306,7 @@ func (client *Client) GetChatAffiliatePrograms(req *GetChatAffiliateProgramsRequ
 		return nil, buildResponseError(result.Data)
 	}
 
-	return UnmarshalChatAffiliatePrograms(result.Data)
+	return UnmarshalConnectedAffiliatePrograms(result.Data)
 }
 
 type GetBusinessFeaturesRequest struct {
@@ -24598,6 +25032,9 @@ func (client *Client) TestUseUpdate() (Update, error) {
 	case TypeUpdateApplicationVerificationRequired:
 		return UnmarshalUpdateApplicationVerificationRequired(result.Data)
 
+	case TypeUpdateApplicationRecaptchaVerificationRequired:
+		return UnmarshalUpdateApplicationRecaptchaVerificationRequired(result.Data)
+
 	case TypeUpdateCall:
 		return UnmarshalUpdateCall(result.Data)
 
@@ -24702,6 +25139,9 @@ func (client *Client) TestUseUpdate() (Update, error) {
 
 	case TypeUpdateDefaultReactionType:
 		return UnmarshalUpdateDefaultReactionType(result.Data)
+
+	case TypeUpdateDefaultPaidReactionType:
+		return UnmarshalUpdateDefaultPaidReactionType(result.Data)
 
 	case TypeUpdateSavedMessagesTags:
 		return UnmarshalUpdateSavedMessagesTags(result.Data)
