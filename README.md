@@ -1,12 +1,21 @@
 # go-tdlib
 
 Go wrapper for [TDLib (Telegram Database Library)](https://github.com/tdlib/td) with full support of the TDLib.
-Current supported version of TDLib corresponds to the commit hash [22d49d5](https://github.com/tdlib/td/commit/22d49d5b87a4d5fc60a194dab02dd1d71529687f), updated on 2024-11-27
+Current supported version of TDLib corresponds to the commit hash [971684a](https://github.com/tdlib/td/commit/971684a3dcc7bdf99eec024e1c4f57ae729d6d53), updated on 2025-04-30
 
 ## TDLib installation
 
 Use [TDLib build instructions](https://tdlib.github.io/td/build.html) with checkmarked `Install built TDLib to /usr/local instead of placing the files to td/tdlib`. Don't forget to checkout a supported commit (see above).
 
+## Custom TDLib Path
+
+If you have TDLib installed in a custom location, use environment variables to specify the include and library paths:
+
+```shell
+CGO_CFLAGS=-I/path/to/tdlib/include \
+CGO_LDFLAGS="-Wl,-rpath,/path/to/tdlib/lib -L/path/to/tdlib/lib -ltdjson" \
+go build ...
+```
 
 ### Windows
 
@@ -35,10 +44,13 @@ To run, put the .dll from C:/td/tdlib/bin to the directory with the compiled .ex
 package main
 
 import (
-    "log"
-    "path/filepath"
-
-    "github.com/zelenin/go-tdlib/client"
+	"context"
+	"github.com/zelenin/go-tdlib/client"
+	"log"
+	"os"
+	"os/signal"
+	"path/filepath"
+	"syscall"
 )
 
 const (
@@ -76,11 +88,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("SetLogVerbosityLevel error: %s", err)
 	}
-	
-    tdlibClient, err := client.NewClient(authorizer)
-    if err != nil {
-        log.Fatalf("NewClient error: %s", err)
-    }
+
+	tdlibClient, err := client.NewClient(authorizer)
+	if err != nil {
+		log.Fatalf("NewClient error: %s", err)
+	}
 
 	versionOption, err := client.GetOption(&client.GetOptionRequest{
 		Name: "version",
@@ -98,12 +110,22 @@ func main() {
 
 	log.Printf("TDLib version: %s (commit: %s)", versionOption.(*client.OptionValueString).Value, commitOption.(*client.OptionValueString).Value)
 
-    me, err := tdlibClient.GetMe()
-    if err != nil {
-        log.Fatalf("GetMe error: %s", err)
-    }
+	if commitOption.(*client.OptionValueString).Value != client.TDLIB_VERSION {
+		log.Printf("TDLib version supported by the library (%s) is not the same as TDLib version (%s)", client.TDLIB_VERSION, commitOption.(*client.OptionValueString).Value)
+	}
 
-    log.Printf("Me: %s %s", me.FirstName, me.LastName)
+	me, err := tdlibClient.GetMe(context.Background())
+	if err != nil {
+		log.Fatalf("GetMe error: %s", err)
+	}
+
+	log.Printf("Me: %s %s", me.FirstName, me.LastName)
+
+	ch := make(chan os.Signal, 2)
+	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
+	<-ch
+	tdlibClient.Close(context.Background())
+	os.Exit(1)
 }
 
 ```
@@ -158,18 +180,13 @@ func main() {
 ### Receive updates
 
 ```go
-tdlibClient, err := client.NewClient(authorizer)
-if err != nil {
-    log.Fatalf("NewClient error: %s", err)
+resHandCallback := func(result client.Type) {
+    log.Printf("%#v", result.GetType())
 }
 
-listener := tdlibClient.GetListener()
-defer listener.Close()
- 
-for update := range listener.Updates {
-    if update.GetClass() == client.ClassUpdate {
-        log.Printf("%#v", update)
-    }
+tdlibClient, err := client.NewClient(authorizer, client.WithResultHandler(client.NewCallbackResultHandler(resHandCallback)))
+if err != nil {
+    log.Fatalf("NewClient error: %s", err)
 }
 ```
 

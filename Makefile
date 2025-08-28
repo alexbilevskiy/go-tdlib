@@ -1,18 +1,21 @@
-TAG := 721300bcb4d0f2114505712f4dc6350af1ce1a09
+TAG := 971684a3dcc7bdf99eec024e1c4f57ae729d6d53
 
 schema-update:
 	curl https://raw.githubusercontent.com/tdlib/td/${TAG}/td/generate/scheme/td_api.tl 2>/dev/null > ./data/td_api.tl
 	curl https://raw.githubusercontent.com/tdlib/td/${TAG}/td/telegram/Td.cpp 2>/dev/null > ./data/Td.cpp
 
 generate-json:
-	go run ./cmd/generate-json.go \
+	go run ./cmd/generateJson/main.go \
+		-version "${TAG}" \
 		-output "./data/td_api.json"
 
 generate-code:
-	go run ./cmd/generate-code.go \
+	go run ./cmd/generateCode/main.go \
+		-version "${TAG}" \
 		-outputDir "./client" \
 		-package client \
-		-functionFile function.go \
-		-typeFile type.go \
-		-unmarshalerFile unmarshaler.go
+		-functionFile function_generated.go \
+		-typeFile type_generated.go \
+		-unmarshalerFile unmarshaler_generated.go \
+		-versionFile version_generated.go
 	go fmt ./...
